@@ -1,0 +1,19 @@
+# Abhängigkeiten (kommen später mit Astro)
+node_modules/
+
+# Build-Ausgabe
+dist/
+.astro/
+
+# Umgebungs-/Geheimnis-Dateien
+.env
+.env.*
+!.env.example
+
+# Betriebssystem / Editor
+.DS_Store
+Thumbs.db
+*.log
+
+# Lokale Claude-Code-Einstellungen (persönlich, nicht teilen)
+.claude/settings.local.json
