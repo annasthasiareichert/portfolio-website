@@ -134,15 +134,39 @@ _Später iterativ erweiterbar._
   (freigestellt aus CV-Seite 3, `entwurf/portrait.png`). Projektbilder weiterhin Platzhalter.
   → Status: wartet auf nächstes Feedback.
 
+- **2026-07-07 — Namens-Lockup-Schrift eingebaut** (siehe „D-Schrift"): Vorname von Kaushan Script auf
+  **Times New Roman italic** umgestellt (75,5px Obergrenze, `letter-spacing: -0.07em`, `#1b1b1b`),
+  Nachname bleibt **Archivo Black**, Größe an den Vornamen angepasst, damit beide wie im CV etwa gleich breit
+  enden. Wortmarke (Kopf) und Fußzeilen-Echo „schreib mir" in denselben Times-Italic-Stil überführt;
+  `--script`-Token → `--lockup` umbenannt, Kaushan-Script-Einbindung entfernt. → wartet auf nächstes Feedback.
+
+- **2026-07-07 — Hero neu als „Masthead" (Rückmeldung: bisher „viel zu langweilig").** Der Hero ist jetzt
+  dem Vorbild ihrer **Portfolio-Titelseite** (Canva `DAHA7IZGJuY`, Seite 1) nachgebaut: das freigestellte
+  **Porträt** steht mittig, das Riesenwort **„PORTFOLIO"** (Archivo Black) läuft **hinter ihr** durch —
+  außerhalb der Silhouette gefüllt, über ihr nur Kontur (Technik: 3 Wort-Ebenen um das Freisteller-PNG).
+  **Hover-Effekt:** die Schrift wandelt sich von fetter Grotesk zu **Times-Kursive** (ihre beiden Marken-
+  schriften), plus sanftes Scale. Signatur „annasthasia reichert." unten rechts wie auf dem Cover.
+  Das Namens-Lockup lebt weiter in Wortmarke (Kopf), Signatur (Hero) und Fußzeile.
+  Neuer Freisteller von der Nutzerin geliefert → `entwurf/portrait-frei.png` (transparentes PNG).
+  **„Ausgewählte Arbeiten": Platzhalter-Farbverläufe durch echte Projektbilder ersetzt** (aus dem Canva-
+  Portfolio `DAHA7IZGJuY` exportiert, `entwurf/projekte/p1…p9`, dem jeweiligen Projekt zugeordnet);
+  Reveal-Karte auf Querformat (16:10) umgestellt. Platzhalter-Links (Projekte, Lebenslauf) springen per
+  `data-soon` + preventDefault nicht mehr nach oben, bis die echten Seiten (Astro-Phase) existieren.
+  Offen fürs nächste Mal: **Texte überarbeiten** (Wunsch der Nutzerin), Wort im Masthead ggf. „PORTFOLIO"
+  vs. Eigenname klären, Projektbilder später in höherer Auflösung nachziehen. → wartet auf Feedback.
+
 ## Offene Design-Details (in v2 gesetzt — Freigabe ausstehend)
 
 - **D-Farbe — Palette (aus CV gemessen):** `--papier #FCFBF9` (Weiß), `--sand #D9D7D1` (Greige/Taupe-Band),
   `--tinte #1A1712` (Schwarz), `--ton #8A857B` (Grau). **Kein bunter Akzent** (CV ist bewusst neutral).
   Terrakotta-Akzent aus v1 **verworfen**.
-- **D-Schrift — Dreiklang (lizenzfrei, OFL, später selbst gehostet):**
-  - Schreibschrift (Namens-Lockup) = **Kaushan Script** — Platzhalter, der die CV-Schreibschrift *nachempfindet*;
-    exakte CV-Schrift ist eine Canva-Font. Alternativen bei Bedarf: Yellowtail, Great Vibes, Sacramento.
-  - Fette Grotesk (Nachname, Überschriften, Projekttitel) = **Archivo** (800–900).
+- **D-Schrift — Dreiklang (finaler Stand Namens-Lockup, 2026-07-07 von Nutzerin festgelegt, eingebaut):**
+  - **Vorname (Namens-Lockup) = Times New Roman, _kursiv_ (italic).**
+    Referenzwerte aus Canva: Schriftgröße **75,5px** (Desktop-Obergrenze), Buchstabenabstand **−70**, Farbe **#1b1b1b**.
+    Buchstabenabstand als `-0.07em` gesetzt (Canva −70 = 1/1000 em), damit er beim Herunterskalieren
+    proportional mitläuft (Verhältnis Abstand↔Größe konstant — ausdrücklicher Wunsch der Nutzerin).
+    Times New Roman ist Systemschrift → kein Font-Laden nötig. Kaushan-Script-Platzhalter **verworfen**.
+  - **Nachname (Lockup) + Überschriften/Projekttitel = Archivo Black** (Archivo 900).
   - Serifen-Kursiv (Eigennamen, editoriale Zeilen) = **Newsreader** italic.
 - Favicon + Social-Vorschaubild. — offen.
 

@@ -6,13 +6,13 @@
 <title>Annasthasia Reichert — Entwurf Startseite</title>
 
 <!-- Schriften nach dem Vorbild deines Lebenslaufs:
-     · Kaushan Script  = fließende Schreibschrift für deinen Vornamen (Lockup)
+     · Times New Roman = kursiver Vorname im Namens-Lockup (Systemschrift, muss nicht geladen werden)
      · Archivo         = fette, kleingeschriebene Grotesk (Nachname, Überschriften, Titel)
      · Newsreader      = ruhige Serifen-Kursiv für Eigennamen & editoriale Zeilen
-     Alle drei lizenzfrei (Open Font License) und später selbst hostbar. -->
+     Archivo & Newsreader sind lizenzfrei (Open Font License) und später selbst hostbar. -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Kaushan+Script&family=Newsreader:ital,opsz,wght@1,6..72,300..500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Newsreader:ital,opsz,wght@1,6..72,300..500&display=swap" rel="stylesheet" />
 
 <style>
 /* ============================================================
@@ -28,7 +28,7 @@
   --haar:       rgba(26,23,18,0.16); /* Haarlinien / Trenner             */
 
   /* Typo */
-  --script: "Kaushan Script", cursive;
+  --lockup: "Times New Roman", Times, serif;  /* Vorname im Namens-Lockup, kursiv gesetzt */
   --grotesk:"Archivo", "Helvetica Neue", Arial, sans-serif;
   --serif:  "Newsreader", Georgia, serif;
 
@@ -48,6 +48,12 @@ body {
   overflow-x: hidden;
 }
 a { color: inherit; text-decoration: none; }
+
+/* für Screenreader sichtbar, optisch verborgen */
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
 
 /* Kleines Label-Motiv (wie die Meta-Zeilen im CV) */
 .mono {
@@ -100,7 +106,7 @@ header .wortmarke {
   font-size: 1.05rem;
   letter-spacing: -0.01em;
 }
-header .wortmarke .vn { font-family: var(--script); font-weight: 400; font-size: 1.35rem; letter-spacing: 0; }
+header .wortmarke .vn { font-family: var(--lockup); font-style: italic; font-weight: 400; font-size: 1.35rem; letter-spacing: -0.07em; }
 header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center; }
 .nav-links { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center; }
 .nav-links a {
@@ -124,76 +130,90 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
 @media (max-width: 760px) { .nav-links a:not(.nav-arbeiten) { display: none; } }
 
 /* ============================================================
-   HERO — Namens-Lockup + Portrait (Masthead deines CV)
+   HERO — Masthead: Porträt verschmilzt mit der Riesen-Schrift
+   (nach dem Vorbild deiner Portfolio-Titelseite)
    ============================================================ */
 .hero {
   position: relative;
   min-height: 100svh;
   background: var(--sand);
-  display: flex; align-items: center;
-  padding: 7rem var(--rand) 4rem;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 6.5rem var(--rand) 4rem;
   overflow: hidden;
   will-change: transform, opacity;
 }
-.hero .karo-ecke {
-  position: absolute; right: 0; bottom: 0;
-  width: 42%; height: 55%;
-  -webkit-mask-image: linear-gradient(315deg, #000, transparent 65%);
-          mask-image: linear-gradient(315deg, #000, transparent 65%);
-  opacity: 0.8; pointer-events: none;
-}
-.hero-grid {
+.hero .eyebrow { position: absolute; top: 6.5rem; left: var(--rand); z-index: 5; margin: 0; }
+
+/* Bühne, in der Schrift-Ebenen und Porträt deckungsgleich übereinanderliegen */
+.masthead {
   position: relative; z-index: 2;
   width: 100%;
-  display: grid;
-  grid-template-columns: 1.5fr 0.9fr;
-  gap: clamp(2rem, 6vw, 6rem);
-  align-items: center;
+  height: min(80svh, 760px);
+  display: flex; align-items: center; justify-content: center;
 }
-.hero .eyebrow { margin-bottom: 1.4rem; }
 
-/* das Lockup: Schreibschrift-Vorname über fettem Nachnamen mit Punkt */
-.lockup { line-height: 0.86; margin-bottom: 1.6rem; }
-.lockup .vorname {
-  display: block;
-  font-family: var(--script);
-  font-weight: 400;
-  font-size: clamp(3rem, 11vw, 8.5rem);
-  color: var(--tinte);
-  transform: translateX(-0.06em);
+/* die Wort-Ebenen: alle zentriert an derselben Stelle (auf Torso-Höhe) */
+.mh-wort {
+  position: absolute; left: 50%; top: 57%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  text-transform: uppercase;
+  line-height: 0.8;
+  white-space: nowrap;
+  user-select: none; pointer-events: none;
+  transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.2,0.8,0.2,1);
 }
-.lockup .nachname {
-  display: block;
-  font-family: var(--grotesk);
-  font-weight: 900;
-  font-size: clamp(3.2rem, 13vw, 10rem);
-  letter-spacing: -0.03em;
-  text-transform: lowercase;
-  margin-top: -0.12em;
-}
-.hero .tagline {
-  font-family: var(--serif); font-style: italic; font-weight: 400;
-  font-size: clamp(1.25rem, 2.6vw, 2rem);
-  line-height: 1.3; max-width: 24ch; color: var(--tinte);
-  margin: 0.4rem 0 1.6rem;
-}
-.hero .pill-reihe { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+/* Grundzustand: fette Grotesk (Archivo Black) */
+.mh-wort.grotesk { font-family: var(--grotesk); font-weight: 900;
+  font-size: clamp(2.6rem, 16.5vw, 14rem); letter-spacing: -0.02em; }
+/* Hover-Zielzustand: kursive Serife (Times italic) */
+.mh-wort.serif { font-family: var(--lockup); font-style: italic; font-weight: 400;
+  font-size: clamp(3.2rem, 20vw, 17rem); letter-spacing: -0.04em; opacity: 0; }
+/* gefüllt (hinter dem Porträt) vs. nur Kontur (vor dem Porträt) */
+.mh-wort.solid { color: #1b1b1b; z-index: 1; }
+.mh-wort.line  { color: transparent; -webkit-text-stroke: 1.6px #1b1b1b; z-index: 3; }
 
-.hero-portrait { position: relative; justify-self: center; }
-.hero-portrait img {
-  display: block;
-  width: clamp(200px, 26vw, 340px);
-  height: auto;
-  border-radius: 3px;
-  filter: grayscale(6%);
-  /* unteren Rand (weißer Pullover) weich ins Greige auslaufen lassen */
-  -webkit-mask-image: linear-gradient(#000 74%, transparent 99%);
-          mask-image: linear-gradient(#000 74%, transparent 99%);
+/* das Porträt liegt zwischen gefüllter Ebene (hinten) und Kontur (vorne) */
+.mh-figur {
+  position: relative; z-index: 2;
+  height: 100%; width: auto; max-width: 94%;
+  object-fit: contain;
+  /* Unterkante (Pullover) weich ins Greige auslaufen lassen */
+  -webkit-mask-image: linear-gradient(#000 88%, transparent 99.5%);
+          mask-image: linear-gradient(#000 88%, transparent 99.5%);
 }
-.hero-portrait .kontakt-mini {
-  margin-top: 1rem; text-align: right; color: var(--tinte);
-  font-size: 0.82rem; line-height: 1.6;
+
+/* HOVER: die Schrift wandelt sich von fetter Grotesk zu kursiver Serife */
+@media (hover: hover) and (min-width: 761px) {
+  .masthead:hover .mh-wort.grotesk { opacity: 0; transform: translate(-50%,-50%) scale(0.94); }
+  .masthead:hover .mh-wort.serif   { opacity: 1; transform: translate(-50%,-50%) scale(1); }
 }
+
+/* kleine Signatur unten rechts (wie auf deiner Portfolio-Titelseite) */
+.mh-signatur {
+  position: absolute; right: var(--rand); bottom: 2.3rem; z-index: 5;
+  font-family: var(--grotesk); font-weight: 900; text-transform: lowercase;
+  font-size: clamp(1.05rem, 2.1vw, 1.6rem); letter-spacing: -0.02em; color: #1b1b1b;
+}
+.mh-signatur .vn {
+  font-family: var(--lockup); font-style: italic; font-weight: 400; letter-spacing: -0.07em;
+}
+
+/* Cursor-Label: erscheint beim Hover über den Masthead und folgt der Maus */
+.cursor-label {
+  position: fixed; top: 0; left: 0; z-index: 70;
+  padding: 0.55rem 1rem; border-radius: 999px;
+  background: var(--tinte); color: var(--papier);
+  font-family: var(--grotesk); font-weight: 700; text-transform: lowercase;
+  font-size: 0.85rem; letter-spacing: 0.01em; white-space: nowrap;
+  transform: translate(14px, 16px) scale(0.85);
+  opacity: 0; pointer-events: none;
+  box-shadow: 0 12px 30px -12px rgba(26,23,18,0.55);
+  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.2,0.8,0.2,1);
+}
+.cursor-label.sichtbar { opacity: 1; transform: translate(16px, 18px) scale(1); }
+.cursor-label .vn { font-family: var(--lockup); font-style: italic; font-weight: 400; letter-spacing: -0.04em; }
+@media (hover: none), (max-width: 760px) { .cursor-label { display: none; } }
 
 .scroll-hinweis {
   position: absolute; bottom: 1.8rem; left: var(--rand); z-index: 3;
@@ -205,20 +225,9 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
 }
 @keyframes pulsieren { 0%,100%{ transform: scaleX(0.35);} 50%{ transform: scaleX(1);} }
 
-/* schwebende Fragmente (zurückhaltend, in Tinte) */
-.fragment {
-  position: absolute; font-family: var(--serif); font-style: italic;
-  color: var(--tinte); opacity: 0.5; pointer-events: none; will-change: transform; z-index: 1;
-}
-.fragment.f1 { top: 16%; right: 30%; font-size: clamp(1rem,2.2vw,1.6rem); }
-.fragment.f2 { bottom: 30%; left: 40%; font-size: clamp(0.9rem,1.8vw,1.3rem); }
-@media (max-width: 900px) { .fragment { display: none; } }
-
 @media (max-width: 760px) {
-  .hero-grid { grid-template-columns: 1fr; }
-  .hero-portrait { justify-self: start; order: -1; }
-  .hero-portrait img { width: 180px; }
-  .hero-portrait .kontakt-mini { text-align: left; }
+  .masthead { height: min(72svh, 560px); }
+  .mh-signatur { bottom: 1.6rem; }
 }
 
 /* ============================================================
@@ -259,17 +268,20 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
 
 /* cursorfolgender Bild-Reveal */
 .reveal {
-  position: fixed; top: 0; left: 0; width: clamp(220px, 24vw, 350px); aspect-ratio: 4/5;
-  border-radius: 3px; overflow: hidden; pointer-events: none; opacity: 0; z-index: 60;
+  position: fixed; top: 0; left: 0; width: clamp(260px, 30vw, 440px); aspect-ratio: 16/10;
+  border-radius: 4px; overflow: hidden; pointer-events: none; opacity: 0; z-index: 60;
   transform: translate(-50%,-50%) scale(0.9);
   transition: opacity 0.35s ease;
+  background-size: cover; background-position: center;
   box-shadow: 0 30px 60px -22px rgba(26,23,18,0.4);
 }
 .reveal.sichtbar { opacity: 1; }
-.reveal .platte { position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 1rem; color: #fff; font-weight: 600; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: lowercase; }
+.reveal .platte { position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 1rem;
+  color: #fff; font-weight: 700; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: lowercase;
+  background: linear-gradient(to top, rgba(0,0,0,0.45), transparent 55%); }
 @media (hover: none), (max-width: 760px) { .reveal { display: none; } }
 
-.index-zeile .mobil-bild { display: none; width: 100%; aspect-ratio: 16/9; margin-top: 0.7rem; border-radius: 3px; }
+.index-zeile .mobil-bild { display: none; width: 100%; aspect-ratio: 16/9; margin-top: 0.7rem; border-radius: 3px; background-size: cover; background-position: center; }
 @media (max-width: 760px) {
   .index-zeile a { grid-template-columns: 2rem 1fr; }
   .index-zeile .meta { grid-column: 2; text-align: left; margin-top: 0.25rem; }
@@ -316,7 +328,7 @@ footer .karo-ecke { position: absolute; right: 0; bottom: 0; width: 40%; height:
 footer .inhalt { position: relative; z-index: 1; }
 footer .kontakt-label { margin-bottom: 1.2rem; }
 footer .kontakt-gross { line-height: 0.95; }
-footer .kontakt-gross .vn { font-family: var(--script); font-weight: 400; font-size: clamp(2.4rem, 8vw, 6rem); display: block; }
+footer .kontakt-gross .vn { font-family: var(--lockup); font-style: italic; font-weight: 400; letter-spacing: -0.07em; font-size: clamp(2.4rem, 8vw, 6rem); display: block; }
 footer .kontakt-gross a { font-family: var(--grotesk); font-weight: 800; text-transform: lowercase; font-size: clamp(1.6rem, 5vw, 3.4rem); letter-spacing: -0.02em; transition: opacity 0.3s; }
 footer .kontakt-gross a:hover { opacity: 0.55; }
 footer .zeile { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.2rem; margin-top: clamp(3rem, 8vw, 5rem); padding-top: 1.6rem; border-top: 1px solid var(--haar); }
@@ -358,31 +370,21 @@ footer .rechtslinks a:hover { text-decoration: underline; }
   </nav>
 </header>
 
-<!-- ===================== HERO ===================== -->
+<!-- ===================== HERO / MASTHEAD ===================== -->
 <section class="hero" id="hero">
-  <div class="karo-ecke karo"></div>
+  <p class="eyebrow mono" data-de="Grafik- &amp; UI-Design · Köln" data-en="Graphic &amp; UI Design · Cologne">Grafik- &amp; UI-Design · Köln</p>
 
-  <div class="hero-grid">
-    <div class="hero-text">
-      <p class="eyebrow mono" data-de="Grafik- &amp; UI-Design · Köln" data-en="Graphic &amp; UI Design · Cologne">Grafik- &amp; UI-Design · Köln</p>
-      <h1 class="lockup">
-        <span class="vorname">annasthasia</span>
-        <span class="nachname">reichert.</span>
-      </h1>
-      <p class="tagline" data-de="Arbeiten, die für sich sprechen." data-en="Work that speaks for itself.">Arbeiten, die für sich sprechen.</p>
-      <div class="pill-reihe">
-        <span class="pill">UI/UX &amp; Graphic Design + Branding</span>
-      </div>
-    </div>
-
-    <div class="hero-portrait">
-      <img src="portrait.png" alt="Porträt von Annasthasia Reichert" />
-      <p class="kontakt-mini">
-        annasthasiareichert@gmx.de<br />
-        Köln · +49 172 540 11 88
-      </p>
-    </div>
+  <!-- die Schrift läuft hinter dem Porträt durch; beim Hover wandelt sie sich von Grotesk zu Serife -->
+  <div class="masthead" aria-label="Annasthasia Reichert — Portfolio">
+    <h1 class="visually-hidden">Annasthasia Reichert — Portfolio</h1>
+    <span class="mh-wort grotesk solid" aria-hidden="true">portfolio</span>
+    <span class="mh-wort serif solid" aria-hidden="true">portfolio</span>
+    <img class="mh-figur" src="portrait-frei.png" alt="Porträt von Annasthasia Reichert" />
+    <span class="mh-wort grotesk line" aria-hidden="true">portfolio</span>
+    <span class="mh-wort serif line" aria-hidden="true">portfolio</span>
   </div>
+
+  <p class="mh-signatur"><span class="vn">annasthasia</span> reichert.</p>
 
   <div class="scroll-hinweis mono">
     <span class="strich"></span>
@@ -399,102 +401,102 @@ footer .rechtslinks a:hover { text-decoration: underline; }
 
   <ul class="index-liste">
     <li class="index-zeile auftritt">
-      <a href="#" data-bild="linear-gradient(135deg,#2b3a4a,#7c94a6)">
+      <a href="#" data-soon data-bild="projekte/p1-ticketag.jpg">
         <span class="nr">01</span>
         <span class="titelblock">
           <span class="titel" data-de="ganzheitliches rebranding" data-en="full rebranding">ganzheitliches rebranding</span>
           <span class="kunde">Ticket AG</span>
         </span>
         <span class="meta">Branding, UI · 2025</span>
-        <span class="mobil-bild" style="background:linear-gradient(135deg,#2b3a4a,#7c94a6)"></span>
+        <span class="mobil-bild" style="background-image:url('projekte/p1-ticketag.jpg')"></span>
       </a>
     </li>
     <li class="index-zeile auftritt">
-      <a href="#" data-bild="linear-gradient(135deg,#3a2f28,#c08457)">
+      <a href="#" data-soon data-bild="projekte/p2-echory.jpg">
         <span class="nr">02</span>
         <span class="titelblock">
           <span class="titel" data-de="logo redesign" data-en="logo redesign">logo redesign</span>
           <span class="kunde">echory</span>
         </span>
         <span class="meta">Logo · 2024</span>
-        <span class="mobil-bild" style="background:linear-gradient(135deg,#3a2f28,#c08457)"></span>
+        <span class="mobil-bild" style="background-image:url('projekte/p2-echory.jpg')"></span>
       </a>
     </li>
     <li class="index-zeile auftritt">
-      <a href="#" data-bild="linear-gradient(135deg,#1c2b3a,#a9c6e0)">
+      <a href="#" data-soon data-bild="projekte/p3-eisbaeren.jpg">
         <span class="nr">03</span>
         <span class="titelblock">
           <span class="titel" data-de="logo redesign" data-en="logo redesign">logo redesign</span>
           <span class="kunde">Eisbären Berlin</span>
         </span>
         <span class="meta">Sport, Logo · 2024</span>
-        <span class="mobil-bild" style="background:linear-gradient(135deg,#1c2b3a,#a9c6e0)"></span>
+        <span class="mobil-bild" style="background-image:url('projekte/p3-eisbaeren.jpg')"></span>
       </a>
     </li>
     <li class="index-zeile auftritt">
-      <a href="#" data-bild="linear-gradient(135deg,#2e2e30,#b8b3ad)">
+      <a href="#" data-soon data-bild="projekte/p4-schuh3d.jpg">
         <span class="nr">04</span>
         <span class="titelblock">
           <span class="titel" data-de="3d-rendering" data-en="3d rendering">3d-rendering</span>
           <span class="kunde" data-de="Schuh-Modell" data-en="Shoe model">Schuh-Modell</span>
         </span>
         <span class="meta">3D, Produkt · 2024</span>
-        <span class="mobil-bild" style="background:linear-gradient(135deg,#2e2e30,#b8b3ad)"></span>
+        <span class="mobil-bild" style="background-image:url('projekte/p4-schuh3d.jpg')"></span>
       </a>
     </li>
     <li class="index-zeile auftritt">
-      <a href="#" data-bild="linear-gradient(135deg,#4a2f3a,#d98fae)">
+      <a href="#" data-soon data-bild="projekte/p5-content.jpg">
         <span class="nr">05</span>
         <span class="titelblock">
           <span class="titel" data-de="content creation" data-en="content creation">content creation</span>
           <span class="kunde" data-de="Verschiedene Brands" data-en="Various brands">Verschiedene Brands</span>
         </span>
         <span class="meta">Social · 2023–25</span>
-        <span class="mobil-bild" style="background:linear-gradient(135deg,#4a2f3a,#d98fae)"></span>
+        <span class="mobil-bild" style="background-image:url('projekte/p5-content.jpg')"></span>
       </a>
     </li>
     <li class="index-zeile auftritt">
-      <a href="#" data-bild="linear-gradient(135deg,#26332b,#8fae87)">
+      <a href="#" data-soon data-bild="projekte/p6-brandassets.jpg">
         <span class="nr">06</span>
         <span class="titelblock">
           <span class="titel" data-de="brand assets" data-en="brand assets">brand assets</span>
           <span class="kunde">ecostag / stagedates</span>
         </span>
         <span class="meta">Branding · 2024</span>
-        <span class="mobil-bild" style="background:linear-gradient(135deg,#26332b,#8fae87)"></span>
+        <span class="mobil-bild" style="background-image:url('projekte/p6-brandassets.jpg')"></span>
       </a>
     </li>
     <li class="index-zeile auftritt">
-      <a href="#" data-bild="linear-gradient(135deg,#33261c,#c99a6a)">
+      <a href="#" data-soon data-bild="projekte/p7-merch.jpg">
         <span class="nr">07</span>
         <span class="titelblock">
           <span class="titel" data-de="merchandise" data-en="merchandise">merchandise</span>
           <span class="kunde">stagedates</span>
         </span>
         <span class="meta">Merch, Print · 2024</span>
-        <span class="mobil-bild" style="background:linear-gradient(135deg,#33261c,#c99a6a)"></span>
+        <span class="mobil-bild" style="background-image:url('projekte/p7-merch.jpg')"></span>
       </a>
     </li>
     <li class="index-zeile auftritt">
-      <a href="#" data-bild="linear-gradient(135deg,#2a2440,#9a8fc9)">
+      <a href="#" data-soon data-bild="projekte/p8-private.jpg">
         <span class="nr">08</span>
         <span class="titelblock">
           <span class="titel" data-de="private projekte" data-en="personal work">private projekte</span>
           <span class="kunde" data-de="Auswahl" data-en="Selection">Auswahl</span>
         </span>
         <span class="meta" data-de="Illustration · laufend" data-en="Illustration · ongoing">Illustration · laufend</span>
-        <span class="mobil-bild" style="background:linear-gradient(135deg,#2a2440,#9a8fc9)"></span>
+        <span class="mobil-bild" style="background-image:url('projekte/p8-private.jpg')"></span>
       </a>
     </li>
     <li class="index-zeile auftritt">
-      <a href="#" data-bild="linear-gradient(135deg,#3a1f1c,#d97a5a)">
+      <a href="#" data-soon data-bild="projekte/p9-lampenwelt.jpg">
         <span class="nr">09</span>
         <span class="titelblock">
           <span class="titel" data-de="banner-gestaltung" data-en="banner design">banner-gestaltung</span>
           <span class="kunde">Lampenwelt</span>
         </span>
         <span class="meta" data-de="Ausblick · 2026" data-en="Preview · 2026">Ausblick · 2026</span>
-        <span class="mobil-bild" style="background:linear-gradient(135deg,#3a1f1c,#d97a5a)"></span>
+        <span class="mobil-bild" style="background-image:url('projekte/p9-lampenwelt.jpg')"></span>
       </a>
     </li>
   </ul>
@@ -540,6 +542,7 @@ footer .rechtslinks a:hover { text-decoration: underline; }
 </footer>
 
 <div class="reveal" id="reveal"><div class="platte" id="reveal-platte"></div></div>
+<div class="cursor-label" id="cursor-label"><span class="vn">annasthasia</span> reichert.</div>
 
 <script>
 const reduziert = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -580,7 +583,7 @@ if (!reduziert && window.matchMedia("(hover: hover)").matches) {
   document.querySelectorAll(".index-zeile a").forEach(a => {
     a.addEventListener("mouseenter", () => {
       aktiv = true;
-      reveal.style.background = a.dataset.bild;
+      reveal.style.backgroundImage = "url('" + a.dataset.bild + "')";
       platte.textContent = a.querySelector(".titel").textContent;
       reveal.classList.add("sichtbar");
     });
@@ -593,6 +596,25 @@ if (!reduziert && window.matchMedia("(hover: hover)").matches) {
     reveal.style.transform = `translate(${istX}px, ${istY}px) translate(-50%,-50%) scale(${aktiv ? 1 : 0.9}) rotate(${rot}deg)`;
     requestAnimationFrame(animiere);
   })();
+}
+
+/* 4b) Platzhalter-Links (Projekte, Lebenslauf) noch ohne Zielseite:
+       nicht nach oben springen lassen, bis die echten Seiten gebaut sind */
+document.querySelectorAll('a[data-soon], .nav-links a[href="#"]').forEach(a => {
+  a.addEventListener("click", (e) => e.preventDefault());
+});
+
+/* 4c) Cursor-Label über dem Masthead ("annasthasia reichert" am Cursor) */
+const masthead = document.querySelector(".masthead");
+const cursorLabel = document.getElementById("cursor-label");
+if (masthead && cursorLabel && !reduziert && window.matchMedia("(hover: hover)").matches) {
+  const setzePos = (e) => {
+    cursorLabel.style.left = e.clientX + "px";
+    cursorLabel.style.top  = e.clientY + "px";
+  };
+  masthead.addEventListener("mouseenter", (e) => { setzePos(e); cursorLabel.classList.add("sichtbar"); });
+  masthead.addEventListener("mousemove", setzePos, { passive: true });
+  masthead.addEventListener("mouseleave", () => cursorLabel.classList.remove("sichtbar"));
 }
 
 /* 5) Sprachumschalter DE/EN */
