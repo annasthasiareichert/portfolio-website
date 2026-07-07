@@ -1,0 +1,23 @@
+---
+// Kurzer „über mich"-Teaser. Die Texte stehen als Variablen hier oben,
+// damit die Kursiv-Auszeichnungen (<em>…</em>) sauber gesetzt werden können.
+const grossDe =
+  "Ich bin Annasthasia — Grafik- & UI-Designerin aus Köln. Ich gestalte <em>Identitäten</em>, die Haltung zeigen, und Interfaces, die sich <em>selbstverständlich</em> anfühlen.";
+const grossEn =
+  "I'm Annasthasia — a graphic & UI designer based in Cologne. I craft <em>identities</em> with a point of view and interfaces that feel <em>effortless</em>.";
+const rechtsDe =
+  "Von der ersten Analyse bis zum fertigen Design — sorgfältig, ruhig und mit Blick fürs Detail. Master in digitalen Technologien, Bachelor in Design & Projektmanagement.";
+const rechtsEn =
+  "From first analysis to finished design — careful, calm and attentive to detail. Master in digital technologies, bachelor in design & project management.";
+---
+
+<section class="ueber auftritt" id="ueber">
+  <div>
+    <h2 data-de="über mich." data-en="about.">über mich.</h2>
+    <p class="gross" data-de={grossDe} data-en={grossEn} set:html={grossDe}></p>
+  </div>
+  <div class="rechts">
+    <p data-de={rechtsDe} data-en={rechtsEn} set:html={rechtsDe}></p>
+    <a href="#" class="pfeil-link" data-de="Mehr über mich →" data-en="More about me →">Mehr über mich →</a>
+  </div>
+</section>

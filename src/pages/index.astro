@@ -1,0 +1,27 @@
+---
+// Startseite — setzt die einzelnen Abschnitte im Grundgerüst zusammen.
+import Grundgeruest from "../layouts/Grundgeruest.astro";
+import Kopf from "../components/Kopf.astro";
+import Hero from "../components/Hero.astro";
+import Arbeiten from "../components/Arbeiten.astro";
+import Zwischenspiel from "../components/Zwischenspiel.astro";
+import Ueber from "../components/Ueber.astro";
+import Fuss from "../components/Fuss.astro";
+---
+
+<Grundgeruest>
+  <Kopf />
+  <Hero />
+  <Arbeiten />
+  <Zwischenspiel />
+  <Ueber />
+  <Fuss />
+
+  <!-- Overlay-Elemente, die dem Cursor folgen (vom Skript gesteuert) -->
+  <div class="reveal" id="reveal"><div class="platte" id="reveal-platte"></div></div>
+  <div class="cursor-label" id="cursor-label"><span class="vn">annasthasia</span> reichert.</div>
+
+  <script>
+    import "../scripts/interaktionen.js";
+  </script>
+</Grundgeruest>

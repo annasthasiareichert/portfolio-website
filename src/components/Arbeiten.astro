@@ -1,0 +1,31 @@
+---
+// „ausgewählte arbeiten" — Editorial-Index mit cursorfolgendem Bild-Reveal.
+// Die Zeilen entstehen aus src/data/projekte.ts.
+import { projekte } from "../data/projekte";
+---
+
+<section class="arbeiten" id="arbeiten">
+  <div class="kopf auftritt">
+    <h2 data-de="ausgewählte arbeiten." data-en="selected work.">ausgewählte arbeiten.</h2>
+    <span class="mono" data-de={`0${projekte.length} Projekte · 2023–2026`} data-en={`0${projekte.length} Projects · 2023–2026`}>0{projekte.length} Projekte · 2023–2026</span>
+  </div>
+
+  <ul class="index-liste">
+    {projekte.map((p, i) => {
+      const nr = String(i + 1).padStart(2, "0");
+      return (
+        <li class="index-zeile auftritt">
+          <a href="#" data-soon data-bild={p.bild}>
+            <span class="nr">{nr}</span>
+            <span class="titelblock">
+              <span class="titel" data-de={p.titel.de} data-en={p.titel.en}>{p.titel.de}</span>
+              <span class="kunde" data-de={p.kunde.de} data-en={p.kunde.en}>{p.kunde.de}</span>
+            </span>
+            <span class="meta" data-de={p.meta.de} data-en={p.meta.en}>{p.meta.de}</span>
+            <span class="mobil-bild" style={`background-image:url('${p.bild}')`}></span>
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+</section>

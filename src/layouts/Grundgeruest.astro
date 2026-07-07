@@ -1,0 +1,43 @@
+---
+// Grund-Layout: HTML-Rahmen, Kopfdaten (<head>), Schriften und globales CSS.
+// Jede Seite wird in dieses Gerüst gesteckt (über <slot />).
+import "../styles/global.css";
+
+interface Props {
+  titel?: string;
+  beschreibung?: string;
+}
+
+const {
+  titel = "Annasthasia Reichert — Grafik- & UI-Design",
+  beschreibung = "Portfolio von Annasthasia Reichert — Grafik- & UI-Designerin aus Köln.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={beschreibung} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{titel}</title>
+
+    <!--
+      Schriften nach dem Vorbild des Lebenslaufs:
+      · Times New Roman = kursiver Vorname im Namens-Lockup (Systemschrift, kein Laden nötig)
+      · Archivo         = fette, kleingeschriebene Grotesk (Nachname, Überschriften, Titel)
+      · Newsreader      = ruhige Serifen-Kursiv für Eigennamen & editoriale Zeilen
+      Archivo & Newsreader sind lizenzfrei (Open Font License) und später selbst hostbar.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Newsreader:ital,opsz,wght@1,6..72,300..500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,334 @@
+/* ============================================================
+   DESIGN-TOKENS — abgeleitet aus deinem Lebenslauf
+   ============================================================ */
+:root {
+  /* Farben (aus dem CV gemessen) */
+  --papier:     #FCFBF9;   /* warmes Weiß, Hauptfläche (Body des CV)     */
+  --sand:       #D9D7D1;   /* Greige/Taupe-Band (Kopf-/Fußband des CV)   */
+  --sand-linie: #C7C4BB;   /* feine Karolinien in der Textur             */
+  --tinte:      #1A1712;   /* warmes Schwarz, Text                       */
+  --ton:        #8A857B;   /* gedämpftes Grau, Nebeninfos / Meta         */
+  --haar:       rgba(26,23,18,0.16); /* Haarlinien / Trenner             */
+
+  /* Typo */
+  --lockup: "Times New Roman", Times, serif;  /* Vorname im Namens-Lockup, kursiv gesetzt */
+  --grotesk:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --serif:  "Newsreader", Georgia, serif;
+
+  /* Rhythmus */
+  --rand: clamp(1.25rem, 5vw, 5rem);
+  --takt: clamp(6rem, 14vw, 12rem);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  background: var(--papier);
+  color: var(--tinte);
+  font-family: var(--grotesk);
+  font-size: clamp(1rem, 0.92rem + 0.35vw, 1.12rem);
+  line-height: 1.55;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+
+/* für Screenreader sichtbar, optisch verborgen */
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* Kleines Label-Motiv (wie die Meta-Zeilen im CV) */
+.mono {
+  font-family: var(--grotesk);
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ton);
+}
+
+/* Serifen-Kursiv für Eigennamen (wie deine Firmennamen im CV) */
+.kursiv { font-family: var(--serif); font-style: italic; font-weight: 400; }
+
+/* Outline-Pill — direkt aus deinem CV-Badge */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--grotesk);
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.5rem 1.1rem;
+  border: 1px solid var(--tinte);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* Karopapier-Textur (wie die Grid-Ecke im CV) */
+.karo {
+  background-image:
+    linear-gradient(var(--sand-linie) 1px, transparent 1px),
+    linear-gradient(90deg, var(--sand-linie) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* ============================================================
+   KOPFZEILE / NAVIGATION
+   ============================================================ */
+header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.3rem var(--rand);
+  mix-blend-mode: multiply;
+}
+header .wortmarke {
+  font-family: var(--grotesk);
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+}
+header .wortmarke .vn { font-family: var(--lockup); font-style: italic; font-weight: 400; font-size: 1.35rem; letter-spacing: -0.07em; }
+header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center; }
+.nav-links { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center; }
+.nav-links a {
+  position: relative; font-weight: 500; font-size: 0.95rem;
+  text-transform: lowercase;
+}
+.nav-links a::after {
+  content: ""; position: absolute; left: 0; bottom: -3px;
+  width: 100%; height: 1px; background: currentColor;
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.2,0.8,0.2,1);
+}
+.nav-links a:hover::after { transform: scaleX(1); }
+
+.sprache { display: inline-flex; border: 1px solid var(--haar); border-radius: 999px; overflow: hidden; }
+.sprache button {
+  font-family: var(--grotesk); font-weight: 600; font-size: 0.68rem; letter-spacing: 0.1em;
+  padding: 0.35rem 0.7rem; background: transparent; border: none; cursor: pointer; color: var(--ton);
+}
+.sprache button.aktiv { background: var(--tinte); color: var(--papier); }
+@media (max-width: 760px) { .nav-links a:not(.nav-arbeiten) { display: none; } }
+
+/* ============================================================
+   HERO — Masthead: Porträt verschmilzt mit der Riesen-Schrift
+   (nach dem Vorbild deiner Portfolio-Titelseite)
+   ============================================================ */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  background: var(--sand);
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 6.5rem var(--rand) 4rem;
+  overflow: hidden;
+  will-change: transform, opacity;
+}
+.hero .eyebrow { position: absolute; top: 6.5rem; left: var(--rand); z-index: 5; margin: 0; }
+
+/* Bühne, in der Schrift-Ebenen und Porträt deckungsgleich übereinanderliegen */
+.masthead {
+  position: relative; z-index: 2;
+  width: 100%;
+  height: min(80svh, 760px);
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* die Wort-Ebenen: alle zentriert an derselben Stelle (auf Torso-Höhe) */
+.mh-wort {
+  position: absolute; left: 50%; top: 57%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  text-transform: uppercase;
+  line-height: 0.8;
+  white-space: nowrap;
+  user-select: none; pointer-events: none;
+  transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.2,0.8,0.2,1);
+}
+/* Grundzustand: fette Grotesk (Archivo Black) */
+.mh-wort.grotesk { font-family: var(--grotesk); font-weight: 900;
+  font-size: clamp(2.6rem, 16.5vw, 14rem); letter-spacing: -0.02em; }
+/* Hover-Zielzustand: kursive Serife (Times italic) */
+.mh-wort.serif { font-family: var(--lockup); font-style: italic; font-weight: 400;
+  font-size: clamp(3.2rem, 20vw, 17rem); letter-spacing: -0.04em; opacity: 0; }
+/* gefüllt (hinter dem Porträt) vs. nur Kontur (vor dem Porträt) */
+.mh-wort.solid { color: #1b1b1b; z-index: 1; }
+.mh-wort.line  { color: transparent; -webkit-text-stroke: 1.6px #1b1b1b; z-index: 3; }
+
+/* das Porträt liegt zwischen gefüllter Ebene (hinten) und Kontur (vorne) */
+.mh-figur {
+  position: relative; z-index: 2;
+  height: 100%; width: auto; max-width: 94%;
+  object-fit: contain;
+  /* Unterkante (Pullover) weich ins Greige auslaufen lassen */
+  -webkit-mask-image: linear-gradient(#000 88%, transparent 99.5%);
+          mask-image: linear-gradient(#000 88%, transparent 99.5%);
+}
+
+/* HOVER: die Schrift wandelt sich von fetter Grotesk zu kursiver Serife */
+@media (hover: hover) and (min-width: 761px) {
+  .masthead:hover .mh-wort.grotesk { opacity: 0; transform: translate(-50%,-50%) scale(0.94); }
+  .masthead:hover .mh-wort.serif   { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+}
+
+/* kleine Signatur unten rechts (wie auf deiner Portfolio-Titelseite) */
+.mh-signatur {
+  position: absolute; right: var(--rand); bottom: 2.3rem; z-index: 5;
+  font-family: var(--grotesk); font-weight: 900; text-transform: lowercase;
+  font-size: clamp(1.05rem, 2.1vw, 1.6rem); letter-spacing: -0.02em; color: #1b1b1b;
+}
+.mh-signatur .vn {
+  font-family: var(--lockup); font-style: italic; font-weight: 400; letter-spacing: -0.07em;
+}
+
+/* Cursor-Label: erscheint beim Hover über den Masthead und folgt der Maus */
+.cursor-label {
+  position: fixed; top: 0; left: 0; z-index: 70;
+  padding: 0.55rem 1rem; border-radius: 999px;
+  background: var(--tinte); color: var(--papier);
+  font-family: var(--grotesk); font-weight: 700; text-transform: lowercase;
+  font-size: 0.85rem; letter-spacing: 0.01em; white-space: nowrap;
+  transform: translate(14px, 16px) scale(0.85);
+  opacity: 0; pointer-events: none;
+  box-shadow: 0 12px 30px -12px rgba(26,23,18,0.55);
+  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.2,0.8,0.2,1);
+}
+.cursor-label.sichtbar { opacity: 1; transform: translate(16px, 18px) scale(1); }
+.cursor-label .vn { font-family: var(--lockup); font-style: italic; font-weight: 400; letter-spacing: -0.04em; }
+@media (hover: none), (max-width: 760px) { .cursor-label { display: none; } }
+
+.scroll-hinweis {
+  position: absolute; bottom: 1.8rem; left: var(--rand); z-index: 3;
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.scroll-hinweis .strich {
+  width: 44px; height: 1px; background: var(--tinte); transform-origin: left;
+  animation: pulsieren 2.6s ease-in-out infinite;
+}
+@keyframes pulsieren { 0%,100%{ transform: scaleX(0.35);} 50%{ transform: scaleX(1);} }
+
+@media (max-width: 760px) {
+  .masthead { height: min(72svh, 560px); }
+  .mh-signatur { bottom: 1.6rem; }
+}
+
+/* ============================================================
+   ARBEITEN — Editorial-Index mit Hover-Bild-Reveal
+   ============================================================ */
+.arbeiten { position: relative; padding: var(--takt) 0; background: var(--papier); }
+.arbeiten .kopf {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 0 var(--rand) clamp(2rem,5vw,3.5rem);
+}
+.arbeiten .kopf h2 {
+  font-family: var(--grotesk); font-weight: 800; font-size: clamp(1.4rem, 3.5vw, 2.4rem);
+  letter-spacing: -0.02em; text-transform: lowercase;
+}
+.index-liste { list-style: none; }
+.index-zeile { border-top: 1px solid var(--haar); }
+.index-zeile:last-child { border-bottom: 1px solid var(--haar); }
+.index-zeile a {
+  display: grid; grid-template-columns: 3.2rem 1fr auto; align-items: baseline; gap: 1rem;
+  padding: clamp(1rem, 2.4vw, 1.7rem) var(--rand);
+  transition: background 0.5s ease;
+}
+.index-zeile .nr { font-weight: 600; font-size: 0.78rem; color: var(--ton); }
+.index-zeile .titelblock { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem 0.9rem; }
+.index-zeile .titel {
+  font-family: var(--grotesk); font-weight: 800; font-size: clamp(1.5rem, 4.4vw, 3.3rem);
+  line-height: 1.02; letter-spacing: -0.02em; text-transform: lowercase;
+  transition: transform 0.5s cubic-bezier(0.2,0.8,0.2,1), opacity 0.4s;
+}
+.index-zeile .kunde { font-family: var(--serif); font-style: italic; font-size: clamp(0.95rem,1.6vw,1.25rem); color: var(--ton); }
+.index-zeile .meta { font-weight: 500; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ton); text-align: right; white-space: nowrap; }
+
+@media (hover: hover) and (min-width: 761px) {
+  .index-liste:hover .index-zeile .titel { opacity: 0.32; }
+  .index-zeile:hover .titel { opacity: 1; transform: translateX(1.4rem); }
+  .index-zeile:hover .nr { color: var(--tinte); }
+}
+
+/* cursorfolgender Bild-Reveal */
+.reveal {
+  position: fixed; top: 0; left: 0; width: clamp(260px, 30vw, 440px); aspect-ratio: 16/10;
+  border-radius: 4px; overflow: hidden; pointer-events: none; opacity: 0; z-index: 60;
+  transform: translate(-50%,-50%) scale(0.9);
+  transition: opacity 0.35s ease;
+  background-size: cover; background-position: center;
+  box-shadow: 0 30px 60px -22px rgba(26,23,18,0.4);
+}
+.reveal.sichtbar { opacity: 1; }
+.reveal .platte { position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 1rem;
+  color: #fff; font-weight: 700; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: lowercase;
+  background: linear-gradient(to top, rgba(0,0,0,0.45), transparent 55%); }
+@media (hover: none), (max-width: 760px) { .reveal { display: none; } }
+
+.index-zeile .mobil-bild { display: none; width: 100%; aspect-ratio: 16/9; margin-top: 0.7rem; border-radius: 3px; background-size: cover; background-position: center; }
+@media (max-width: 760px) {
+  .index-zeile a { grid-template-columns: 2rem 1fr; }
+  .index-zeile .meta { grid-column: 2; text-align: left; margin-top: 0.25rem; }
+  .index-zeile .mobil-bild { display: block; grid-column: 1 / -1; }
+}
+
+/* ============================================================
+   ZWISCHENSPIEL — Kernaussage mit Parallax
+   ============================================================ */
+.zwischenspiel {
+  position: relative; padding: var(--takt) var(--rand); overflow: hidden;
+  background: var(--sand); display: flex; justify-content: center; text-align: center;
+}
+.zwischenspiel .karo-ecke { position: absolute; left: 0; top: 0; width: 38%; height: 60%;
+  -webkit-mask-image: linear-gradient(135deg, #000, transparent 65%); mask-image: linear-gradient(135deg, #000, transparent 65%); opacity: 0.7; }
+.zwischenspiel .aussage {
+  position: relative; z-index: 1;
+  font-family: var(--serif); font-style: italic; font-weight: 300;
+  font-size: clamp(1.9rem, 6vw, 4.8rem); line-height: 1.08; max-width: 18ch; letter-spacing: -0.01em;
+}
+.zwischenspiel .drift {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); z-index: 0;
+  font-family: var(--grotesk); font-weight: 900; text-transform: lowercase; letter-spacing: -0.02em;
+  color: var(--tinte); opacity: 0.05; font-size: clamp(5rem, 20vw, 18rem); white-space: nowrap; will-change: transform;
+}
+
+/* ============================================================
+   ÜBER-TEASER
+   ============================================================ */
+.ueber { padding: var(--takt) var(--rand); display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 6vw, 6rem); align-items: end; }
+.ueber h2 { font-family: var(--grotesk); font-weight: 800; text-transform: lowercase; font-size: clamp(1.4rem,3.5vw,2.4rem); letter-spacing: -0.02em; margin-bottom: 1.4rem; }
+.ueber .gross { font-family: var(--serif); font-weight: 300; font-size: clamp(1.5rem, 3.2vw, 2.6rem); line-height: 1.28; }
+.ueber .gross em { font-style: italic; }
+.ueber .rechts { color: var(--ton); max-width: 40ch; }
+.pfeil-link { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.4rem; font-weight: 600; color: var(--tinte); border-bottom: 1px solid var(--tinte); padding-bottom: 2px; }
+@media (max-width: 760px) { .ueber { grid-template-columns: 1fr; } }
+
+/* ============================================================
+   FUSSZEILE / KONTAKT
+   ============================================================ */
+footer { position: relative; background: var(--sand); color: var(--tinte); padding: var(--takt) var(--rand) 3rem; overflow: hidden; }
+footer .karo-ecke { position: absolute; right: 0; bottom: 0; width: 40%; height: 70%;
+  -webkit-mask-image: linear-gradient(315deg, #000, transparent 60%); mask-image: linear-gradient(315deg, #000, transparent 60%); opacity: 0.8; }
+footer .inhalt { position: relative; z-index: 1; }
+footer .kontakt-label { margin-bottom: 1.2rem; }
+footer .kontakt-gross { line-height: 0.95; }
+footer .kontakt-gross .vn { font-family: var(--lockup); font-style: italic; font-weight: 400; letter-spacing: -0.07em; font-size: clamp(2.4rem, 8vw, 6rem); display: block; }
+footer .kontakt-gross a { font-family: var(--grotesk); font-weight: 800; text-transform: lowercase; font-size: clamp(1.6rem, 5vw, 3.4rem); letter-spacing: -0.02em; transition: opacity 0.3s; }
+footer .kontakt-gross a:hover { opacity: 0.55; }
+footer .zeile { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.2rem; margin-top: clamp(3rem, 8vw, 5rem); padding-top: 1.6rem; border-top: 1px solid var(--haar); }
+footer .rechtslinks { display: flex; gap: 1.4rem; }
+footer .rechtslinks a:hover { text-decoration: underline; }
+
+/* ============================================================
+   SCROLL-AUFTRITT
+   ============================================================ */
+.auftritt { opacity: 0; transform: translateY(26px); transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.2,0.8,0.2,1); }
+.auftritt.in-view { opacity: 1; transform: none; }
+
+/* ============================================================
+   BEWEGUNG RESPEKTIEREN
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .auftritt { opacity: 1; transform: none; }
+  .fragment, .drift, .reveal { display: none; }
+}
