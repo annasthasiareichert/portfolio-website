@@ -1,9 +1,12 @@
 ---
 // Projekt-Detailseite — eine eigene Unterseite je Projekt (/arbeiten/<slug>).
 // Astro erzeugt aus src/data/projekte.ts automatisch für jedes Projekt eine Seite.
+// Ist `fall` gesetzt, wird eine reiche Fallstudie aus Blöcken gerendert (Fallblock.astro),
+// sonst greift die einfache Galerie (Intro + Vorschaubild).
 import Grundgeruest from "../../layouts/Grundgeruest.astro";
 import Kopf from "../../components/Kopf.astro";
 import Fuss from "../../components/Fuss.astro";
+import Fallblock from "../../components/Fallblock.astro";
 import { projekte } from "../../data/projekte";
 
 export function getStaticPaths() {
@@ -19,7 +22,8 @@ export function getStaticPaths() {
 
 const { projekt, index, naechstes } = Astro.props;
 const nr = String(index + 1).padStart(2, "0");
-// Galerie: zusätzliche Bilder, sonst nur das Vorschaubild
+const hatFall = !!(projekt.fall && projekt.fall.length);
+// Galerie (einfache Variante): zusätzliche Bilder, sonst nur das Vorschaubild
 const galerie = projekt.bilder && projekt.bilder.length ? projekt.bilder : [projekt.bild];
 ---
 
@@ -43,29 +47,43 @@ const galerie = projekt.bilder && projekt.bilder.length ? projekt.bilder : [proj
       )}
     </section>
 
-    <div class="projekt-inhalt">
-      {projekt.beschreibung && (
-        <p class="projekt-intro" data-de={projekt.beschreibung.de} data-en={projekt.beschreibung.en}>{projekt.beschreibung.de}</p>
-      )}
+    {hatFall ? (
+      <div class="fall-inhalt">
+        {projekt.fall!.map((block) => <Fallblock block={block} />)}
 
-      <div class="projekt-galerie">
-        {galerie.map((b, i) => (
-          <figure class="projekt-figur">
-            <img src={b} alt={`${projekt.titel.de} – ${projekt.kunde.de}`} loading={i === 0 ? "eager" : "lazy"} decoding="async" />
-          </figure>
-        ))}
+        <!-- Weiter blättern -->
+        <nav class="projekt-nav">
+          <a class="pfeil-link projekt-zurueck-fuss" href="/#arbeiten" data-de="← alle Arbeiten" data-en="← all work">← alle Arbeiten</a>
+          <a class="naechstes-projekt" href={`/arbeiten/${naechstes.slug}`}
+             data-de={`nächstes Projekt: ${naechstes.titel.de} →`}
+             data-en={`next project: ${naechstes.titel.en} →`}>nächstes Projekt: {naechstes.titel.de} →</a>
+        </nav>
       </div>
+    ) : (
+      <div class="projekt-inhalt">
+        {projekt.beschreibung && (
+          <p class="projekt-intro" data-de={projekt.beschreibung.de} data-en={projekt.beschreibung.en}>{projekt.beschreibung.de}</p>
+        )}
 
-      <p class="projekt-platzhalter mono" data-de="Weitere Bilder & Details folgen." data-en="More visuals & details coming soon.">Weitere Bilder & Details folgen.</p>
+        <div class="projekt-galerie">
+          {galerie.map((b, i) => (
+            <figure class="projekt-figur">
+              <img src={b} alt={`${projekt.titel.de} – ${projekt.kunde.de}`} loading={i === 0 ? "eager" : "lazy"} decoding="async" />
+            </figure>
+          ))}
+        </div>
 
-      <!-- Weiter blättern -->
-      <nav class="projekt-nav">
-        <a class="pfeil-link projekt-zurueck-fuss" href="/#arbeiten" data-de="← alle Arbeiten" data-en="← all work">← alle Arbeiten</a>
-        <a class="naechstes-projekt" href={`/arbeiten/${naechstes.slug}`}
-           data-de={`nächstes Projekt: ${naechstes.titel.de} →`}
-           data-en={`next project: ${naechstes.titel.en} →`}>nächstes Projekt: {naechstes.titel.de} →</a>
-      </nav>
-    </div>
+        <p class="projekt-platzhalter mono" data-de="Weitere Bilder & Details folgen." data-en="More visuals & details coming soon.">Weitere Bilder & Details folgen.</p>
+
+        <!-- Weiter blättern -->
+        <nav class="projekt-nav">
+          <a class="pfeil-link projekt-zurueck-fuss" href="/#arbeiten" data-de="← alle Arbeiten" data-en="← all work">← alle Arbeiten</a>
+          <a class="naechstes-projekt" href={`/arbeiten/${naechstes.slug}`}
+             data-de={`nächstes Projekt: ${naechstes.titel.de} →`}
+             data-en={`next project: ${naechstes.titel.en} →`}>nächstes Projekt: {naechstes.titel.de} →</a>
+        </nav>
+      </div>
+    )}
   </main>
 
   <Fuss />

@@ -362,7 +362,7 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
   border-radius: 4px; overflow: hidden; pointer-events: none; opacity: 0; z-index: 60;
   transform: translate(-50%,-50%) scale(0.9);
   transition: opacity 0.35s ease;
-  background-size: cover; background-position: center;
+  background-size: cover; background-position: center; background-color: var(--sand);
   box-shadow: 0 30px 60px -22px rgba(26,23,18,0.4);
 }
 .reveal.sichtbar { opacity: 1; }
@@ -371,7 +371,7 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
   background: linear-gradient(to top, rgba(0,0,0,0.45), transparent 55%); }
 @media (hover: none), (max-width: 760px) { .reveal { display: none; } }
 
-.index-zeile .mobil-bild { display: none; width: 100%; aspect-ratio: 16/9; margin-top: 0.7rem; border-radius: 3px; background-size: cover; background-position: center; }
+.index-zeile .mobil-bild { display: none; width: 100%; aspect-ratio: 16/9; margin-top: 0.7rem; border-radius: 3px; background-size: cover; background-position: center; background-color: var(--sand); }
 @media (max-width: 760px) {
   .index-zeile a { grid-template-columns: 2rem 1fr; }
   .index-zeile .meta { grid-column: 2; text-align: left; margin-top: 0.25rem; }
@@ -628,6 +628,112 @@ footer .rechtslinks a:hover { text-decoration: underline; }
 @media (max-width: 640px) {
   .projekt-nav { flex-direction: column; align-items: flex-start; }
   .naechstes-projekt { margin-left: 0; text-align: left; }
+}
+
+/* ============================================================
+   PROJEKT-FALLSTUDIEN — reiche Detailseiten aus Blöcken (fall[] in projekte.ts)
+   Bausteine: Bild-Bühne · Bilderpaar · Textabschnitt · Prozess
+   ============================================================ */
+.fall-inhalt {
+  max-width: 1160px; margin-inline: auto;
+  padding: clamp(2.5rem, 6vw, 4.5rem) var(--rand) var(--takt);
+}
+.fall-abschnitt { margin-top: clamp(3.5rem, 9vw, 7rem); }
+.fall-abschnitt:first-child { margin-top: 0; }
+
+/* Abschnitts-Label mit vorangestellter Haarlinie (editorial) */
+.fall-label {
+  display: flex; align-items: center; gap: 0.9rem;
+  font-family: var(--grotesk); font-weight: 600; font-size: 0.72rem;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--ton);
+  margin-bottom: clamp(1.1rem, 2.6vw, 1.9rem);
+}
+.fall-label::before {
+  content: ""; flex: 0 0 auto; width: clamp(1.4rem, 4vw, 2.6rem); height: 1px;
+  background: var(--tinte); opacity: 0.55;
+}
+
+/* Textabschnitt — erste Zeile als große Serifen-Kursiv-Aussage (lead) */
+.fall-lead {
+  font-family: var(--serif); font-style: italic; font-weight: 300;
+  font-size: clamp(1.3rem, 2.7vw, 1.9rem); line-height: 1.4; letter-spacing: -0.01em;
+  color: var(--tinte); max-width: 42ch;
+}
+.fall-absatz { max-width: 62ch; margin-top: 1rem; color: var(--tinte); }
+.fall-lead + .fall-absatz { margin-top: 1.4rem; }
+
+/* Prozess — nummerierte Schritte (Hover: Nummer färbt sich, Titel rückt vor) */
+.fall-prozess-liste { list-style: none; }
+.fall-schritt {
+  display: grid; grid-template-columns: clamp(3rem, 7vw, 5rem) 1fr; gap: clamp(1rem, 3vw, 2.4rem);
+  align-items: start; padding: clamp(1.4rem, 3.2vw, 2.1rem) 0;
+  border-top: 1px solid var(--haar);
+}
+.fall-prozess-liste .fall-schritt:last-child { border-bottom: 1px solid var(--haar); }
+.fall-schritt-nr {
+  font-family: var(--grotesk); font-weight: 800; font-size: clamp(1.5rem, 3.6vw, 2.4rem);
+  line-height: 1; letter-spacing: -0.02em; color: var(--sand-linie);
+  transition: color 0.4s ease;
+}
+.fall-schritt-titel {
+  font-family: var(--grotesk); font-weight: 800; font-size: clamp(1.05rem, 2vw, 1.35rem);
+  letter-spacing: -0.01em; line-height: 1.18;
+  transition: transform 0.45s cubic-bezier(0.2,0.8,0.2,1);
+}
+.fall-schritt-text { margin-top: 0.5rem; max-width: 56ch; color: var(--ton); }
+@media (hover: hover) and (min-width: 761px) {
+  .fall-schritt:hover .fall-schritt-nr { color: var(--tinte); }
+  .fall-schritt:hover .fall-schritt-titel { transform: translateX(0.5rem); }
+}
+
+/* Bild-Bühnen — Bild sitzt gerahmt auf papier/sand/dunkel */
+.fall-figur { margin: 0; }
+.fall-buehne {
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 14px; overflow: hidden;
+  padding: clamp(1.5rem, 5vw, 4rem);
+  transition: transform 0.55s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.55s ease;
+}
+.fall-buehne[data-buehne="papier"] { background: var(--papier); border: 1px solid var(--haar); }
+.fall-buehne[data-buehne="sand"]   { background: var(--sand); }
+.fall-buehne[data-buehne="dunkel"] { background: var(--tinte); padding: clamp(0.9rem, 2.5vw, 1.8rem); }
+.fall-buehne img {
+  display: block; width: 100%; height: auto; max-width: var(--bild-max, 100%);
+  border-radius: 6px;
+}
+
+.fall-unterschrift {
+  margin-top: 0.95rem;
+  font-family: var(--grotesk); font-weight: 600; font-size: 0.74rem;
+  letter-spacing: 0.05em; color: var(--ton);
+}
+
+/* Hover: Bühne hebt sich sanft, Bild zoomt minimal → wirkt hochwertig */
+@media (hover: hover) and (min-width: 761px) {
+  .fall-buehne img { transition: transform 0.6s cubic-bezier(0.2,0.8,0.2,1); }
+  .fall-buehne:hover { transform: translateY(-6px); box-shadow: 0 42px 72px -34px rgba(26,23,18,0.5); }
+  .fall-buehne:hover img { transform: scale(1.025); }
+}
+
+/* Bilderpaar (z. B. Mobile + App-Icon) auf einer Bühne */
+.fall-paar .paar-inhalt {
+  display: flex; align-items: center; justify-content: center;
+  gap: clamp(1.25rem, 3vw, 2.25rem); flex-wrap: wrap; min-width: 0;
+}
+.paar-figur {
+  margin: 0; display: flex; flex-direction: column; align-items: center; gap: 0.9rem;
+  width: min(var(--bild-max, 100%), 100%); max-width: 100%; min-width: 0;
+}
+.paar-figur img { display: block; width: 100%; height: auto; }
+.paar-cap {
+  font-family: var(--grotesk); font-weight: 600; font-size: 0.66rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--ton);
+}
+
+@media (max-width: 760px) {
+  .fall-buehne { padding: clamp(1.1rem, 5vw, 2rem); border-radius: 10px; }
+  .fall-buehne[data-buehne="dunkel"] { padding: clamp(0.7rem, 3vw, 1.2rem); }
+  .fall-schritt { grid-template-columns: 2.6rem 1fr; gap: 0.9rem; }
 }
 
 /* ============================================================

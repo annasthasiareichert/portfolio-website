@@ -1,0 +1,84 @@
+---
+// Ein Abschnitt einer Projekt-Fallstudie. Rendert je nach `art`:
+//  · "bild"    – ein Bild auf einer Bühne (papier/sand/dunkel), optional mit Label & Beschriftung
+//  · "paar"    – zwei Bilder nebeneinander auf einer Bühne (z. B. Mobile + App-Icon)
+//  · "text"    – Textabschnitt; erste Zeile als große Serifen-Kursiv-Aussage, wenn `lead`
+//  · "prozess" – nummerierte Schritte (Titel + Text)
+// Alle sichtbaren Texte tragen data-de/data-en für die Sprachumschaltung (interaktionen.js).
+import type { FallBlock } from "../data/projekte";
+const { block } = Astro.props as { block: FallBlock };
+---
+
+{block.art === "bild" && (
+  <section class="fall-abschnitt auftritt">
+    {block.label && (
+      <p class="fall-label" data-de={block.label.de} data-en={block.label.en}>{block.label.de}</p>
+    )}
+    <figure class="fall-figur">
+      <div class="fall-buehne" data-buehne={block.buehne ?? "papier"}>
+        <img
+          src={block.bild}
+          alt={block.alt.de}
+          loading="lazy"
+          decoding="async"
+          style={block.max ? `--bild-max:${block.max}` : undefined}
+        />
+      </div>
+      {block.unterschrift && (
+        <figcaption class="fall-unterschrift" data-de={block.unterschrift.de} data-en={block.unterschrift.en}>{block.unterschrift.de}</figcaption>
+      )}
+    </figure>
+  </section>
+)}
+
+{block.art === "paar" && (
+  <section class="fall-abschnitt auftritt">
+    {block.label && (
+      <p class="fall-label" data-de={block.label.de} data-en={block.label.en}>{block.label.de}</p>
+    )}
+    <figure class="fall-figur">
+      <div class="fall-buehne fall-paar" data-buehne={block.buehne ?? "sand"}>
+        <div class="paar-inhalt">
+          {block.bilder.map((b) => (
+            <span class="paar-figur" style={b.max ? `--bild-max:${b.max}` : undefined}>
+              <img src={b.bild} alt={b.alt.de} loading="lazy" decoding="async" />
+              {b.unterschrift && (
+                <span class="paar-cap" data-de={b.unterschrift.de} data-en={b.unterschrift.en}>{b.unterschrift.de}</span>
+              )}
+            </span>
+          ))}
+        </div>
+      </div>
+    </figure>
+  </section>
+)}
+
+{block.art === "text" && (
+  <section class="fall-abschnitt fall-text auftritt">
+    {block.label && (
+      <p class="fall-label" data-de={block.label.de} data-en={block.label.en}>{block.label.de}</p>
+    )}
+    {block.absaetze.map((a, i) => (
+      <p class={block.lead && i === 0 ? "fall-lead" : "fall-absatz"} data-de={a.de} data-en={a.en}>{a.de}</p>
+    ))}
+  </section>
+)}
+
+{block.art === "prozess" && (
+  <section class="fall-abschnitt auftritt">
+    {block.label && (
+      <p class="fall-label" data-de={block.label.de} data-en={block.label.en}>{block.label.de}</p>
+    )}
+    <ol class="fall-prozess-liste">
+      {block.schritte.map((s, i) => (
+        <li class="fall-schritt">
+          <span class="fall-schritt-nr" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+          <div class="fall-schritt-text-block">
+            <h3 class="fall-schritt-titel" data-de={s.titel.de} data-en={s.titel.en}>{s.titel.de}</h3>
+            <p class="fall-schritt-text" data-de={s.text.de} data-en={s.text.en}>{s.text.de}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+)}
