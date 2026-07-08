@@ -1,0 +1,76 @@
+---
+// Projekt-Detailseite — eine eigene Unterseite je Projekt (/arbeiten/<slug>).
+// Astro erzeugt aus src/data/projekte.ts automatisch für jedes Projekt eine Seite.
+import Grundgeruest from "../../layouts/Grundgeruest.astro";
+import Kopf from "../../components/Kopf.astro";
+import Fuss from "../../components/Fuss.astro";
+import { projekte } from "../../data/projekte";
+
+export function getStaticPaths() {
+  return projekte.map((p, i) => ({
+    params: { slug: p.slug },
+    props: {
+      projekt: p,
+      index: i,
+      naechstes: projekte[(i + 1) % projekte.length],
+    },
+  }));
+}
+
+const { projekt, index, naechstes } = Astro.props;
+const nr = String(index + 1).padStart(2, "0");
+// Galerie: zusätzliche Bilder, sonst nur das Vorschaubild
+const galerie = projekt.bilder && projekt.bilder.length ? projekt.bilder : [projekt.bild];
+---
+
+<Grundgeruest
+  titel={`${projekt.titel.de} — ${projekt.kunde.de} · Annasthasia Reichert`}
+  beschreibung={projekt.beschreibung ? projekt.beschreibung.de : `${projekt.titel.de} für ${projekt.kunde.de}.`}
+>
+  <Kopf />
+
+  <main class="unterseite projektseite">
+    <!-- Sand-Kopfband mit Titel, Kunde und Leistungen -->
+    <section class="seitenkopf projekt-kopf">
+      <a class="projekt-zurueck mono" href="/#arbeiten" data-de="← zurück zu den Arbeiten" data-en="← back to work">← zurück zu den Arbeiten</a>
+      <p class="mono kopfband-label" data-de={`${nr} · ${projekt.meta.de}`} data-en={`${nr} · ${projekt.meta.en}`}>{nr} · {projekt.meta.de}</p>
+      <h1 class="seitentitel" data-de={projekt.titel.de} data-en={projekt.titel.en}>{projekt.titel.de}</h1>
+      <p class="seitenkopf-unter"><span class="kursiv" data-de={projekt.kunde.de} data-en={projekt.kunde.en}>{projekt.kunde.de}</span></p>
+      {projekt.leistungen && (
+        <ul class="pill-liste projekt-leistungen">
+          {projekt.leistungen.map((l) => <li class="pill">{l}</li>)}
+        </ul>
+      )}
+    </section>
+
+    <div class="projekt-inhalt">
+      {projekt.beschreibung && (
+        <p class="projekt-intro" data-de={projekt.beschreibung.de} data-en={projekt.beschreibung.en}>{projekt.beschreibung.de}</p>
+      )}
+
+      <div class="projekt-galerie">
+        {galerie.map((b, i) => (
+          <figure class="projekt-figur">
+            <img src={b} alt={`${projekt.titel.de} – ${projekt.kunde.de}`} loading={i === 0 ? "eager" : "lazy"} decoding="async" />
+          </figure>
+        ))}
+      </div>
+
+      <p class="projekt-platzhalter mono" data-de="Weitere Bilder & Details folgen." data-en="More visuals & details coming soon.">Weitere Bilder & Details folgen.</p>
+
+      <!-- Weiter blättern -->
+      <nav class="projekt-nav">
+        <a class="pfeil-link projekt-zurueck-fuss" href="/#arbeiten" data-de="← alle Arbeiten" data-en="← all work">← alle Arbeiten</a>
+        <a class="naechstes-projekt" href={`/arbeiten/${naechstes.slug}`}
+           data-de={`nächstes Projekt: ${naechstes.titel.de} →`}
+           data-en={`next project: ${naechstes.titel.en} →`}>nächstes Projekt: {naechstes.titel.de} →</a>
+      </nav>
+    </div>
+  </main>
+
+  <Fuss />
+
+  <script>
+    import "../../scripts/interaktionen.js";
+  </script>
+</Grundgeruest>

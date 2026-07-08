@@ -15,7 +15,7 @@ import { projekte } from "../data/projekte";
       const nr = String(i + 1).padStart(2, "0");
       return (
         <li class="index-zeile auftritt">
-          <a href="#" data-soon data-bild={p.bild}>
+          <a href={`/arbeiten/${p.slug}`} data-bild={p.bild}>
             <span class="nr">{nr}</span>
             <span class="titelblock">
               <span class="titel" data-de={p.titel.de} data-en={p.titel.en}>{p.titel.de}</span>

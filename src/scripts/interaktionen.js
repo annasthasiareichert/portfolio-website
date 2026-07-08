@@ -69,8 +69,8 @@ if (!reduziert && reveal && platte && window.matchMedia("(hover: hover)").matche
   })();
 }
 
-/* 4b) Platzhalter-Links (Projekte, Lebenslauf) noch ohne Zielseite:
-       nicht nach oben springen lassen, bis die echten Seiten gebaut sind */
+/* 4b) Sicherheitsnetz für evtl. verbliebene Platzhalter-Links (data-soon oder href="#"):
+       nicht nach oben springen lassen. Projekte & Lebenslauf sind inzwischen echte Seiten. */
 document.querySelectorAll('a[data-soon], .nav-links a[href="#"]').forEach((a) => {
   a.addEventListener("click", (e) => e.preventDefault());
 });

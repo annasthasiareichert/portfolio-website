@@ -81,7 +81,17 @@ header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; justify-content: space-between; align-items: center;
   padding: 1.3rem var(--rand);
-  mix-blend-mode: multiply;
+}
+/* Frosted-Glas-Streifen hinter Wortmarke & Navigation: hebt das Menü über
+   scrollenden Inhalten ab, ist aber nicht solid — Blur + weiches Ausblenden nach unten. */
+header::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: color-mix(in srgb, var(--papier) 65%, transparent);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+          backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-mask-image: linear-gradient(to bottom, #000 56%, transparent);
+          mask-image: linear-gradient(to bottom, #000 56%, transparent);
+  pointer-events: none;
 }
 header .wortmarke {
   font-family: var(--grotesk);
@@ -402,8 +412,8 @@ footer .karo-ecke { position: absolute; right: 0; bottom: 0; width: 40%; height:
 footer .inhalt { position: relative; z-index: 1; }
 footer .kontakt-label { margin-bottom: 1.2rem; }
 footer .kontakt-gross { line-height: 0.95; }
-footer .kontakt-gross .vn { font-family: var(--lockup); font-style: italic; font-weight: 400; letter-spacing: -0.07em; font-size: clamp(2.4rem, 8vw, 6rem); display: block; }
-footer .kontakt-gross a { font-family: var(--grotesk); font-weight: 800; text-transform: lowercase; font-size: clamp(1.6rem, 5vw, 3.4rem); letter-spacing: -0.02em; transition: opacity 0.3s; }
+footer .kontakt-gross .vn { font-family: var(--lockup); font-style: italic; font-weight: 400; letter-spacing: -0.05em; font-size: clamp(1.5rem, 3.6vw, 2.5rem); display: block; margin-bottom: 0.35rem; }
+footer .kontakt-gross a { font-family: var(--grotesk); font-weight: 800; text-transform: lowercase; font-size: clamp(1.3rem, 5vw, 3.4rem); letter-spacing: -0.02em; transition: opacity 0.3s; overflow-wrap: anywhere; }
 footer .kontakt-gross a:hover { opacity: 0.55; }
 footer .zeile { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.2rem; margin-top: clamp(3rem, 8vw, 5rem); padding-top: 1.6rem; border-top: 1px solid var(--haar); }
 footer .rechtslinks { display: flex; gap: 1.4rem; }
@@ -431,6 +441,10 @@ footer .rechtslinks a:hover { text-decoration: underline; }
   font-family: var(--grotesk); font-weight: 900; text-transform: lowercase;
   font-size: clamp(3.2rem, 15vw, 11rem); line-height: 0.86; letter-spacing: -0.03em;
   color: #1b1b1b;
+}
+/* Lebenslauf ist eine echte Inhaltsseite → Titel bewusst kompakt (nahm zu viel Raum ein) */
+.lebenslauf .seitentitel {
+  font-size: clamp(2.4rem, 6.5vw, 4rem); line-height: 0.92; letter-spacing: -0.02em;
 }
 /* Rechtsseiten: Titel sind rein zweckdienlich → deutlich kleiner + kompakteres Band */
 .rechtsseite .seitenkopf {
@@ -557,6 +571,58 @@ footer .rechtslinks a:hover { text-decoration: underline; }
   text-transform: none; max-width: none;
 }
 .rechts-fuss { margin-top: clamp(2.5rem, 6vw, 3.5rem); color: var(--ton); }
+
+/* ============================================================
+   PROJEKT-DETAILSEITEN — /arbeiten/<slug>
+   ============================================================ */
+.projekt-kopf { position: relative; }
+.projekt-zurueck {
+  display: inline-block; margin-bottom: clamp(1rem, 2.5vw, 1.6rem);
+  color: var(--ton); font-size: 0.72rem; letter-spacing: 0.06em;
+  transition: color 0.3s;
+}
+.projekt-zurueck:hover { color: var(--tinte); }
+
+/* Titel bewusst kompakt (wie Lebenslauf), nicht die Riesen-Variante */
+.projektseite .seitentitel {
+  font-size: clamp(2.4rem, 7vw, 4.6rem); line-height: 0.9; letter-spacing: -0.02em;
+}
+.projekt-leistungen { margin-top: clamp(1.1rem, 2.6vw, 1.6rem); }
+
+.projekt-inhalt { padding: clamp(2.2rem, 5vw, 3.6rem) var(--rand) var(--takt); }
+.projekt-intro {
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(1.15rem, 2.4vw, 1.6rem); line-height: 1.5;
+  max-width: 62ch; color: var(--tinte);
+  margin-bottom: clamp(2rem, 5vw, 3.2rem);
+}
+.projekt-galerie { display: grid; gap: clamp(1rem, 2.5vw, 1.8rem); }
+.projekt-figur { margin: 0; }
+.projekt-figur img {
+  display: block; width: 100%; height: auto;
+  border-radius: 8px; background: var(--sand);
+}
+.projekt-platzhalter {
+  margin-top: clamp(1.4rem, 3vw, 2rem); color: var(--ton);
+  font-size: 0.72rem; letter-spacing: 0.06em;
+}
+.projekt-nav {
+  display: flex; justify-content: space-between; align-items: baseline;
+  flex-wrap: wrap; gap: 1rem 2rem;
+  margin-top: clamp(3rem, 7vw, 5rem); padding-top: 1.6rem;
+  border-top: 1px solid var(--haar);
+}
+.projekt-nav .pfeil-link { margin-top: 0; }
+.naechstes-projekt {
+  margin-left: auto; text-align: right;
+  font-family: var(--grotesk); font-weight: 700; font-size: clamp(1rem, 2.2vw, 1.3rem);
+  letter-spacing: -0.01em; transition: opacity 0.3s;
+}
+.naechstes-projekt:hover { opacity: 0.6; }
+@media (max-width: 640px) {
+  .projekt-nav { flex-direction: column; align-items: flex-start; }
+  .naechstes-projekt { margin-left: 0; text-align: left; }
+}
 
 /* ============================================================
    BEWEGUNG RESPEKTIEREN
