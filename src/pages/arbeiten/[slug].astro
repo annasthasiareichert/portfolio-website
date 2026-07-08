@@ -49,7 +49,7 @@ const galerie = projekt.bilder && projekt.bilder.length ? projekt.bilder : [proj
 
     {hatFall ? (
       <div class="fall-inhalt">
-        {projekt.fall!.map((block) => <Fallblock block={block} />)}
+        {projekt.fall!.map((block, i) => <Fallblock block={block} eager={i === 0} />)}
 
         <!-- Weiter blättern -->
         <nav class="projekt-nav">

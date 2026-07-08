@@ -6,7 +6,9 @@
 //  · "prozess" – nummerierte Schritte (Titel + Text)
 // Alle sichtbaren Texte tragen data-de/data-en für die Sprachumschaltung (interaktionen.js).
 import type { FallBlock } from "../data/projekte";
-const { block } = Astro.props as { block: FallBlock };
+// `eager` = erstes Bild der Seite sofort laden (Hero), damit beim ersten Blick sichtbar.
+const { block, eager = false } = Astro.props as { block: FallBlock; eager?: boolean };
+const ladeArt = eager ? "eager" : "lazy";
 ---
 
 {block.art === "bild" && (
@@ -19,7 +21,7 @@ const { block } = Astro.props as { block: FallBlock };
         <img
           src={block.bild}
           alt={block.alt.de}
-          loading="lazy"
+          loading={ladeArt}
           decoding="async"
           style={block.max ? `--bild-max:${block.max}` : undefined}
         />
@@ -41,7 +43,7 @@ const { block } = Astro.props as { block: FallBlock };
         <div class="paar-inhalt">
           {block.bilder.map((b) => (
             <span class="paar-figur" style={b.max ? `--bild-max:${b.max}` : undefined}>
-              <img src={b.bild} alt={b.alt.de} loading="lazy" decoding="async" />
+              <img src={b.bild} alt={b.alt.de} loading={ladeArt} decoding="async" />
               {b.unterschrift && (
                 <span class="paar-cap" data-de={b.unterschrift.de} data-en={b.unterschrift.en}>{b.unterschrift.de}</span>
               )}
