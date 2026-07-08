@@ -15,6 +15,11 @@
 // pink → pink-hell → chrom → holo, jeder Stil wird länger gehalten (siehe interaktionen.js, Block 6).
 // Der stark „flüssige" Rand entsteht über den SVG-Filter #pf-goo (Blur + Kontrast + Verzerrung),
 // der in den Masken-Kreis gebacken ist.
+//
+// GUMMI-MODUS (WebGL, wort-gummi.js): Wenn der Browser mitmacht, übernehmen die
+// beiden .pf-gl-Leinwände das Zeichnen aller Wort-Ebenen (die <img> bleiben als
+// unsichtbare Quellen + Fallback stehen). Das Wort wabert dann leicht, schmiegt
+// sich zum Cursor und lässt sich per Klicken-und-Halten wie Gummi ziehen.
 ---
 
 <section class="hero" id="hero">
@@ -25,6 +30,9 @@
 
     <!-- 1. Solid-Wort — liegt HINTER dem Porträt (füllt die Lettern außerhalb der Silhouette) -->
     <img class="pf-solid" src="/header/portfolio-flach.webp" width="2658" height="365" alt="" aria-hidden="true" fetchpriority="high" decoding="async" />
+
+    <!-- 1b. Gummi-Leinwand HINTEN: verformbare Kopie des Solid-Worts (WebGL) -->
+    <canvas class="pf-gl pf-gl-hinten" aria-hidden="true"></canvas>
 
     <!-- 2. Porträt -->
     <img class="pf-figur" src="/portrait-frei.png" alt="" aria-hidden="true" />
@@ -70,6 +78,9 @@
         </mask>
       </svg>
     </div>
+
+    <!-- Gummi-Leinwand VORNE: verformbare Kopie von Kontur + Reveal (WebGL) -->
+    <canvas class="pf-gl pf-gl-vorne" aria-hidden="true"></canvas>
 
     <!-- Partikel-Ebene über dem Wort -->
     <canvas class="pf-partikel" aria-hidden="true"></canvas>

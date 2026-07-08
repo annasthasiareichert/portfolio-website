@@ -1,6 +1,8 @@
 // Alle Bewegungen & Interaktionen der Startseite.
 // Läuft im Browser, nachdem die Seite geladen ist.
 
+import { starteWortGummi } from "./wort-gummi.js";
+
 const reduziert = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /* 1) Erscheinen beim Scrollen */
@@ -102,7 +104,15 @@ langButtons.forEach((b) => b.addEventListener("click", () => setzeSprache(b.data
       WELCHER Stil erscheint, hängt von der VERWEILDAUER des Cursors ab (nicht von
       der Stelle im Wort): pink → pink-hell → chrom → holo, jeder Stil wird lange
       gehalten und dann übergeblendet. Zusätzlich fliegen Partikel mit der Bewegung.
-      Auf Touch-Geräten läuft ein sanfter Auto-Sweep, damit der Effekt auch dort lebt. */
+      Auf Touch-Geräten läuft ein sanfter Auto-Sweep, damit der Effekt auch dort lebt.
+
+      NEU — das Wort ist „Gummi": Wenn WebGL verfügbar ist, zeichnet wort-gummi.js
+      alle Wort-Ebenen auf zwei Leinwände und verformt sie organisch. Die Schrift
+      wabert ständig ganz leicht, schmiegt sich beim Hover zum Cursor, und beim
+      KLICKEN-UND-HALTEN klebt sie am Cursor: Ziehen nimmt die Materie mit (auch
+      über die Kontur hinaus), Loslassen federt wackelnd zurück. Die Physik dazu
+      (Zug, Feder, Quetscher) steht hier unten; gezeichnet wird im Modul.
+      Ohne WebGL läuft alles wie bisher über die DOM-Ebenen + SVG-Maske. */
 const pf = document.querySelector("[data-pf]");
 const masthead = document.querySelector(".masthead");
 if (pf && masthead && !reduziert) {
@@ -110,6 +120,24 @@ if (pf && masthead && !reduziert) {
   const canvas = masthead.querySelector(".pf-partikel");
   const ctx = canvas ? canvas.getContext("2d") : null;
   const hoverGeraet = window.matchMedia("(hover: hover)").matches;
+
+  // WebGL-Gummi starten (null → alter DOM-Weg bleibt aktiv)
+  const glVorne = masthead.querySelector(".pf-gl-vorne");
+  const gummi = glVorne
+    ? starteWortGummi({
+        solid: masthead.querySelector(".pf-solid"),
+        kontur: pf.querySelector(".pf-outline"),
+        mats,
+        hinten: masthead.querySelector(".pf-gl-hinten"),
+        vorne: glVorne,
+      })
+    : null;
+  let glAn = false;      // true, sobald die Leinwände die <img>-Ebenen ersetzen
+  let gummiTot = false;  // WebGL-Kontext verloren → dauerhaft zurück zum DOM-Weg
+  if (gummi) gummi.beiVerlust(() => {
+    gummiTot = true; glAn = false;
+    masthead.classList.remove("wort-gl");
+  });
 
   // Wie lange ein Stil gehalten wird, bis der nächste kommt (Sekunden)
   const HALTEN = 2.4;      // ← größer = Stile wechseln seltener
@@ -124,19 +152,26 @@ if (pf && masthead && !reduziert) {
     mats.forEach((m) => { if (m.dataset.src) m.src = m.dataset.src; });
   };
 
-  // Maße von Wort (für die Cursor-Position) und Bühne (für die Partikel-Leinwand)
+  // Maße von Wort (für die Cursor-Position), Bühne (Partikel) und Gummi-Leinwand
   let pfRect = pf.getBoundingClientRect();
   let mastRect = masthead.getBoundingClientRect();
+  let glRect = glVorne ? glVorne.getBoundingClientRect() : mastRect;
   let dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const groesseCanvas = () => {
-    if (!canvas) return;
+  const messen = () => {
+    pfRect = pf.getBoundingClientRect();
     mastRect = masthead.getBoundingClientRect();
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = Math.round(mastRect.width * dpr);
-    canvas.height = Math.round(mastRect.height * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (glVorne) glRect = glVorne.getBoundingClientRect();
   };
-  const messen = () => { pfRect = pf.getBoundingClientRect(); mastRect = masthead.getBoundingClientRect(); };
+  const groesseCanvas = () => {
+    messen();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    if (canvas) {
+      canvas.width = Math.round(mastRect.width * dpr);
+      canvas.height = Math.round(mastRect.height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    if (gummi && !gummiTot) gummi.groesse(glRect.width, glRect.height, dpr);
+  };
   groesseCanvas();
   window.addEventListener("resize", groesseCanvas, { passive: true });
   window.addEventListener("scroll", messen, { passive: true });
@@ -152,8 +187,21 @@ if (pf && masthead && !reduziert) {
   let autoT = 0;                       // Phase für den Touch-Auto-Sweep
   let letzteZeit = 0;
 
-  // Stil nach Verweildauer wählen (Reihenfolge fest, Überblendung am Ende der Haltezeit)
-  const setzeStilNachVerweil = (v) => {
+  // „Gummi"-Zustand (nur mit WebGL benutzt) — alles in px auf der Gummi-Leinwand
+  let mausX = -9999, mausY = 0;        // Cursor auf der Leinwand
+  let griffAktiv = false;              // gerade gedrückt gehalten?
+  let griffX = 0, griffY = 0;          // wo festgehalten wurde (rutscht langsam nach)
+  let griffZX = -9999, griffZY = 0;    // Zentrum der Verformung (= Cursor beim Halten)
+  let zugX = 0, zugY = 0;              // aktuelle Auslenkung der Materie
+  let zugVX = 0, zugVY = 0;            // Feder-Geschwindigkeit fürs Zurückwackeln
+  let druck = 0;                       // Quetsch-Impuls beim Anfassen/Loslassen
+  let magnet = 0;                      // 0..1 Hover-Anschmiegen
+  let revealWert = 0;                  // 0..1 weiches Ein-/Ausblenden des Reveals
+
+  // Stil nach Verweildauer wählen (Reihenfolge fest, Überblendung am Ende der
+  // Haltezeit). Liefert die Deckkraft je Material — angewendet wird sie unten:
+  // im DOM-Weg auf die <img>, im WebGL-Weg als Shader-Uniform.
+  const stilAnteile = (v) => {
     const n = mats.length;
     const phase = v / HALTEN;
     const cur = Math.floor(phase) % n;
@@ -161,10 +209,8 @@ if (pf && masthead && !reduziert) {
     const frac = phase - Math.floor(phase);
     const tf = UEBERBLEND / HALTEN;
     const anteil = frac > 1 - tf ? (frac - (1 - tf)) / tf : 0; // 0…1 Überblendung
-    mats.forEach((m, i) => {
-      m.style.opacity = i === cur ? String(1 - anteil) : i === naechster ? String(anteil) : "0";
-    });
     aktuellerStil = anteil > 0.5 ? naechster : cur;
+    return mats.map((_, i) => (i === cur ? 1 - anteil : i === naechster ? anteil : 0));
   };
 
   // Partikel
@@ -214,6 +260,42 @@ if (pf && masthead && !reduziert) {
     aktiv = true; pf.classList.add("aktiv");
   }
 
+  // Klicken-und-Halten: die Schrift am Cursor festhalten und mitziehen.
+  // Nur sinnvoll, wenn der WebGL-Gummi läuft (der DOM-Weg kann nicht verformen).
+  if (gummi) {
+    // Cursor-Position auf der Gummi-Leinwand immer mitschreiben
+    pf.addEventListener("pointermove", (e) => {
+      mausX = e.clientX - glRect.left;
+      mausY = e.clientY - glRect.top;
+    }, { passive: true });
+
+    pf.addEventListener("pointerdown", (e) => {
+      ladeMaterialien(); messen();
+      mausX = e.clientX - glRect.left;
+      mausY = e.clientY - glRect.top;
+      griffAktiv = true;
+      griffX = mausX; griffY = mausY;
+      griffZX = mausX; griffZY = mausY;
+      zugVX = 0; zugVY = 0;
+      druck = 0.25; // kurzes Einquetschen beim Anfassen
+      pf.classList.add("gegriffen");
+      // Zeiger „einfangen": Bewegungen kommen weiter bei uns an,
+      // auch wenn der Cursor das Wort beim Ziehen verlässt
+      try { pf.setPointerCapture(e.pointerId); } catch (_) {}
+      // Maus: keine native Bild-Zieh-Geste/Textauswahl starten
+      if (e.pointerType !== "touch") e.preventDefault();
+    });
+
+    const loslassen = () => {
+      if (!griffAktiv) return;
+      griffAktiv = false;
+      druck = -0.18; // kleiner „Plopp" beim Loslassen
+      pf.classList.remove("gegriffen");
+    };
+    window.addEventListener("pointerup", loslassen, { passive: true });
+    window.addEventListener("pointercancel", loslassen, { passive: true });
+  }
+
   const tick = (ts) => {
     const dt = letzteZeit ? Math.min((ts - letzteZeit) / 1000, 0.05) : 0;
     letzteZeit = ts;
@@ -234,12 +316,67 @@ if (pf && masthead && !reduziert) {
     bx += (zx - bx) * 0.16;
     by += (zy - by) * 0.16;
     br += ((aktiv ? radiusZiel() : 0) - br) * 0.12;
-    const parken = !aktiv && br < 0.6;
-    pf.style.setProperty("--cx", (parken ? -9999 : bx) + "px");
-    pf.style.setProperty("--cy", by + "px");
-    pf.style.setProperty("--r", Math.max(0, br) + "px");
 
-    setzeStilNachVerweil(verweil);
+    const ops = stilAnteile(verweil);
+
+    // „Gummi"-Physik: Zug zum Cursor bzw. Zurückfedern nach dem Loslassen
+    if (gummi && !gummiTot) {
+      if (griffAktiv) {
+        // Zugvektor = Cursor minus Haltepunkt; je weiter gezogen wird, desto
+        // mehr „rutscht" das Material (Gummi-Widerstand statt harter Kopplung)
+        const dx = mausX - griffX, dy = mausY - griffY;
+        const nachgeben = 1 / (1 + Math.hypot(dx, dy) / 420);
+        zugX += (dx * nachgeben - zugX) * Math.min(1, dt * 14);
+        zugY += (dy * nachgeben - zugY) * Math.min(1, dt * 14);
+        zugVX = 0; zugVY = 0;
+        // Haltepunkt gibt ganz langsam nach — wie Kaugummi, der sich setzt
+        griffX += dx * Math.min(1, dt * 0.8);
+        griffY += dy * Math.min(1, dt * 0.8);
+        griffZX = mausX; griffZY = mausY;
+      } else {
+        // gedämpfte Feder: schnappt mit ein, zwei Wacklern zurück in Form
+        zugVX += (-110 * zugX - 9 * zugVX) * dt;
+        zugVY += (-110 * zugY - 9 * zugVY) * dt;
+        zugX += zugVX * dt; zugY += zugVY * dt;
+      }
+      druck += -druck * Math.min(1, dt * 5);
+      magnet += ((hoverGeraet && aktiv && !griffAktiv ? 1 : 0) - magnet) * Math.min(1, dt * 8);
+      revealWert += ((aktiv ? 1 : 0) - revealWert) * Math.min(1, dt * 6);
+
+      // Umschalten auf die Leinwände, sobald Solid + Kontur als Texturen da sind
+      if (!glAn && gummi.bereit()) {
+        glAn = true;
+        masthead.classList.add("wort-gl");
+      }
+      if (glAn) {
+        const ox = pfRect.left - glRect.left, oy = pfRect.top - glRect.top;
+        gummi.zeichne({
+          zeit: ts / 1000,
+          wort: [ox, oy, pfRect.width, pfRect.height],
+          blob: [ox + bx, oy + by, Math.max(0, br)],
+          reveal: revealWert,
+          matOp: ops,
+          maus: [mausX, mausY],
+          magnet,
+          magnetR: radiusZiel() * 1.6,
+          griff: [griffZX, griffZY],
+          zug: [zugX, zugY],
+          druck,
+          griffR: Math.min(Math.max(pfRect.width * 0.13, 110), 240),
+          wabern: pfRect.width * 0.0022,
+        });
+      }
+    }
+
+    // DOM-Weg (ohne WebGL bzw. bis die Leinwände bereit sind):
+    // SVG-Masken-Kreis + Material-Deckkraft direkt an den Elementen setzen
+    if (!glAn) {
+      const parken = !aktiv && br < 0.6;
+      pf.style.setProperty("--cx", (parken ? -9999 : bx) + "px");
+      pf.style.setProperty("--cy", by + "px");
+      pf.style.setProperty("--r", Math.max(0, br) + "px");
+      mats.forEach((m, i) => { m.style.opacity = String(ops[i]); });
+    }
 
     // Partikel bewegen & zeichnen (mit sanftem Glühen für mehr Dynamik)
     if (ctx) {

@@ -315,7 +315,27 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
   line-height: 0;
   /* Blob-Geometrie (px, relativ zum Wort) — vom Skript gesetzt */
   --cx: -9999px; --cy: 0px; --r: 0px;
+  /* Touch: senkrechtes Wischen scrollt weiter, waagerechtes greift das Wort */
+  touch-action: pan-y;
 }
+
+/* GUMMI-MODUS (WebGL): Die beiden Leinwände zeichnen die Wort-Ebenen verformbar
+   (wort-gummi.js). Sie ragen 90 px über die Bühne hinaus, damit gezogene Materie
+   nicht an der Bühnenkante abgeschnitten wird. Sobald sie bereit sind, bekommt
+   .masthead die Klasse .wort-gl und die <img>-Ebenen werden unsichtbar
+   (bleiben aber als Textur-Quellen und Fallback im Dokument). */
+.pf-gl {
+  position: absolute; left: -90px; top: -90px;
+  width: calc(100% + 180px); height: calc(100% + 180px);
+  pointer-events: none;
+}
+.pf-gl-hinten { z-index: 1; }
+.pf-gl-vorne  { z-index: 3; }
+.masthead.wort-gl .pf-solid,
+.masthead.wort-gl .pf .pf-outline,
+.masthead.wort-gl .pf .pf-reveal { opacity: 0; }
+.masthead.wort-gl .pf { cursor: grab; }
+.masthead.wort-gl .pf.gegriffen { cursor: grabbing; }
 .pf-outline, .pf-mat { display: block; width: 100%; height: auto; }
 
 /* Ruhezustand: nur die Kontur. Über dem Porträt allein sichtbar; außerhalb ihrer
@@ -362,9 +382,9 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
   .pf-solid, .pf { width: 94vw; }
 }
 
-/* Ohne Bewegungswunsch: statische Schrift (Solid + Outline), kein Reveal/Partikel */
+/* Ohne Bewegungswunsch: statische Schrift (Solid + Outline), kein Reveal/Partikel/Gummi */
 @media (prefers-reduced-motion: reduce) {
-  .pf-reveal, .pf-partikel { display: none; }
+  .pf-reveal, .pf-partikel, .pf-gl { display: none; }
 }
 
 /* ============================================================
