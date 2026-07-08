@@ -1,0 +1,116 @@
+---
+// Lebenslauf — eigene Unterseite mit Werdegang, Kenntnissen und PDF-Download.
+import Grundgeruest from "../layouts/Grundgeruest.astro";
+import Kopf from "../components/Kopf.astro";
+import Fuss from "../components/Fuss.astro";
+import {
+  profil, untertitel, stationen, ausbildung,
+  faehigkeiten, interessen, pdfPfad,
+} from "../data/lebenslauf.ts";
+---
+
+<Grundgeruest
+  titel="Lebenslauf — Annasthasia Reichert"
+  beschreibung="Werdegang von Annasthasia Reichert — Grafik- & UI-Designerin aus Köln."
+>
+  <Kopf />
+
+  <main class="unterseite lebenslauf">
+    <!-- Kopfband -->
+    <section class="seitenkopf">
+      <p class="mono kopfband-label" data-de="Werdegang" data-en="Resume">Werdegang</p>
+      <h1 class="seitentitel">lebenslauf</h1>
+      <p class="seitenkopf-unter"><span class="vn">annasthasia</span> reichert · {untertitel}</p>
+      <a class="knopf" href={pdfPfad} download>
+        <span data-de="Als PDF herunterladen" data-en="Download as PDF">Als PDF herunterladen</span>
+        <span class="knopf-pfeil" aria-hidden="true">↓</span>
+      </a>
+    </section>
+
+    <div class="ls-inhalt">
+      <!-- Profil -->
+      <section class="ls-block auftritt">
+        <h2 class="ls-h2" data-de="profil" data-en="profile">profil</h2>
+        <p class="ls-profil">{profil}</p>
+      </section>
+
+      <!-- Berufserfahrung -->
+      <section class="ls-block auftritt">
+        <h2 class="ls-h2" data-de="berufserfahrung" data-en="experience">berufserfahrung</h2>
+        <ol class="werdegang">
+          {stationen.map((s) => (
+            <li class="station">
+              <div class="station-zeit"><span>{s.zeitraum}</span></div>
+              <div class="station-body">
+                <h3 class="station-rolle">
+                  {s.rolle}
+                  {s.art && <span class="station-art">{s.art}</span>}
+                </h3>
+                <p class="station-firma"><span class="kursiv">{s.firma}</span> · {s.ort}</p>
+                <ul class="station-punkte">
+                  {s.punkte.map((p) => <li>{p}</li>)}
+                </ul>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <!-- Kenntnisse & Ausbildung nebeneinander -->
+      <section class="ls-block ls-split auftritt">
+        <div>
+          <h2 class="ls-h2" data-de="kenntnisse" data-en="skills">kenntnisse</h2>
+
+          <h4 class="mono ls-untertitel" data-de="Professionelle Fähigkeiten" data-en="Professional skills">Professionelle Fähigkeiten</h4>
+          <ul class="pill-liste">
+            {faehigkeiten.professionell.map((f) => <li class="pill">{f}</li>)}
+          </ul>
+
+          <h4 class="mono ls-untertitel" data-de="Technische Fähigkeiten" data-en="Technical skills">Technische Fähigkeiten</h4>
+          <ul class="pill-liste">
+            {faehigkeiten.technisch.map((f) => <li class="pill">{f}</li>)}
+          </ul>
+
+          <h4 class="mono ls-untertitel" data-de="Sprachen" data-en="Languages">Sprachen</h4>
+          <ul class="pill-liste">
+            {faehigkeiten.sprachen.map((f) => <li class="pill">{f}</li>)}
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="ls-h2" data-de="ausbildung" data-en="education">ausbildung</h2>
+          <ul class="bildung-liste">
+            {ausbildung.map((a) => (
+              <li class="bildung">
+                <p class="bildung-abschluss">{a.abschluss}</p>
+                <p class="bildung-fach">{a.fach}</p>
+                <p class="bildung-ort mono">{a.ort}</p>
+              </li>
+            ))}
+          </ul>
+
+          <h2 class="ls-h2 interessen-h2" data-de="interessen" data-en="interests">interessen</h2>
+          <p class="ls-untertitel mono" data-de="Kreativ" data-en="Creative">Kreativ</p>
+          <p class="interessen-text">{interessen.kreativ}</p>
+          <p class="ls-untertitel mono" data-de="Sportlich" data-en="Sporty">Sportlich</p>
+          <p class="interessen-text">{interessen.sportlich}</p>
+        </div>
+      </section>
+
+      <!-- Download-Wiederholung am Ende -->
+      <section class="ls-block ls-download-fuss auftritt">
+        <p class="mono" data-de="Lieber auf Papier?" data-en="Prefer it on paper?">Lieber auf Papier?</p>
+        <a class="knopf" href={pdfPfad} download>
+          <span data-de="Lebenslauf als PDF" data-en="Resume as PDF">Lebenslauf als PDF</span>
+          <span class="knopf-pfeil" aria-hidden="true">↓</span>
+        </a>
+      </section>
+    </div>
+  </main>
+
+  <Fuss />
+
+  <script>
+    import "../scripts/interaktionen.js";
+  </script>
+</Grundgeruest>
