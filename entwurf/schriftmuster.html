@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Schriftmuster — Namens-Lockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Great+Vibes&family=Pinyon+Script&family=Parisienne&family=Dancing+Script:wght@600&family=Ephesis&family=Sacramento&family=Playfair+Display:ital,wght@1,600&family=Archivo:wght@700;800;900&family=Familjen+Grotesk:wght@700&family=Syne:wght@800&family=Space+Grotesk:wght@700&family=Anton&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --papier:#FCFBF9; --sand:#D9D7D1; --tinte:#1A1712; --ton:#8A857B; --haar:rgba(26,23,18,0.16);
+    --grotesk:"Archivo",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--papier);color:var(--tinte);font-family:var(--grotesk);padding:clamp(1.5rem,5vw,4rem);}
+  .mono{font-weight:600;font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ton);}
+  h1{font-family:var(--grotesk);font-weight:800;text-transform:lowercase;font-size:clamp(1.6rem,4vw,2.6rem);letter-spacing:-0.02em;margin:0.4rem 0 0.6rem;}
+  .intro{max-width:60ch;color:var(--ton);line-height:1.55;margin-bottom:2.5rem;}
+  .block-titel{font-family:var(--grotesk);font-weight:800;text-transform:lowercase;font-size:1.3rem;margin:2.5rem 0 1.2rem;padding-top:1.4rem;border-top:1px solid var(--haar);}
+
+  .referenz{background:var(--sand);border-radius:6px;padding:1.4rem 1.6rem;display:flex;flex-wrap:wrap;align-items:center;gap:1.2rem 2rem;}
+  .referenz img{max-width:min(440px,70vw);height:auto;display:block;}
+  .referenz .txt{color:var(--tinte);}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;}
+  .karte{border:1px solid var(--haar);border-radius:6px;padding:1.2rem 1.4rem;background:var(--papier);}
+  .karte .kopf{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.6rem;}
+  .karte .tag{font-weight:700;font-size:0.85rem;}
+  .karte .name{font-weight:500;font-size:0.72rem;color:var(--ton);}
+  .probe{font-size:clamp(2.4rem,5vw,3.6rem);line-height:1;color:var(--tinte);}
+
+  /* Schreibschrift-Proben */
+  .s-kaushan{font-family:"Kaushan Script",cursive;}
+  .s-vibes{font-family:"Great Vibes",cursive;font-size:clamp(3rem,6vw,4.6rem);}
+  .s-pinyon{font-family:"Pinyon Script",cursive;font-size:clamp(3rem,6vw,4.6rem);}
+  .s-parisienne{font-family:"Parisienne",cursive;}
+  .s-dancing{font-family:"Dancing Script",cursive;font-weight:600;}
+  .s-ephesis{font-family:"Ephesis",cursive;font-size:clamp(3rem,6vw,4.6rem);}
+  .s-sacramento{font-family:"Sacramento",cursive;}
+  .s-playfair{font-family:"Playfair Display",serif;font-style:italic;font-weight:600;}
+
+  /* Grotesk-Proben (Nachname) */
+  .g-probe{font-weight:900;text-transform:lowercase;font-size:clamp(2.6rem,6vw,4rem);line-height:1;letter-spacing:-0.03em;}
+  .g-archivo{font-family:"Archivo";font-weight:900;}
+  .g-familjen{font-family:"Familjen Grotesk";font-weight:700;}
+  .g-syne{font-family:"Syne";font-weight:800;}
+  .g-space{font-family:"Space Grotesk";font-weight:700;}
+  .g-anton{font-family:"Anton";font-weight:400;letter-spacing:-0.01em;}
+
+  /* Kombinationen */
+  .kombi-reihe{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem;}
+  .kombi{background:var(--sand);border-radius:6px;padding:1.6rem 1.8rem;}
+  .kombi .lock{line-height:0.86;}
+  .kombi .vn{display:block;color:var(--tinte);}
+  .kombi .nn{display:block;font-family:"Archivo";font-weight:900;text-transform:lowercase;font-size:clamp(2.6rem,6vw,4rem);letter-spacing:-0.03em;margin-top:-0.1em;}
+  .kombi .label{margin-bottom:0.8rem;}
+</style>
+</head>
+<body>
+  <p class="mono">Feinschliff · Startseite</p>
+  <h1>schriftmuster — namens-lockup.</h1>
+  <p class="intro">Oben deine echte Schrift aus dem Lebenslauf als Referenz. Darunter lizenzfreie Alternativen,
+  die du dauerhaft frei auf der Website nutzen darfst. Sag mir einfach die Kürzel, die dir gefallen —
+  z. B. „S3 + G1" — dann setze ich sie in den Entwurf ein.</p>
+
+  <div class="referenz">
+    <img src="cv-lockup-referenz.png" alt="Namens-Lockup aus dem Lebenslauf" />
+    <span class="txt mono">← deine CV-Schrift (Referenz)</span>
+  </div>
+
+  <p class="block-titel">schreibschrift · vorname</p>
+  <div class="grid">
+    <div class="karte"><div class="kopf"><span class="tag">S1</span><span class="name">Pinyon Script</span></div><div class="probe s-pinyon">annasthasia</div></div>
+    <div class="karte"><div class="kopf"><span class="tag">S2</span><span class="name">Great Vibes</span></div><div class="probe s-vibes">annasthasia</div></div>
+    <div class="karte"><div class="kopf"><span class="tag">S3</span><span class="name">Ephesis</span></div><div class="probe s-ephesis">annasthasia</div></div>
+    <div class="karte"><div class="kopf"><span class="tag">S4</span><span class="name">Parisienne</span></div><div class="probe s-parisienne">annasthasia</div></div>
+    <div class="karte"><div class="kopf"><span class="tag">S5</span><span class="name">Playfair Display <em>Italic</em></span></div><div class="probe s-playfair">annasthasia</div></div>
+    <div class="karte"><div class="kopf"><span class="tag">S6</span><span class="name">Dancing Script</span></div><div class="probe s-dancing">annasthasia</div></div>
+    <div class="karte"><div class="kopf"><span class="tag">S7</span><span class="name">Sacramento</span></div><div class="probe s-sacramento">annasthasia</div></div>
+    <div class="karte"><div class="kopf"><span class="tag">S8</span><span class="name">Kaushan Script <em>(aktuell)</em></span></div><div class="probe s-kaushan">annasthasia</div></div>
+  </div>
+
+  <p class="block-titel">fette grotesk · nachname</p>
+  <div class="grid">
+    <div class="karte"><div class="kopf"><span class="tag">G1</span><span class="name">Archivo Black <em>(aktuell)</em></span></div><div class="g-probe g-archivo">reichert.</div></div>
+    <div class="karte"><div class="kopf"><span class="tag">G2</span><span class="name">Familjen Grotesk</span></div><div class="g-probe g-familjen">reichert.</div></div>
+    <div class="karte"><div class="kopf"><span class="tag">G3</span><span class="name">Syne Extrabold</span></div><div class="g-probe g-syne">reichert.</div></div>
+    <div class="karte"><div class="kopf"><span class="tag">G4</span><span class="name">Space Grotesk</span></div><div class="g-probe g-space">reichert.</div></div>
+    <div class="karte"><div class="kopf"><span class="tag">G5</span><span class="name">Anton</span></div><div class="g-probe g-anton">reichert.</div></div>
+  </div>
+
+  <p class="block-titel">drei fertige kombinationen · zum vergleich</p>
+  <div class="kombi-reihe">
+    <div class="kombi"><span class="mono label">A · Pinyon + Archivo</span><div class="lock"><span class="vn s-pinyon" style="font-size:clamp(2.6rem,5vw,4rem)">annasthasia</span><span class="nn">reichert.</span></div></div>
+    <div class="kombi"><span class="mono label">B · Great Vibes + Archivo</span><div class="lock"><span class="vn s-vibes" style="font-size:clamp(2.6rem,5vw,4rem)">annasthasia</span><span class="nn">reichert.</span></div></div>
+    <div class="kombi"><span class="mono label">C · Ephesis + Archivo</span><div class="lock"><span class="vn s-ephesis" style="font-size:clamp(2.6rem,5vw,4rem)">annasthasia</span><span class="nn">reichert.</span></div></div>
+  </div>
+</body>
+</html>
