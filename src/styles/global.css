@@ -129,6 +129,53 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
 @media (max-width: 760px) { .nav-links a:not(.nav-arbeiten) { display: none; } }
 
 /* ============================================================
+   WORK-IN-PROGRESS-BANNER — diagonale Ecke oben links
+   Dezenter, aber sichtbarer Hinweis: die Seite ist ein Zwischenstand.
+   Monochrom (Tinte-Band, Papier-Schrift) – kein bunter Akzent.
+   Text folgt der DE/EN-Umschaltung: „Noch in Arbeit“ / „Work in Progress“.
+   ============================================================ */
+.wip-ecke {
+  position: fixed; top: 0; left: 0;
+  width: 150px; height: 150px;
+  overflow: hidden;
+  z-index: 200;           /* über Kopfzeile (100) & Overlays */
+  pointer-events: none;   /* blockiert keine Klicks (Wortmarke bleibt erreichbar) */
+}
+.wip-band {
+  position: absolute;
+  left: -46px; top: 33px; width: 210px;
+  transform: rotate(-45deg);
+  padding: 6px 0;
+  background: var(--tinte); color: var(--papier);
+  text-align: center;
+  box-shadow: 0 10px 24px -12px rgba(26,23,18,0.5);
+}
+/* feine Ober-/Unterlinie am Band – wirkt wie ein aufgeklebtes Etikett */
+.wip-band::before {
+  content: ""; position: absolute; inset: 2px 0;
+  border-top: 1px solid rgba(252,251,249,0.26);
+  border-bottom: 1px solid rgba(252,251,249,0.26);
+}
+.wip-text {
+  font-family: var(--grotesk); font-weight: 700;
+  font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
+  white-space: nowrap;
+}
+/* Wortmarke rückt vom Banner weg (am Desktop ist links Platz) */
+.wortmarke { margin-left: 3rem; }
+
+@media (max-width: 760px) {
+  .wip-ecke { width: 118px; height: 118px; }
+  .wip-band { left: -42px; top: 26px; width: 166px; padding: 5px 0; }
+  .wip-text { font-size: 0.54rem; letter-spacing: 0.11em; }
+  /* Mobil ist die Kopfzeile voll – kein Platz seitlich. Darum die ganze
+     Kopfzeile etwas tiefer setzen, sodass die Wortmarke UNTER der
+     Banner-Diagonale sitzt statt seitlich zu kollidieren. */
+  header { padding-top: 2.4rem; }
+  .wortmarke { margin-left: 0; }
+}
+
+/* ============================================================
    HERO — Masthead: Porträt verschmilzt mit der Riesen-Schrift
    (nach dem Vorbild deiner Portfolio-Titelseite)
    ============================================================ */

@@ -38,6 +38,24 @@ const {
     />
   </head>
   <body>
+    <!--
+      Work-in-Progress-Hinweis: dezenter Diagonal-Banner in der oberen linken Ecke.
+      Signalisiert Besucher:innen, dass die Seite ein Zwischenstand ist – nicht das
+      finale Ergebnis. Liegt im Grundgerüst → erscheint auf allen Seiten.
+      pointer-events:none, damit die Wortmarke darunter klickbar bleibt.
+    -->
+    <div
+      class="wip-ecke"
+      role="note"
+      aria-label="Hinweis: Diese Website ist noch in Arbeit – ein Zwischenstand, nicht das finale Ergebnis."
+    >
+      <span class="wip-band" aria-hidden="true">
+        <span class="wip-text" data-de="Noch in Arbeit" data-en="Work in Progress"
+          >Noch in Arbeit</span
+        >
+      </span>
+    </div>
+
     <slot />
   </body>
 </html>
