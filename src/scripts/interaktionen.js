@@ -185,6 +185,7 @@ if (pf && masthead && !reduziert) {
   let verweil = 0;                     // aufsummierte Verweildauer auf dem Wort (s)
   let aktuellerStil = 0;
   let autoT = 0;                       // Phase für den Touch-Auto-Sweep
+  let partikelTakt = 0;                // Zeit seit dem letzten Partikel-Spawn (Touch)
   let letzteZeit = 0;
 
   // „Gummi"-Zustand (nur mit WebGL benutzt) — alles in px auf der Gummi-Leinwand
@@ -316,15 +317,30 @@ if (pf && masthead && !reduziert) {
 
     if (aktiv) verweil += dt; // Verweildauer läuft nur, solange der Cursor auf dem Wort ist
 
-    // Touch-Auto-Sweep: Zielpunkt über das Wort schicken + Partikel streuen.
-    // Beim Scrollen (|schwapp| > 0) fegt der Sweep schneller → mehr Partikel.
+    // Touch-Auto-Sweep: Zielpunkt über das Wort schicken — jetzt als echte
+    // Schleife (links/rechts UND rauf/runter), nicht mehr fast nur waagerecht.
+    // Der Sweep-Punkt wird unten zugleich zum „Magneten": die Schrift beult
+    // sich sichtbar zu ihm hin — das Wobbly lebt also auch ohne Berührung.
+    // Beim Scrollen (|schwapp| > 0) fegt der Sweep schneller.
     if (!hoverGeraet && aktiv) {
       const vorX = zx, vorY = zy;
       autoT += dt * (0.6 + Math.min(Math.abs(schwapp) * 0.05, 2.2));
       zx = pfRect.width * (0.5 + 0.42 * Math.sin(autoT));
-      zy = pfRect.height * (0.5 + 0.22 * Math.sin(autoT * 1.7));
-      const mx = (pfRect.left - mastRect.left) + zx, my = (pfRect.top - mastRect.top) + zy;
-      spawnPartikel(mx, my, zx - vorX, zy - vorY);
+      zy = pfRect.height * (0.5 + 0.60 * Math.sin(autoT * 1.7) + 0.25 * Math.sin(autoT * 0.9 + 2.1));
+      // Sweep-Punkt als Cursor-Ersatz an den Gummi melden (Magnet-Verformung)
+      mausX = (pfRect.left - glRect.left) + zx;
+      mausY = (pfRect.top - glRect.top) + zy;
+      // Partikel nur getaktet streuen (ca. alle 70 ms statt jedes Bild) —
+      // weniger Konfetti, der Fokus liegt auf der Verformung der Schrift
+      partikelTakt += dt;
+      if (partikelTakt > 0.07) {
+        partikelTakt = 0;
+        spawnPartikel(
+          (pfRect.left - mastRect.left) + zx,
+          (pfRect.top - mastRect.top) + zy,
+          zx - vorX, zy - vorY
+        );
+      }
     }
 
     // Blob weich nachziehen
@@ -355,7 +371,11 @@ if (pf && masthead && !reduziert) {
         zugX += zugVX * dt; zugY += zugVY * dt;
       }
       druck += -druck * Math.min(1, dt * 5);
-      magnet += ((hoverGeraet && aktiv && !griffAktiv ? 1 : 0) - magnet) * Math.min(1, dt * 8);
+      // Magnet: am Desktop schmiegt sich die Schrift zum Cursor (Stärke 1);
+      // auf Touch zieht der Auto-Sweep-Punkt deutlich kräftiger (2.6), damit
+      // die Verformung auch ohne Anfassen klar zu sehen ist
+      const magnetZiel = !aktiv || griffAktiv ? 0 : hoverGeraet ? 1 : 2.6;
+      magnet += (magnetZiel - magnet) * Math.min(1, dt * 8);
       revealWert += ((aktiv ? 1 : 0) - revealWert) * Math.min(1, dt * 6);
 
       // Scroll-Schwung ausfedern: weich zurück zur Ruhe, mit ein paar Wacklern
@@ -378,13 +398,16 @@ if (pf && masthead && !reduziert) {
           matOp: ops,
           maus: [mausX, mausY],
           magnet,
-          magnetR: radiusZiel() * 1.6,
+          // Touch: größerer Wirkradius, damit die Beule um den Sweep-Punkt
+          // ganze Buchstaben erfasst statt nur Kanten anzukratzen
+          magnetR: radiusZiel() * (hoverGeraet ? 1.6 : 2.3),
           griff: [griffZX, griffZY],
           zug: [zugX, zugY],
           druck,
           griffR: Math.min(Math.max(pfRect.width * 0.13, 110), 240),
-          // Grundwabern legt beim Scrollen zu (bis ~3×), damit es lebendiger wird
-          wabern: pfRect.width * 0.0022 * (1 + Math.min(Math.abs(schwapp) / 26, 2)),
+          // Grundwabern: auf Touch von Haus aus kräftiger (kein Hover-Leben da),
+          // und beim Scrollen legt es weiter zu (bis ~3×)
+          wabern: pfRect.width * (hoverGeraet ? 0.0022 : 0.0034) * (1 + Math.min(Math.abs(schwapp) / 26, 2)),
           schwapp,
         });
       }

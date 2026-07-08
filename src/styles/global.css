@@ -272,7 +272,7 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
 @keyframes pulsieren { 0%,100%{ transform: scaleX(0.35);} 50%{ transform: scaleX(1);} }
 
 @media (max-width: 760px) {
-  .masthead { height: min(72svh, 560px); }
+  .masthead { height: min(64svh, 480px); }
   .mh-signatur { bottom: 1.6rem; }
 }
 
@@ -384,7 +384,7 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
 .figur-schleier {
   display: none;
   position: absolute; left: 0; right: 0; bottom: 0;
-  height: 32%;
+  height: 20%;
   z-index: 3;
   pointer-events: none;
   -webkit-backdrop-filter: blur(14px);
@@ -399,13 +399,14 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
 
 @media (max-width: 760px) {
   /* Wort auf Halshöhe: die Kette schneidet es im oberen Drittel — wie im Desktop-Bild */
-  .pf-solid, .pf { width: 94vw; top: 74%; }
+  .pf-solid, .pf { width: 94vw; top: 80%; }
 
-  /* Porträt größer und an die Bühnen-Unterkante gesetzt (statt mittig schwebend);
-     die Maske greift so wirklich auf den sichtbaren Pullover-Saum */
+  /* Porträt schmaler als das Wort und an der Bühnen-Unterkante verankert:
+     links und rechts der Schultern bleiben die Lettern voll schwarz sichtbar,
+     und die Fade-Maske greift wirklich auf den sichtbaren Pullover-Saum */
   .pf-figur {
     top: auto; bottom: 0; height: auto;
-    width: min(118%, 470px); max-width: none;
+    width: min(82%, 330px); max-width: none;
     -webkit-mask-image: linear-gradient(#000 70%, rgba(0,0,0,0.4) 88%, transparent 99%);
             mask-image: linear-gradient(#000 70%, rgba(0,0,0,0.4) 88%, transparent 99%);
   }
