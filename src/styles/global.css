@@ -82,8 +82,11 @@ header {
   display: flex; justify-content: space-between; align-items: center;
   padding: 1.3rem var(--rand);
 }
-/* Frosted-Glas-Streifen hinter Wortmarke & Navigation: hebt das Menü über
-   scrollenden Inhalten ab, ist aber nicht solid — Blur + weiches Ausblenden nach unten. */
+/* Frosted-Glas-Streifen hinter Wortmarke & Navigation.
+   Am Seitenanfang unsichtbar (opacity 0) → die Navigation verschmilzt mit dem
+   Hintergrund. Sobald gescrollt wird (Klasse .gescrollt, per Skript), blendet der
+   Streifen ein und hebt das Menü über den Inhalten ab. Nicht solid — Blur + weiches
+   Ausblenden nach unten. */
 header::before {
   content: ""; position: absolute; inset: 0; z-index: -1;
   background: color-mix(in srgb, var(--papier) 65%, transparent);
@@ -92,7 +95,10 @@ header::before {
   -webkit-mask-image: linear-gradient(to bottom, #000 56%, transparent);
           mask-image: linear-gradient(to bottom, #000 56%, transparent);
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
 }
+header.gescrollt::before { opacity: 1; }
 header .wortmarke {
   font-family: var(--grotesk);
   font-weight: 800;

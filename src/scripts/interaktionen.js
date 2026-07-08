@@ -14,6 +14,15 @@ const beobachter = new IntersectionObserver((es) => {
 }, { threshold: 0.15 });
 document.querySelectorAll(".auftritt").forEach((el) => beobachter.observe(el));
 
+/* 1b) Kopfzeile: am Seitenanfang mit dem Hintergrund verschmelzen (kein Streifen),
+       beim Scrollen den Frosted-Streifen einblenden (Klasse .gescrollt) */
+const kopfzeile = document.querySelector("header");
+if (kopfzeile) {
+  const kopfPruefen = () => kopfzeile.classList.toggle("gescrollt", window.scrollY > 16);
+  kopfPruefen();
+  window.addEventListener("scroll", kopfPruefen, { passive: true });
+}
+
 /* 2) Wegscroll des Hero + 3) Parallax */
 const hero = document.getElementById("hero");
 const parallaxEls = document.querySelectorAll("[data-parallax]");
