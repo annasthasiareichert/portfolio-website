@@ -47,6 +47,7 @@ uniform vec2  uZug;       /* aktuelle Auslenkung beim Ziehen (px) */
 uniform float uDruck;     /* kurzes Einquetschen beim Anfassen/Loslassen */
 uniform float uGriffR;    /* Reichweite des Griffs (px) */
 uniform float uWabern;    /* ständiges leichtes Wabern (px) */
+uniform float uSchwapp;   /* Scroll-Schwung (px): Nachschwingen beim Scrollen */
 
 float hasch(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 
@@ -81,6 +82,12 @@ vec2 verformung(vec2 p) {
   /* 4) Grundwabern: langsames, organisches Atmen, damit nichts starr wirkt. */
   v += uWabern * vec2(rauschen(p * 0.006 + vec2(uZeit * 0.22, 0.0)),
                       rauschen(p * 0.006 + vec2(37.3, uZeit * 0.19)));
+
+  /* 5) Scroll-Schwung (mobil): das Wort schwingt dem Scrollen wie Wackelpudding
+        nach — ungleich stark über die Breite, damit es wabert statt starr zu
+        rutschen. uSchwapp federt in interaktionen.js zurück auf 0. */
+  v.y += uSchwapp * (0.60 + 0.40 * rauschen(vec2(p.x * 0.009 + 3.7, uZeit * 0.9)));
+  v.x += uSchwapp * 0.22 * rauschen(vec2(p.y * 0.012 + 11.3, uZeit * 0.7));
   return v;
 }
 
@@ -269,6 +276,7 @@ export function starteWortGummi(teile) {
     s.f1("uDruck", z.druck);
     s.f1("uGriffR", z.griffR);
     s.f1("uWabern", z.wabern);
+    s.f1("uSchwapp", z.schwapp);
   };
 
   return {

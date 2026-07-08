@@ -198,6 +198,20 @@ if (pf && masthead && !reduziert) {
   let magnet = 0;                      // 0..1 Hover-Anschmiegen
   let revealWert = 0;                  // 0..1 weiches Ein-/Ausblenden des Reveals
 
+  // Scroll-Schwung (nur Touch-Geräte, Desktop bleibt unberührt): Jedes Stück
+  // Scrollweg stößt eine gedämpfte Feder an — schnelles Rauf-und-Runter-Wischen
+  // baut viel Schwung auf und lässt das Wort kräftig nachwabbeln, ein sanfter
+  // Swipe nur ein leises Zittern. Die Feder beruhigt sich von selbst.
+  let schwapp = 0, schwappV = 0;       // Auslenkung (px) + Feder-Geschwindigkeit
+  if (gummi && !hoverGeraet) {
+    let letzterScrollY = window.scrollY;
+    window.addEventListener("scroll", () => {
+      const y = window.scrollY;
+      schwappV += (y - letzterScrollY) * 5; // Stoß proportional zum Scrolltempo
+      letzterScrollY = y;
+    }, { passive: true });
+  }
+
   // Stil nach Verweildauer wählen (Reihenfolge fest, Überblendung am Ende der
   // Haltezeit). Liefert die Deckkraft je Material — angewendet wird sie unten:
   // im DOM-Weg auf die <img>, im WebGL-Weg als Shader-Uniform.
@@ -302,10 +316,11 @@ if (pf && masthead && !reduziert) {
 
     if (aktiv) verweil += dt; // Verweildauer läuft nur, solange der Cursor auf dem Wort ist
 
-    // Touch-Auto-Sweep: Zielpunkt über das Wort schicken + Partikel streuen
+    // Touch-Auto-Sweep: Zielpunkt über das Wort schicken + Partikel streuen.
+    // Beim Scrollen (|schwapp| > 0) fegt der Sweep schneller → mehr Partikel.
     if (!hoverGeraet && aktiv) {
       const vorX = zx, vorY = zy;
-      autoT += dt * 0.6;
+      autoT += dt * (0.6 + Math.min(Math.abs(schwapp) * 0.05, 2.2));
       zx = pfRect.width * (0.5 + 0.42 * Math.sin(autoT));
       zy = pfRect.height * (0.5 + 0.22 * Math.sin(autoT * 1.7));
       const mx = (pfRect.left - mastRect.left) + zx, my = (pfRect.top - mastRect.top) + zy;
@@ -343,6 +358,11 @@ if (pf && masthead && !reduziert) {
       magnet += ((hoverGeraet && aktiv && !griffAktiv ? 1 : 0) - magnet) * Math.min(1, dt * 8);
       revealWert += ((aktiv ? 1 : 0) - revealWert) * Math.min(1, dt * 6);
 
+      // Scroll-Schwung ausfedern: weich zurück zur Ruhe, mit ein paar Wacklern
+      schwappV += (-90 * schwapp - 7 * schwappV) * dt;
+      schwapp += schwappV * dt;
+      schwapp = Math.max(-64, Math.min(64, schwapp));
+
       // Umschalten auf die Leinwände, sobald Solid + Kontur als Texturen da sind
       if (!glAn && gummi.bereit()) {
         glAn = true;
@@ -363,7 +383,9 @@ if (pf && masthead && !reduziert) {
           zug: [zugX, zugY],
           druck,
           griffR: Math.min(Math.max(pfRect.width * 0.13, 110), 240),
-          wabern: pfRect.width * 0.0022,
+          // Grundwabern legt beim Scrollen zu (bis ~3×), damit es lebendiger wird
+          wabern: pfRect.width * 0.0022 * (1 + Math.min(Math.abs(schwapp) / 26, 2)),
+          schwapp,
         });
       }
     }
