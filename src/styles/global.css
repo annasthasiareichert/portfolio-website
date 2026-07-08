@@ -214,6 +214,82 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
 }
 
 /* ============================================================
+   MASTHEAD-WORT „PORTFOLIO" — noth.in-Effekt mit Porträt dahinter
+   Ruhezustand flach & schwarz über dem Porträt; der Cursor bläht einen
+   kleinen Bereich zu glänzender 3D-Folie auf (Stil je nach Verweildauer).
+   Steuerung: interaktionen.js (Block 6).
+   ============================================================ */
+
+/* Porträt — liegt hinter der Schrift, volle Bühnenhöhe */
+.pf-figur {
+  position: absolute; left: 50%; top: 0; transform: translateX(-50%);
+  height: 100%; width: auto; max-width: 96%;
+  object-fit: contain; z-index: 1;
+  pointer-events: none; user-select: none;
+  /* Unterkante (Pullover) weich auslaufen lassen */
+  -webkit-mask-image: linear-gradient(#000 88%, transparent 99.5%);
+          mask-image: linear-gradient(#000 88%, transparent 99.5%);
+}
+
+/* Bühne für die Wort-Ebenen, über dem Porträt */
+.pf {
+  position: absolute; left: 50%; top: 57%; transform: translate(-50%, -50%);
+  width: min(1400px, 92vw); z-index: 2;
+  line-height: 0; user-select: none;
+  /* Blob-Geometrie (px, relativ zum Wort) — vom Skript gesetzt */
+  --cx: -9999px; --cy: 0px; --r: 0px;
+}
+.pf-basis, .pf-mat { display: block; width: 100%; height: auto; }
+
+/* flache schwarze Grafik. Sobald ein Stil sichtbar ist, wird sie im Blob
+   ausgestanzt (invertierte Maske) → kein Schwarz mehr unter der Folie. */
+.pf-basis { position: relative; z-index: 1; }
+.pf.aktiv .pf-basis {
+  -webkit-mask: url(#pf-mask-inv);
+          mask: url(#pf-mask-inv);
+}
+
+/* Reveal-Ebene: blendet beim Betreten des Worts ein/aus */
+.pf-reveal {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  will-change: opacity;
+}
+.pf.aktiv .pf-reveal { opacity: 1; }
+
+/* Maske: zeigt die Materialien nur im gooey Blob (SVG-Maske, folgt dem Cursor) */
+.pf-maske {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  -webkit-mask: url(#pf-mask);
+          mask: url(#pf-mask);
+}
+
+/* die vier aufgeblasenen Material-Grafiken, deckungsgleich gestapelt.
+   Ihre Deckkraft setzt das Skript nach Verweildauer (Überblendung). */
+.pf-mat { position: absolute; top: 0; left: 0; opacity: 0; }
+
+/* Geometrie der Masken-Kreise aus den CSS-Variablen (Chrome erlaubt cx/cy/r als CSS) */
+.pf-blob { cx: var(--cx, -9999px); cy: var(--cy, 0px); r: var(--r, 0px); }
+.pf-blob-bg { x: -3000px; y: -3000px; width: 9000px; height: 9000px; }
+.pf-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* Partikel-Leinwand über dem Wort */
+.pf-partikel {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  z-index: 3; pointer-events: none;
+}
+
+@media (max-width: 760px) {
+  .pf { width: 94vw; }
+}
+
+/* Ohne Bewegungswunsch: nur die flache, schwarze Schrift (kein Reveal/Partikel) */
+@media (prefers-reduced-motion: reduce) {
+  .pf-reveal, .pf-partikel { display: none; }
+}
+
+/* ============================================================
    ARBEITEN — Editorial-Index mit Hover-Bild-Reveal
    ============================================================ */
 .arbeiten { position: relative; padding: var(--takt) 0; background: var(--papier); }

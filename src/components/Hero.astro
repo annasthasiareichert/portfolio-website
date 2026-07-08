@@ -1,19 +1,69 @@
 ---
-// Hero / Masthead: Das Porträt verschmilzt mit dem Riesenwort „portfolio".
-// Beim Hover wandelt sich die Schrift von fetter Grotesk zu kursiver Serife
-// und ein Namens-Label folgt dem Cursor (siehe interaktionen.js).
+// Hero / Masthead: Riesenwort „PORTFOLIO" im noth.in-Stil — jetzt mit Porträt dahinter.
+//
+// Ebenen (hinten → vorne):
+//   1. Porträt (.pf-figur) — liegt HINTER der Schrift.
+//   2. Flache schwarze Schrift (.pf-basis) — wird im Reveal-Bereich AUSGESTANZT (transparent),
+//      damit der glänzende Stil sauber steht und das Porträt zwischen den Lettern durchscheint.
+//   3. Reveal (.pf-maske) — die aufgeblasene Folienschrift, per gooey SVG-Maske rund um den Cursor.
+//   4. Partikel (.pf-partikel) — fliegen an der Cursor-Bewegung mit.
+//
+// WELCHER Stil erscheint, hängt jetzt von der VERWEILDAUER des Cursors ab (nicht von der Stelle):
+// pink → pink-hell → chrom → holo, jeder Stil wird länger gehalten (siehe interaktionen.js, Block 6).
+// Der stark „flüssige" Rand entsteht über den SVG-Filter #pf-goo (Blur + Kontrast + Verzerrung),
+// der in die Masken-Kreise gebacken ist.
 ---
 
 <section class="hero" id="hero">
   <p class="eyebrow mono" data-de="Grafik- &amp; UI-Design · Köln" data-en="Graphic &amp; UI Design · Cologne">Grafik- &amp; UI-Design · Köln</p>
 
-  <div class="masthead" aria-label="Annasthasia Reichert — Portfolio">
+  <div class="masthead">
     <h1 class="visually-hidden">Annasthasia Reichert — Portfolio</h1>
-    <span class="mh-wort grotesk solid" aria-hidden="true">portfolio</span>
-    <span class="mh-wort serif solid" aria-hidden="true">portfolio</span>
-    <img class="mh-figur" src="/portrait-frei.png" alt="Porträt von Annasthasia Reichert" />
-    <span class="mh-wort grotesk line" aria-hidden="true">portfolio</span>
-    <span class="mh-wort serif line" aria-hidden="true">portfolio</span>
+
+    <!-- Porträt hinter der Schrift -->
+    <img class="pf-figur" src="/portrait-frei.png" alt="" aria-hidden="true" />
+
+    <div class="pf" data-pf aria-hidden="true">
+      <!-- Grundzustand: flach & schwarz. Im Reveal-Bereich per #pf-mask-inv ausgestanzt. -->
+      <img class="pf-basis" src="/header/portfolio-flach.webp" width="2658" height="365" alt="Portfolio" fetchpriority="high" decoding="async" />
+
+      <!-- Reveal: aufgeblasene Materialien, nur im gooey Blob um den Cursor sichtbar.
+           Erst bei Bedarf geladen (data-src → src via Skript). -->
+      <div class="pf-reveal">
+        <div class="pf-maske">
+          <img class="pf-mat" data-src="/header/portfolio-pink.webp"      width="2658" height="365" alt="" decoding="async" />
+          <img class="pf-mat" data-src="/header/portfolio-pink-hell.webp" width="2658" height="365" alt="" decoding="async" />
+          <img class="pf-mat" data-src="/header/portfolio-chrom.webp"     width="2658" height="365" alt="" decoding="async" />
+          <img class="pf-mat" data-src="/header/portfolio-holo.webp"      width="2658" height="365" alt="" decoding="async" />
+        </div>
+      </div>
+
+      <!-- Definitionen: Flüssig-Filter + zwei Masken (Blob & invertierter Blob fürs Ausstanzen).
+           Die Kreis-Geometrie kommt aus den CSS-Variablen --cx/--cy/--r (vom Skript gesetzt). -->
+      <svg class="pf-defs" width="0" height="0" aria-hidden="true" focusable="false">
+        <filter id="pf-goo" x="-80%" y="-80%" width="260%" height="260%" color-interpolation-filters="sRGB">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+          <feColorMatrix in="blur" type="matrix"
+            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8" result="goo" />
+          <feTurbulence type="fractalNoise" baseFrequency="0.02 0.03" numOctaves="2" seed="6" result="rauschen" />
+          <feDisplacementMap in="goo" in2="rauschen" scale="36" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+
+        <mask id="pf-mask" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse"
+              x="-1500" y="-1500" width="5000" height="5000">
+          <circle class="pf-blob" fill="#fff" filter="url(#pf-goo)" />
+        </mask>
+
+        <mask id="pf-mask-inv" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse"
+              x="-1500" y="-1500" width="5000" height="5000">
+          <rect class="pf-blob-bg" fill="#fff" />
+          <circle class="pf-blob" fill="#000" filter="url(#pf-goo)" />
+        </mask>
+      </svg>
+    </div>
+
+    <!-- Partikel-Ebene über dem Wort -->
+    <canvas class="pf-partikel" aria-hidden="true"></canvas>
   </div>
 
   <p class="mh-signatur"><span class="vn">annasthasia</span> reichert.</p>
