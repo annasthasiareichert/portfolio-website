@@ -1,17 +1,20 @@
 ---
-// Hero / Masthead: Riesenwort „PORTFOLIO" im noth.in-Stil — jetzt mit Porträt dahinter.
+// Hero / Masthead: Riesenwort „PORTFOLIO" im noth.in-Stil — verschmilzt mit dem Porträt.
 //
 // Ebenen (hinten → vorne):
-//   1. Porträt (.pf-figur) — liegt HINTER der Schrift.
-//   2. Flache schwarze Schrift (.pf-basis) — wird im Reveal-Bereich AUSGESTANZT (transparent),
-//      damit der glänzende Stil sauber steht und das Porträt zwischen den Lettern durchscheint.
-//   3. Reveal (.pf-maske) — die aufgeblasene Folienschrift, per gooey SVG-Maske rund um den Cursor.
-//   4. Partikel (.pf-partikel) — fliegen an der Cursor-Bewegung mit.
+//   1. Solid-Wort (.pf-solid, schwarz gefüllt) — liegt HINTER dem Porträt. Außerhalb ihrer
+//      Silhouette (Porträt dort transparent) füllt es die Lettern → gefülltes Schwarz.
+//   2. Porträt (.pf-figur) — verdeckt das Solid-Wort dort, wo sie steht.
+//   3. Outline-Wort (.pf-outline, nur Kontur) — VOR dem Porträt. Ruhezustand: über ihrem
+//      Körper sieht man so nur die Kontur; außerhalb deckt sie sich mit dem Solid dahinter.
+//   4. Reveal (.pf-maske) — die aufgeblasene Folienschrift, per gooey SVG-Maske am Cursor;
+//      deckt im Blob die Outline ab (kein Schwarz mehr unter der Folie).
+//   5. Partikel (.pf-partikel) — fliegen an der Cursor-Bewegung mit.
 //
-// WELCHER Stil erscheint, hängt jetzt von der VERWEILDAUER des Cursors ab (nicht von der Stelle):
+// WELCHER Stil erscheint, hängt von der VERWEILDAUER des Cursors ab (nicht von der Stelle):
 // pink → pink-hell → chrom → holo, jeder Stil wird länger gehalten (siehe interaktionen.js, Block 6).
 // Der stark „flüssige" Rand entsteht über den SVG-Filter #pf-goo (Blur + Kontrast + Verzerrung),
-// der in die Masken-Kreise gebacken ist.
+// der in den Masken-Kreis gebacken ist.
 ---
 
 <section class="hero" id="hero">
@@ -20,12 +23,16 @@
   <div class="masthead">
     <h1 class="visually-hidden">Annasthasia Reichert — Portfolio</h1>
 
-    <!-- Porträt hinter der Schrift -->
+    <!-- 1. Solid-Wort — liegt HINTER dem Porträt (füllt die Lettern außerhalb der Silhouette) -->
+    <img class="pf-solid" src="/header/portfolio-flach.webp" width="2658" height="365" alt="" aria-hidden="true" fetchpriority="high" decoding="async" />
+
+    <!-- 2. Porträt -->
     <img class="pf-figur" src="/portrait-frei.png" alt="" aria-hidden="true" />
 
+    <!-- 3+4. Vor dem Porträt: Outline (Ruhezustand) + Reveal-Folie (am Cursor) -->
     <div class="pf" data-pf aria-hidden="true">
-      <!-- Grundzustand: flach & schwarz. Im Reveal-Bereich per #pf-mask-inv ausgestanzt. -->
-      <img class="pf-basis" src="/header/portfolio-flach.webp" width="2658" height="365" alt="Portfolio" fetchpriority="high" decoding="async" />
+      <!-- Ruhezustand: nur die Kontur. Über dem Porträt sieht man so allein die Outline. -->
+      <img class="pf-outline" src="/header/portfolio-outline.webp" width="2658" height="365" alt="" decoding="async" />
 
       <!-- Reveal: aufgeblasene Materialien, nur im gooey Blob um den Cursor sichtbar.
            Erst bei Bedarf geladen (data-src → src via Skript). -->
@@ -38,7 +45,7 @@
         </div>
       </div>
 
-      <!-- Definitionen: Flüssig-Filter + zwei Masken (Blob & invertierter Blob fürs Ausstanzen).
+      <!-- Definitionen: Flüssig-Filter + Blob-Maske für den Reveal.
            Die Kreis-Geometrie kommt aus den CSS-Variablen --cx/--cy/--r (vom Skript gesetzt). -->
       <svg class="pf-defs" width="0" height="0" aria-hidden="true" focusable="false">
         <filter id="pf-goo" x="-80%" y="-80%" width="260%" height="260%" color-interpolation-filters="sRGB">
@@ -54,6 +61,8 @@
           <circle class="pf-blob" fill="#fff" filter="url(#pf-goo)" />
         </mask>
 
+        <!-- Invertierte Maske: stanzt die Outline im Blob aus (gleiche Geometrie wie #pf-mask),
+             damit unter der Folie kein Schwarz mehr steht. -->
         <mask id="pf-mask-inv" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse"
               x="-1500" y="-1500" width="5000" height="5000">
           <rect class="pf-blob-bg" fill="#fff" />

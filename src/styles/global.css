@@ -220,36 +220,51 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
    Steuerung: interaktionen.js (Block 6).
    ============================================================ */
 
-/* Porträt — liegt hinter der Schrift, volle Bühnenhöhe */
+/* Solid-Wort (schwarz gefüllt) — liegt HINTER dem Porträt. Teilt sich Position & Größe
+   mit .pf, damit Solid, Outline und Reveal exakt deckungsgleich sitzen.
+   Das gemeinsame `top` verschiebt das ganze Wort (tiefer = Kopf/Kinn bleiben frei). */
+.pf-solid,
+.pf {
+  position: absolute; left: 50%; top: 68%;
+  transform: translate(-50%, -50%);
+  width: min(1400px, 92vw);
+  user-select: none;
+}
+.pf-solid {
+  z-index: 1; display: block; height: auto;
+  pointer-events: none;
+}
+
+/* Porträt — zwischen Solid (hinten) und Outline/Reveal (vorne), volle Bühnenhöhe */
 .pf-figur {
   position: absolute; left: 50%; top: 0; transform: translateX(-50%);
   height: 100%; width: auto; max-width: 96%;
-  object-fit: contain; z-index: 1;
+  object-fit: contain; z-index: 2;
   pointer-events: none; user-select: none;
   /* Unterkante (Pullover) weich auslaufen lassen */
   -webkit-mask-image: linear-gradient(#000 88%, transparent 99.5%);
           mask-image: linear-gradient(#000 88%, transparent 99.5%);
 }
 
-/* Bühne für die Wort-Ebenen, über dem Porträt */
+/* Bühne für Outline + Reveal — liegt VOR dem Porträt */
 .pf {
-  position: absolute; left: 50%; top: 57%; transform: translate(-50%, -50%);
-  width: min(1400px, 92vw); z-index: 2;
-  line-height: 0; user-select: none;
+  z-index: 3;
+  line-height: 0;
   /* Blob-Geometrie (px, relativ zum Wort) — vom Skript gesetzt */
   --cx: -9999px; --cy: 0px; --r: 0px;
 }
-.pf-basis, .pf-mat { display: block; width: 100%; height: auto; }
+.pf-outline, .pf-mat { display: block; width: 100%; height: auto; }
 
-/* flache schwarze Grafik. Sobald ein Stil sichtbar ist, wird sie im Blob
-   ausgestanzt (invertierte Maske) → kein Schwarz mehr unter der Folie. */
-.pf-basis { position: relative; z-index: 1; }
-.pf.aktiv .pf-basis {
+/* Ruhezustand: nur die Kontur. Über dem Porträt allein sichtbar; außerhalb ihrer
+   Silhouette deckt sie sich mit dem schwarzen Solid dahinter → wirkt gefüllt. */
+.pf-outline { position: relative; z-index: 1; }
+/* Sobald ein Stil sichtbar ist, wird die Kontur im Blob ausgestanzt → kein Schwarz unter der Folie. */
+.pf.aktiv .pf-outline {
   -webkit-mask: url(#pf-mask-inv);
           mask: url(#pf-mask-inv);
 }
 
-/* Reveal-Ebene: blendet beim Betreten des Worts ein/aus */
+/* Reveal-Ebene: blendet beim Betreten des Worts ein/aus, deckt die Outline im Blob ab */
 .pf-reveal {
   position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;
   opacity: 0;
@@ -269,7 +284,7 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
    Ihre Deckkraft setzt das Skript nach Verweildauer (Überblendung). */
 .pf-mat { position: absolute; top: 0; left: 0; opacity: 0; }
 
-/* Geometrie der Masken-Kreise aus den CSS-Variablen (Chrome erlaubt cx/cy/r als CSS) */
+/* Geometrie des Masken-Kreises aus den CSS-Variablen (Chrome erlaubt cx/cy/r als CSS) */
 .pf-blob { cx: var(--cx, -9999px); cy: var(--cy, 0px); r: var(--r, 0px); }
 .pf-blob-bg { x: -3000px; y: -3000px; width: 9000px; height: 9000px; }
 .pf-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
@@ -277,14 +292,14 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
 /* Partikel-Leinwand über dem Wort */
 .pf-partikel {
   position: absolute; inset: 0; width: 100%; height: 100%;
-  z-index: 3; pointer-events: none;
+  z-index: 4; pointer-events: none;
 }
 
 @media (max-width: 760px) {
-  .pf { width: 94vw; }
+  .pf-solid, .pf { width: 94vw; }
 }
 
-/* Ohne Bewegungswunsch: nur die flache, schwarze Schrift (kein Reveal/Partikel) */
+/* Ohne Bewegungswunsch: statische Schrift (Solid + Outline), kein Reveal/Partikel */
 @media (prefers-reduced-motion: reduce) {
   .pf-reveal, .pf-partikel { display: none; }
 }
