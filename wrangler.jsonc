@@ -1,0 +1,10 @@
+{
+  // Cloudflare Workers – nur die fertige, statische Astro-Seite ausliefern.
+  // Kein Server-Code: Der Ordner "dist" (Ergebnis von "npm run build")
+  // wird 1:1 als Website serviert.
+  "name": "portfolio-website",
+  "compatibility_date": "2026-07-08",
+  "assets": {
+    "directory": "./dist"
+  }
+}
