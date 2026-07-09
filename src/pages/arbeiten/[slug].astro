@@ -33,6 +33,34 @@ const galerie = projekt.bilder && projekt.bilder.length ? projekt.bilder : [proj
 >
   <Kopf />
 
+  <!-- Ankunft des Karten-Flugs von der Startseite: läuft synchron noch VOR dem
+       ersten Malen. Baut die Papier-Deckschicht (html.karten-ankunft) und die
+       fliegende Karte an exakt dem Rechteck auf, an dem sie auf der Startseite
+       stehen geblieben ist — so gibt es keinen sichtbaren Bruch. Den Weiterflug
+       ins erste Projektbild übernimmt scripts/ankunft.js (unten). -->
+  <script define:vars={{ slug: projekt.slug }}>
+    (() => {
+      try {
+        const roh = sessionStorage.getItem("kartenflug");
+        if (!roh) return;
+        const flug = JSON.parse(roh);
+        // Frische-Fenster großzügig (15 s): auch ein langsamer Seitenaufbau darf den
+        // Flug noch annehmen. Veraltete Reste räumen faecher.js/ankunft.js ohnehin weg.
+        const frisch = flug && flug.slug === slug && flug.rect && Date.now() - flug.t < 15000;
+        const ruhig = matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (!frisch || ruhig) { sessionStorage.removeItem("kartenflug"); return; }
+        document.documentElement.classList.add("karten-ankunft", "karten-ankunft-still");
+        const el = document.createElement("div");
+        el.className = "ankunft-karte";
+        el.style.cssText =
+          `left:${flug.rect.left}px;top:${flug.rect.top}px;` +
+          `width:${flug.rect.width}px;height:${flug.rect.height}px;` +
+          `background-image:url('${flug.bild}')`;
+        document.body.appendChild(el);
+      } catch (_) {}
+    })();
+  </script>
+
   <main class="unterseite projektseite">
     <!-- Sand-Kopfband mit Titel, Kunde und Leistungen -->
     <section class="seitenkopf projekt-kopf">
@@ -90,5 +118,6 @@ const galerie = projekt.bilder && projekt.bilder.length ? projekt.bilder : [proj
 
   <script>
     import "../../scripts/interaktionen.js";
+    import "../../scripts/ankunft.js";
   </script>
 </Grundgeruest>

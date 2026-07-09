@@ -27,6 +27,23 @@ if (buehne && karten && wort && kundeZeile) {
     el.textContent = lang() === "en" ? en : de;
   };
 
+  /* 0) Titel-Wort an der Unterkante verankern ------------------------------
+        Das Wort soll fast komplett ÜBER den Karten schweben und nur ein kleines
+        Stück (~0,35em) hinter der Kartenoberkante abtauchen. Dafür messen wir
+        die ruhende Trefferfläche der mittleren Karte (.fk-a — bewegt sich nie)
+        und setzen `bottom` des Wortes passend. Läuft einmal beim Start und bei
+        jeder Größenänderung. */
+  const setzeWortAnker = () => {
+    const mitteA = links[Math.floor(links.length / 2)];
+    if (!mitteA) return;
+    const kartenTop = mitteA.getBoundingClientRect().top;
+    const buehneR = buehne.getBoundingClientRect();
+    const eintauchen = parseFloat(getComputedStyle(wort).fontSize) * 0.35;
+    wort.style.bottom = `${buehneR.bottom - (kartenTop + eintauchen)}px`;
+  };
+  setzeWortAnker();
+  window.addEventListener("resize", setzeWortAnker, { passive: true });
+
   /* 1) Hover → Titel & Kunde einblenden ----------------------------------- */
   if (zeigeGeraet) {
     // Ruhezustand: der Titel der mittleren Karte steht dezent als Wasserzeichen
@@ -53,10 +70,12 @@ if (buehne && karten && wort && kundeZeile) {
     });
   }
 
-  /* 2) Maus → Kartenreihe kippt leicht in 3D mit -------------------------- */
+  /* 2) Maus → Kartenreihe kippt leicht in 3D mit --------------------------
+        Bewusst dezent und träge: Der Tilt bewegt auch die Trefferflächen der
+        Karten — je kleiner/weicher er ist, desto ruhiger fühlt sich Hover an. */
   if (zeigeGeraet && !reduziert) {
-    karten.style.transition = "transform 0.4s ease"; // CSS glättet die Bewegung
-    const NEIGUNG = 6; // Grad max.
+    karten.style.transition = "transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)";
+    const NEIGUNG = 3.5; // Grad max.
     buehne.addEventListener("pointermove", (e) => {
       const r = buehne.getBoundingClientRect();
       const nx = (e.clientX - r.left) / r.width - 0.5;  // −0.5 … 0.5
@@ -119,6 +138,24 @@ if (buehne && karten && wort && kundeZeile) {
     const zx = vw / 2 - (r.left + r.width / 2);
     const zy = vh * 0.38 - (r.top + r.height / 2);
 
+    // Staffelstab für die Detailseite: Dort baut ein Inline-Schnipsel die Karte
+    // an GENAU diesem End-Rechteck wieder auf und lässt sie ins erste Projektbild
+    // weiterfliegen (scripts/ankunft.js) — so wirkt der Seitenwechsel wie EIN Flug.
+    try {
+      const zielHoehe = r.height * skala;
+      sessionStorage.setItem("kartenflug", JSON.stringify({
+        slug: a.dataset.slug,
+        bild: a.dataset.bild,
+        rect: {
+          left: vw / 2 - zielBreite / 2,
+          top: vh * 0.38 - zielHoehe / 2,
+          width: zielBreite,
+          height: zielHoehe,
+        },
+        t: Date.now(),
+      }));
+    } catch (_) { /* Speicher gesperrt → Übergang endet einfach im Vorhang */ }
+
     // 3) Papier-Vorhang überbrückt den Seitenwechsel
     const vorhang = document.createElement("div");
     vorhang.className = "uebergang-vorhang";
@@ -138,6 +175,7 @@ if (buehne && karten && wort && kundeZeile) {
   // damit der Fächer beim Wiederkommen sauber dasteht.
   window.addEventListener("pageshow", (e) => {
     if (!e.persisted) return;
+    try { sessionStorage.removeItem("kartenflug"); } catch (_) {}
     document.querySelectorAll(".fk.zerstreut").forEach((el) => {
       el.classList.remove("zerstreut");
       el.style.transform = ""; el.style.opacity = ""; el.style.transitionDelay = "";

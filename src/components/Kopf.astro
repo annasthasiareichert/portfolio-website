@@ -14,6 +14,18 @@ const pfad = Astro.url.pathname;
       <a href="/lebenslauf" data-de="lebenslauf" data-en="resume" data-ghost="lebenslauf" aria-current={pfad === "/lebenslauf" ? "page" : undefined}>lebenslauf</a>
       <a href="/#kontakt" data-de="kontakt" data-en="contact" data-ghost="kontakt">kontakt</a>
     </div>
+    <a
+      class="kopf-linkedin"
+      href="https://www.linkedin.com/in/annasthasia-leandra-reichert/"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="LinkedIn-Profil von Annasthasia Reichert (öffnet in neuem Tab)"
+    >
+      <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" focusable="false">
+        <path fill="currentColor" d="M4.98 3.5A2.49 2.49 0 1 1 5 8.48a2.49 2.49 0 0 1-.02-4.98zM3 9.75h4v11.5H3zM9.5 9.75h3.83v1.57h.05c.53-1.01 1.84-2.07 3.79-2.07 4.05 0 4.8 2.67 4.8 6.14v5.86h-4v-5.2c0-1.24-.02-2.83-1.72-2.83-1.73 0-1.99 1.35-1.99 2.74v5.29h-3.76z"/>
+      </svg>
+      <span class="kopf-linkedin-text">LinkedIn</span>
+    </a>
     <div class="sprache" role="group" aria-label="Sprache wählen">
       <button data-lang="de" class="aktiv">DE</button>
       <button data-lang="en">EN</button>

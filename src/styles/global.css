@@ -127,6 +127,26 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
 .nav-links a:hover,
 .nav-links a[aria-current="page"] { font-weight: 700; }
 
+/* LinkedIn direkt in der Kopfzeile — auf den ersten Blick sichtbar, ohne zu scrollen.
+   Gleiche Formensprache wie der Sprach-Umschalter (Hairline-Pille, monochrom). */
+.kopf-linkedin {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--haar); border-radius: 999px;
+  color: var(--tinte);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.kopf-linkedin:hover { background: var(--tinte); color: var(--papier); }
+.kopf-linkedin svg { display: block; }
+.kopf-linkedin-text {
+  font-family: var(--grotesk); font-weight: 600; font-size: 0.68rem; letter-spacing: 0.1em;
+}
+/* Mobil bleibt das Icon sichtbar, nur der Schriftzug weicht */
+@media (max-width: 760px) {
+  .kopf-linkedin { padding: 0.35rem 0.5rem; }
+  .kopf-linkedin-text { display: none; }
+}
+
 .sprache { display: inline-flex; border: 1px solid var(--haar); border-radius: 999px; overflow: hidden; }
 .sprache button {
   font-family: var(--grotesk); font-weight: 600; font-size: 0.68rem; letter-spacing: 0.1em;
@@ -480,23 +500,25 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
   letter-spacing: -0.02em; text-transform: lowercase;
 }
 
-/* Bühne */
+/* Bühne — die Karten sitzen unten, darüber ist bewusst Luft für das Titel-Wort */
 .faecher {
   position: relative;
   padding: clamp(1.5rem, 5vw, 4rem) var(--rand) clamp(2rem, 5vw, 3.5rem);
-  min-height: clamp(340px, 42vw, 520px);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: clamp(400px, 48vw, 620px);
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
   perspective: 1500px;
 }
 
-/* Großes Titel-Wort hinter den Karten — an der Oberkante verankert (translateY 0),
-   damit kurze wie lange Titel auf gleicher Höhe starten: erste Zeile gut lesbar
-   über den Kartenoberkanten, der Rest verschwindet leicht dahinter */
+/* Großes Titel-Wort — schwebt sichtbar ÜBER den Karten: nur die unterste Partie
+   der letzten Zeile taucht hinter den Kartenoberkanten ab (nicht mittig dahinter).
+   An der UNTERKANTE verankert: faecher.js setzt `bottom` so, dass das Wort knapp
+   (~0,35em) hinter der Kartenoberkante abtaucht — kurze wie lange Titel enden
+   dadurch immer auf derselben Höhe und wachsen nach OBEN in die freie Fläche. */
 .faecher-wort {
-  position: absolute; left: 50%; top: 9%; transform: translate(-50%, 0);
+  position: absolute; left: 50%; bottom: 62%; transform: translate(-50%, 0);
   z-index: 0; margin: 0; pointer-events: none; width: 100%;
   font-family: var(--grotesk); font-weight: 900; text-transform: lowercase;
-  font-size: clamp(2.4rem, 10vw, 9rem); line-height: 0.9; letter-spacing: -0.03em;
+  font-size: clamp(2.4rem, 9vw, 8.2rem); line-height: 0.92; letter-spacing: -0.03em;
   text-align: center; color: var(--tinte); text-wrap: balance;
   opacity: 0; transition: opacity 0.5s ease;
 }
@@ -510,17 +532,28 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
   transform-style: preserve-3d;
   --mid: calc((var(--n) - 1) / 2);
 }
+/* Weniger Überlappung als früher: jede Karte hat eine klar eigene Zone,
+   der Cursor erwischt nicht mehr so leicht zwei Karten „gleichzeitig". */
 .fk {
-  --rot: calc((var(--i) - var(--mid)) * 3.4deg);
+  --rot: calc((var(--i) - var(--mid)) * 3.2deg);
   position: relative;
-  width: clamp(108px, 12.5vw, 194px);
-  margin-inline: clamp(-36px, -2.6vw, -22px);
+  width: clamp(112px, 13vw, 200px);
+  margin-inline: clamp(-30px, -2.1vw, -18px);
   transform: rotate(var(--rot));
   transform-origin: center 170%;
   z-index: calc(var(--i) + 1);
-  transition: transform 0.5s cubic-bezier(0.2,0.8,0.2,1);
 }
-.fk-a { display: block; position: relative; animation: fk-schweben 6s ease-in-out infinite; animation-delay: calc(var(--i) * -0.7s); }
+/* WICHTIG gegen Hover-Zittern: Der Link (.fk-a) ist die Trefferfläche und bewegt
+   sich NIE — weder Schwebe-Animation noch Hover-Hub laufen auf ihm. Alles Sichtbare
+   (Schwebe-Wrapper, Karte) ist von Pointer-Events ausgenommen. So bleibt die Zone,
+   die der Cursor erfasst, absolut ruhig, während die Karte sich frei bewegen darf. */
+.fk-a { display: block; position: relative; }
+.fk-a > * { pointer-events: none; }
+.fk-schwebe {
+  display: block;
+  animation: fk-schweben 6s ease-in-out infinite;
+  animation-delay: calc(var(--i) * -0.7s);
+}
 @keyframes fk-schweben {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-9px); }
@@ -558,17 +591,19 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
    damit sie sauber in die Detailseite morphen kann (Name kommt aus faecher.js) */
 .fk-a.faehrt-weg { z-index: 60; }
 
-/* Hover: Karte richtet sich auf, hebt sich, Nachbarn machen Platz */
+/* Hover: Karte richtet sich auf, hebt sich, Nachbarn machen Platz.
+   Alle Bewegungen laufen auf .fk-karte (rein visuell) — die Trefferflächen
+   der Links bleiben unbewegt, dadurch kein Hin-und-her-Springen mehr. */
 @media (hover: hover) and (min-width: 761px) {
   .faecher:hover .faecher-hinweis { opacity: 0; }
   .fk:hover { z-index: 50; }
-  .fk:hover .fk-a { animation-play-state: paused; }
+  .fk:hover .fk-schwebe { animation-play-state: paused; }
   .fk:hover .fk-karte {
     transform: translateY(-26px) scale(1.06) rotate(calc(-1 * var(--rot)));
     box-shadow: 0 44px 74px -28px rgba(26,23,18,0.6), 0 10px 22px -10px rgba(26,23,18,0.35);
   }
-  .fk:hover + .fk { transform: rotate(var(--rot)) translateX(16px); }
-  .fk:has(+ .fk:hover) { transform: rotate(var(--rot)) translateX(-16px); }
+  .fk:hover + .fk .fk-karte { transform: translateX(18px); }
+  .fk:has(+ .fk:hover) .fk-karte { transform: translateX(-18px); }
 }
 
 /* Mobile / Touch: wischbares Karussell statt Fächer */
@@ -587,7 +622,7 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
     flex: 0 0 min(70%, 256px); width: auto; margin: 0;
     transform: none; z-index: auto; scroll-snap-align: center;
   }
-  .fk-a { animation: none; }
+  .fk-schwebe { animation: none; }
   .fk-karte { transform: none; border-radius: 10px; box-shadow: 0 12px 26px -16px rgba(26,23,18,0.45); }
   .fk-label {
     position: static; width: auto; height: auto; clip: auto; white-space: normal;
@@ -618,6 +653,31 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
 }
 .uebergang-vorhang.an { opacity: 1; }
 
+/* --- Ankunft auf der Detailseite (Inline-Schnipsel in [slug].astro + ankunft.js) ---
+   Papier-Deckschicht ab dem ersten Frame (unter Kopfzeile & WIP-Banner, damit die
+   Navigation „stehen bleibt"), darüber die weiterfliegende Karte. Scrollen ist
+   während des kurzen Anflugs gesperrt, damit das Ziel-Rechteck nicht wegrutscht. */
+html.karten-ankunft { overflow: hidden; }
+html.karten-ankunft::after {
+  content: ""; position: fixed; inset: 0; z-index: 90;
+  background: var(--papier); pointer-events: none;
+  opacity: 1; transition: opacity 0.45s ease;
+}
+html.karten-ankunft.karten-ankunft-frei::after { opacity: 0; }
+/* Die angeflogene Karte (Geometrie kommt aus dem Inline-Schnipsel/ankunft.js) */
+.ankunft-karte {
+  position: fixed; z-index: 95; pointer-events: none;
+  background-size: cover; background-position: center;
+  border-radius: 12px;
+  box-shadow: 0 60px 100px -30px rgba(26,23,18,0.6);
+  will-change: left, top, width, height, opacity;
+}
+/* Beim Anflug bleiben die Inhaltsblöcke ruhig stehen (kein Herein-Schweben) —
+   sonst würde das Ziel-Bild beim Vermessen noch wandern. Die Klasse bleibt
+   dauerhaft gesetzt, damit die Intro-Animation nicht nachträglich anspringt. */
+html.karten-ankunft-still .fall-inhalt > *,
+html.karten-ankunft-still .projekt-inhalt > * { animation: none; }
+
 /* Ankommen auf der Detailseite: Kopf-Inhalt und die ersten Blöcke schweben
    gestaffelt herein → „deutlich mehr Bewegung" beim Öffnen */
 @media (prefers-reduced-motion: no-preference) {
@@ -641,7 +701,7 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fk-a { animation: none; }
+  .fk-schwebe { animation: none; }
 }
 
 /* ============================================================
