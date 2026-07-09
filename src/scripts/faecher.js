@@ -38,34 +38,100 @@ if (buehne && karten && wort && kundeZeile) {
     if (!mitteA) return;
     const kartenTop = mitteA.getBoundingClientRect().top;
     const buehneR = buehne.getBoundingClientRect();
-    const eintauchen = parseFloat(getComputedStyle(wort).fontSize) * 0.35;
-    wort.style.bottom = `${buehneR.bottom - (kartenTop + eintauchen)}px`;
+    // Der Titel schwebt jetzt KOMPLETT über den Karten und sitzt ein deutliches
+    // Stück höher (früher tauchte die Unterkante hinter die Karten ab und war
+    // dadurch halb verdeckt). `luft` = Abstand über der Kartenoberkante; groß
+    // genug, dass auch eine fokussierte Karte (die sich ~26px anhebt) nicht in
+    // den Titel hineinragt. Anker weiter an der Unterkante, damit kurze wie
+    // lange Titel unten bündig sind und nach OBEN in die freie Luft wachsen.
+    // Höher/tiefer stellen: den Faktor 0.24 anpassen (größer = Titel höher).
+    const luft = parseFloat(getComputedStyle(wort).fontSize) * 0.24;
+    wort.style.bottom = `${buehneR.bottom - kartenTop + luft}px`;
   };
   setzeWortAnker();
   window.addEventListener("resize", setzeWortAnker, { passive: true });
 
-  /* 1) Hover → Titel & Kunde einblenden ----------------------------------- */
+  /* 1) Fokus → Titel & Kunde einblenden -----------------------------------
+        Welche Karte „im Fokus" steht, entscheidet hier bewusst JS – nicht das
+        CSS-:hover. Denn die Karten überlappen sich; mit :hover flackerte die
+        Auswahl bei jeder kleinen (vor allem senkrechten) Mausbewegung und die
+        Karten sprangen unruhig hin und her.
+        Stattdessen fragen wir bei jeder Bewegung die OBERSTE Karte unter dem
+        Cursor ab (document.elementFromPoint trifft die echte, gedrehte Fläche).
+        Die fokussierte Karte bekommt die Klasse .fokus und wird dadurch nach
+        vorn geholt (z-index 50) — im Überlappungsbereich liegt sie damit VOR
+        ihrer Nachbarin. Daraus ergibt sich genau das gewünschte Verhalten:
+          · Die Karte bleibt fokussiert, solange der Cursor in ihrer Kontur ist –
+            auch über dem Stück, unter dem eine andere Karte liegt.
+          · Die Nachbarkarte übernimmt erst, wenn der Cursor ihren freien, nicht
+            überdeckten Teil erreicht — also nur bei WAAGERECHTER Bewegung.
+          · Senkrechte Bewegung führt in den Leerraum über/unter der Karte und
+            wechselt die Auswahl nie. */
   if (zeigeGeraet) {
-    // Ruhezustand: der Titel der mittleren Karte steht dezent als Wasserzeichen
     const mitte = links[Math.floor(links.length / 2)];
-    if (mitte) {
-      setzeText(wort, mitte.dataset.titelDe, mitte.dataset.titelEn);
-      wort.classList.add("ruht");
-    }
+    let fokusA = null;
 
-    links.forEach((a) => {
-      a.addEventListener("mouseenter", () => {
-        setzeText(wort, a.dataset.titelDe, a.dataset.titelEn);
-        setzeText(kundeZeile, a.dataset.kundeDe, a.dataset.kundeEn);
-        wort.classList.remove("ruht");
-        wort.classList.add("aktiv");
-        kundeZeile.classList.add("aktiv");
+    const ruhe = () => {
+      wort.classList.remove("aktiv");
+      wort.classList.add("ruht");
+      kundeZeile.classList.remove("aktiv");
+    };
+
+    const fokussiere = (a) => {
+      if (a === fokusA) return;
+      if (fokusA) fokusA.closest(".fk").classList.remove("fokus");
+      fokusA = a;
+      if (!a) { ruhe(); return; }
+      a.closest(".fk").classList.add("fokus");
+      setzeText(wort, a.dataset.titelDe, a.dataset.titelEn);
+      setzeText(kundeZeile, a.dataset.kundeDe, a.dataset.kundeEn);
+      wort.classList.remove("ruht");
+      wort.classList.add("aktiv");
+      kundeZeile.classList.add("aktiv");
+    };
+
+    // Ruhezustand: mittlerer Titel als dezentes Wasserzeichen
+    if (mitte) setzeText(wort, mitte.dataset.titelDe, mitte.dataset.titelEn);
+    ruhe();
+
+    // Oberste Karte unter dem Cursor bestimmen (echte Kontur inkl. Fächer-Drehung).
+    // Die Karten-Innereien sind pointer-events:none, daher liefert elementFromPoint
+    // immer die Trefferfläche .fk-a der zuoberst liegenden Karte – oder nichts.
+    const karteUnter = (x, y) => {
+      const el = document.elementFromPoint(x, y);
+      return el ? el.closest(".fk-a") : null;
+    };
+
+    let lx = 0, ly = 0, geplant = false;
+    buehne.addEventListener("pointermove", (e) => {
+      lx = e.clientX; ly = e.clientY;
+      if (geplant) return;
+      geplant = true;
+      requestAnimationFrame(() => {
+        geplant = false;
+        const a = karteUnter(lx, ly);
+        // Über einer Karte → diese fokussieren. Über Leerraum (z. B. senkrecht
+        // neben oder über den Karten) → aktuelle Auswahl behalten, kein Wechsel.
+        if (a) fokussiere(a);
       });
-      a.addEventListener("mouseleave", () => {
-        // Titel bleibt (zuletzt berührt), fällt aber dezent ins Wasserzeichen zurück
-        wort.classList.remove("aktiv");
-        wort.classList.add("ruht");
-        kundeZeile.classList.remove("aktiv");
+    }, { passive: true });
+
+    // Den Fächer ganz verlassen → zurück ins Wasserzeichen
+    buehne.addEventListener("pointerleave", () => {
+      if (fokusA) fokusA.closest(".fk").classList.remove("fokus");
+      fokusA = null;
+      ruhe();
+    });
+
+    // Tastatur (Tab-Navigation): denselben Fokus-Look zeigen (Barrierefreiheit)
+    links.forEach((a) => {
+      a.addEventListener("focus", () => fokussiere(a));
+      a.addEventListener("blur", () => {
+        if (fokusA === a) {
+          a.closest(".fk").classList.remove("fokus");
+          fokusA = null;
+          ruhe();
+        }
       });
     });
   }

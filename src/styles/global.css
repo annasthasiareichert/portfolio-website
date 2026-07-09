@@ -522,8 +522,11 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
   text-align: center; color: var(--tinte); text-wrap: balance;
   opacity: 0; transition: opacity 0.5s ease;
 }
-.faecher-wort.ruht  { opacity: 0.09; }
-.faecher-wort.aktiv { opacity: 0.92; }
+/* Titel-Ton bleibt bewusst KONSTANT hell (Nutzerwunsch): Hover wechselt nur den
+   TEXT der Überschrift, nie ihre Farbe/Helligkeit — kein Umschlagen auf Schwarz.
+   Ruhe = Erst-Zustand (mittlerer Titel), aktiv = gehovte Karte; gleicher Ton. */
+.faecher-wort.ruht  { opacity: 0.14; }
+.faecher-wort.aktiv { opacity: 0.14; }
 
 /* Kartenreihe */
 .faecher-karten {
@@ -591,19 +594,22 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
    damit sie sauber in die Detailseite morphen kann (Name kommt aus faecher.js) */
 .fk-a.faehrt-weg { z-index: 60; }
 
-/* Hover: Karte richtet sich auf, hebt sich, Nachbarn machen Platz.
-   Alle Bewegungen laufen auf .fk-karte (rein visuell) — die Trefferflächen
-   der Links bleiben unbewegt, dadurch kein Hin-und-her-Springen mehr. */
+/* Fokus: Karte richtet sich auf, hebt sich, Nachbarn machen Platz.
+   Gesteuert über die Klasse .fokus (aus faecher.js), NICHT über :hover — so
+   bleibt die Auswahl bei überlappenden Karten ruhig und springt nicht mehr.
+   Alle Bewegungen laufen auf .fk-karte (rein visuell); die Trefferflächen der
+   Links bleiben unbewegt. Das .fokus-z-index sorgt zugleich dafür, dass die
+   fokussierte Karte im Überlappungsbereich vorn liegt (klebt am Cursor). */
 @media (hover: hover) and (min-width: 761px) {
   .faecher:hover .faecher-hinweis { opacity: 0; }
-  .fk:hover { z-index: 50; }
-  .fk:hover .fk-schwebe { animation-play-state: paused; }
-  .fk:hover .fk-karte {
+  .fk.fokus { z-index: 50; }
+  .fk.fokus .fk-schwebe { animation-play-state: paused; }
+  .fk.fokus .fk-karte {
     transform: translateY(-26px) scale(1.06) rotate(calc(-1 * var(--rot)));
     box-shadow: 0 44px 74px -28px rgba(26,23,18,0.6), 0 10px 22px -10px rgba(26,23,18,0.35);
   }
-  .fk:hover + .fk .fk-karte { transform: translateX(18px); }
-  .fk:has(+ .fk:hover) .fk-karte { transform: translateX(-18px); }
+  .fk.fokus + .fk .fk-karte { transform: translateX(18px); }
+  .fk:has(+ .fk.fokus) .fk-karte { transform: translateX(-18px); }
 }
 
 /* Mobile / Touch: wischbares Karussell statt Fächer */
