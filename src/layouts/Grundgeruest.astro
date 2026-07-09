@@ -20,9 +20,10 @@ const {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={beschreibung} />
-    <!-- Favicon (AR-Monogramm): dunkle Schrift auf hellem Tab, helle Schrift im Dark Mode -->
-    <link rel="icon" type="image/png" href="/favicon-dark.png" media="(prefers-color-scheme: light)" />
-    <link rel="icon" type="image/png" href="/favicon-light.png" media="(prefers-color-scheme: dark)" />
+    <!-- Favicon (AR im Kreis, immer voller Kontrast):
+         helles System = weißer Kreis + schwarzes AR · Dark Mode = schwarzer Kreis + weißes AR -->
+    <link rel="icon" type="image/png" href="/favicon-light.png" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/png" href="/favicon-dark.png" media="(prefers-color-scheme: dark)" />
     <title>{titel}</title>
 
     <!--
