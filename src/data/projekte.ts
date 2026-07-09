@@ -55,7 +55,7 @@ export type Projekt = {
 export const projekte: Projekt[] = [
   {
     slug: "ticket-ag-rebranding",
-    bild: "/projekte/ticket-ag/desktop.webp",
+    bild: "/projekte/karten/ticket-ag.webp",
     titel: { de: "ganzheitliches rebranding", en: "full rebranding" },
     kunde: { de: "Ticket AG", en: "Ticket AG" },
     meta:  { de: "Branding, UI · 2025", en: "Branding, UI · 2025" },
@@ -136,7 +136,7 @@ export const projekte: Projekt[] = [
   },
   {
     slug: "echory-logo-redesign",
-    bild: "/projekte/p2-echory.jpg",
+    bild: "/projekte/karten/echory.webp",
     titel: { de: "logo redesign", en: "logo redesign" },
     kunde: { de: "echory", en: "echory" },
     meta:  { de: "Logo · 2024", en: "Logo · 2024" },
@@ -148,7 +148,7 @@ export const projekte: Projekt[] = [
   },
   {
     slug: "eisbaeren-berlin-logo",
-    bild: "/projekte/p3-eisbaeren.jpg",
+    bild: "/projekte/karten/eisbaeren.webp",
     titel: { de: "logo redesign", en: "logo redesign" },
     kunde: { de: "Eisbären Berlin", en: "Eisbären Berlin" },
     meta:  { de: "Sport, Logo · 2024", en: "Sport, Logo · 2024" },
@@ -160,7 +160,7 @@ export const projekte: Projekt[] = [
   },
   {
     slug: "3d-rendering-schuh",
-    bild: "/projekte/p4-schuh3d.jpg",
+    bild: "/projekte/karten/schuh-3d.webp",
     titel: { de: "3d-rendering", en: "3d rendering" },
     kunde: { de: "Schuh-Modell", en: "Shoe model" },
     meta:  { de: "3D, Produkt · 2024", en: "3D, Product · 2024" },
@@ -172,7 +172,7 @@ export const projekte: Projekt[] = [
   },
   {
     slug: "content-creation",
-    bild: "/projekte/p5-content.jpg",
+    bild: "/projekte/karten/content.webp",
     titel: { de: "content creation", en: "content creation" },
     kunde: { de: "Verschiedene Brands", en: "Various brands" },
     meta:  { de: "Social · 2023–25", en: "Social · 2023–25" },
@@ -184,7 +184,7 @@ export const projekte: Projekt[] = [
   },
   {
     slug: "brand-assets-ecostag",
-    bild: "/projekte/p6-brandassets.jpg",
+    bild: "/projekte/karten/brand-assets.webp",
     titel: { de: "brand assets", en: "brand assets" },
     kunde: { de: "ecostag / stagedates", en: "ecostag / stagedates" },
     meta:  { de: "Branding · 2024", en: "Branding · 2024" },
@@ -196,7 +196,7 @@ export const projekte: Projekt[] = [
   },
   {
     slug: "merchandise-stagedates",
-    bild: "/projekte/p7-merch.jpg",
+    bild: "/projekte/karten/merch.webp",
     titel: { de: "merchandise", en: "merchandise" },
     kunde: { de: "stagedates", en: "stagedates" },
     meta:  { de: "Merch, Print · 2024", en: "Merch, Print · 2024" },
@@ -208,7 +208,7 @@ export const projekte: Projekt[] = [
   },
   {
     slug: "private-projekte",
-    bild: "/projekte/p8-private.jpg",
+    bild: "/projekte/karten/private.webp",
     titel: { de: "private projekte", en: "personal work" },
     kunde: { de: "Auswahl", en: "Selection" },
     meta:  { de: "Illustration · laufend", en: "Illustration · ongoing" },
@@ -220,7 +220,7 @@ export const projekte: Projekt[] = [
   },
   {
     slug: "lampenwelt-banner",
-    bild: "/projekte/p9-lampenwelt.jpg",
+    bild: "/projekte/karten/lampenwelt.webp",
     titel: { de: "banner-gestaltung", en: "banner design" },
     kunde: { de: "Lampenwelt", en: "Lampenwelt" },
     meta:  { de: "Ausblick · 2026", en: "Preview · 2026" },
