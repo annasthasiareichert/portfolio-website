@@ -157,9 +157,10 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
   padding: 11px 0;
   background: var(--tinte); color: var(--papier);
   text-align: center;
-  /* Weicher, diffuser Schatten ohne harte Kante – verläuft in den Hintergrund.
-     Zwei Ebenen: naher, leiser Halo + weit gestreuter, sehr weicher Verlauf. */
-  box-shadow: 0 4px 16px rgba(26,23,18,0.16), 0 12px 48px rgba(26,23,18,0.18);
+  /* Sehr weicher, natürlicher Schatten – hebt das Band nur minimal ab, ohne
+     jede sichtbare Kante. Großer Blur bei niedriger Deckkraft, in zwei Ebenen
+     gestaffelt, damit der Verlauf ganz sanft im Hintergrund ausläuft. */
+  box-shadow: 0 10px 30px rgba(26,23,18,0.10), 0 26px 70px rgba(26,23,18,0.08);
 }
 .wip-text {
   font-family: var(--grotesk); font-weight: 800;
@@ -184,8 +185,21 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
    HERO — Masthead: Porträt verschmilzt mit der Riesen-Schrift
    (nach dem Vorbild deiner Portfolio-Titelseite)
    ============================================================ */
+/* Nicht-skalierende Sand-Fläche direkt hinter der Hero (deckt genau den ersten
+   Bildschirm ab). Liegt über dem hellen Body-Grund (z-index:0), aber unter der
+   Hero (z-index:1) – und nur im oberen Bereich, damit tiefer liegende, transparente
+   Abschnitte unberührt bleiben. Beim Verkleinern der Hero scheint so dieselbe
+   Sand-Farbe durch – kein weißer Rand mehr. */
+.hero-grund {
+  position: absolute; top: 0; left: 0; width: 100%;
+  height: 100svh;
+  background: var(--sand);
+  z-index: 0;
+  pointer-events: none;
+}
 .hero {
   position: relative;
+  z-index: 1;
   min-height: 100svh;
   background: var(--sand);
   display: flex; flex-direction: column; justify-content: center;
