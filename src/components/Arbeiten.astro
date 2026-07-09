@@ -1,31 +1,58 @@
 ---
-// „ausgewählte arbeiten" — Editorial-Index mit cursorfolgendem Bild-Reveal.
-// Die Zeilen entstehen aus src/data/projekte.ts.
+// „ausgewählte arbeiten" — schwebender 3D-Karten-Fächer.
+// Die Projekte aus src/data/projekte.ts liegen als Karten zentriert und leicht
+// gefächert auf der Bühne. Beim Hover hebt sich eine Karte heraus, im Hintergrund
+// erscheint groß ihr Titel (Archivo Black), darunter mittig der Kundenname.
+// Klick → Detailseite, mit einem „Hineinschweben"-Übergang (siehe scripts/faecher.js).
+// Auf dem Handy wird derselbe Kartenstapel zu einem wischbaren Karussell.
 import { projekte } from "../data/projekte";
+const anzahl = projekte.length;
+const jahre = "2023–2026";
 ---
 
 <section class="arbeiten" id="arbeiten">
   <div class="kopf auftritt">
     <h2 data-de="ausgewählte arbeiten." data-en="selected work.">ausgewählte arbeiten.</h2>
-    <span class="mono" data-de={`0${projekte.length} Projekte · 2023–2026`} data-en={`0${projekte.length} Projects · 2023–2026`}>0{projekte.length} Projekte · 2023–2026</span>
+    <span
+      class="mono"
+      data-de={`0${anzahl} Projekte · ${jahre}`}
+      data-en={`0${anzahl} Projects · ${jahre}`}>0{anzahl} Projekte · {jahre}</span>
   </div>
 
-  <ul class="index-liste">
-    {projekte.map((p, i) => {
-      const nr = String(i + 1).padStart(2, "0");
-      return (
-        <li class="index-zeile auftritt">
-          <a href={`/arbeiten/${p.slug}`} data-bild={p.bild}>
-            <span class="nr">{nr}</span>
-            <span class="titelblock">
-              <span class="titel" data-de={p.titel.de} data-en={p.titel.en}>{p.titel.de}</span>
-              <span class="kunde" data-de={p.kunde.de} data-en={p.kunde.en}>{p.kunde.de}</span>
+  <div class="faecher auftritt" id="faecher">
+    <!-- Großes Titel-Wort hinter den Karten (dekorativ, per JS beim Hover gesetzt) -->
+    <p class="faecher-wort" id="faecher-wort" aria-hidden="true"></p>
+
+    <ul class="faecher-karten" id="faecher-karten" style={`--n:${anzahl}`}>
+      {projekte.map((p, i) => (
+        <li class="fk" style={`--i:${i}`}>
+          <a
+            class="fk-a"
+            href={`/arbeiten/${p.slug}`}
+            data-slug={p.slug}
+            data-bild={p.bild}
+            data-titel-de={p.titel.de}
+            data-titel-en={p.titel.en}
+            data-kunde-de={p.kunde.de}
+            data-kunde-en={p.kunde.en}>
+            <span class="fk-karte">
+              <span class="fk-bild" style={`background-image:url('${p.bild}')`} aria-hidden="true"></span>
+              <span class="fk-schein" aria-hidden="true"></span>
             </span>
-            <span class="meta" data-de={p.meta.de} data-en={p.meta.en}>{p.meta.de}</span>
-            <span class="mobil-bild" style={`background-image:url('${p.bild}')`}></span>
+            <span class="fk-label">
+              <span class="fk-titel" data-de={p.titel.de} data-en={p.titel.en}>{p.titel.de}</span>
+              <span class="fk-kunde" data-de={p.kunde.de} data-en={p.kunde.en}>{p.kunde.de}</span>
+            </span>
           </a>
         </li>
-      );
-    })}
-  </ul>
+      ))}
+    </ul>
+
+    <!-- Kundenname mittig unter dem Fächer (Desktop; per JS beim Hover gesetzt) -->
+    <p class="faecher-kunde" id="faecher-kunde" aria-hidden="true"></p>
+
+    <p class="faecher-hinweis mono" aria-hidden="true"
+       data-de="über eine Karte fahren · klicken zum Öffnen"
+       data-en="hover a card · click to open">über eine Karte fahren · klicken zum Öffnen</p>
+  </div>
 </section>

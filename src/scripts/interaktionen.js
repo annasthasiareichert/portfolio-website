@@ -50,35 +50,8 @@ if (!reduziert && hero) {
   }, { passive: true });
 }
 
-/* 4) Hover-Bild-Reveal, folgt dem Cursor */
-const reveal = document.getElementById("reveal");
-const platte = document.getElementById("reveal-platte");
-let zielX = 0, zielY = 0, istX = 0, istY = 0, aktiv = false;
-if (!reduziert && reveal && platte && window.matchMedia("(hover: hover)").matches) {
-  document.querySelectorAll(".index-zeile a").forEach((a) => {
-    a.addEventListener("mouseenter", () => {
-      aktiv = true;
-      reveal.style.backgroundImage = "url('" + a.dataset.bild + "')";
-      platte.textContent = a.querySelector(".titel").textContent;
-      reveal.classList.add("sichtbar");
-    });
-    a.addEventListener("mouseleave", () => {
-      aktiv = false;
-      reveal.classList.remove("sichtbar");
-    });
-  });
-  window.addEventListener("mousemove", (e) => {
-    zielX = e.clientX; zielY = e.clientY;
-  }, { passive: true });
-  (function animiere() {
-    istX += (zielX - istX) * 0.12;
-    istY += (zielY - istY) * 0.12;
-    const rot = Math.max(-7, Math.min(7, (zielX - istX) * 0.14));
-    reveal.style.transform =
-      `translate(${istX}px, ${istY}px) translate(-50%,-50%) scale(${aktiv ? 1 : 0.9}) rotate(${rot}deg)`;
-    requestAnimationFrame(animiere);
-  })();
-}
+/* 4) Der Hover-Bild-Reveal der alten Projektliste ist in den Karten-Fächer
+      gewandert (siehe scripts/faecher.js), daher hier entfernt. */
 
 /* 4b) Sicherheitsnetz für evtl. verbliebene Platzhalter-Links (data-soon oder href="#"):
        nicht nach oben springen lassen. Projekte & Lebenslauf sind inzwischen echte Seiten. */
