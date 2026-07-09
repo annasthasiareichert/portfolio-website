@@ -148,8 +148,7 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
   z-index: 200;           /* über Kopfzeile (100) & Overlays */
   pointer-events: none;   /* blockiert keine Klicks (Wortmarke bleibt erreichbar) */
 }
-/* Einfarbiges, breiteres Band – kein Etikett-Rahmen mehr, dafür klar sichtbar
-   und durch einen weichen Schlagschatten vom Hintergrund abgehoben. */
+/* Einfarbiges, breiteres Band – kein Etikett-Rahmen, kein Schatten, flach. */
 .wip-band {
   position: absolute;
   left: -54px; top: 40px; width: 240px;
@@ -157,10 +156,6 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
   padding: 11px 0;
   background: var(--tinte); color: var(--papier);
   text-align: center;
-  /* Sehr weicher, natürlicher Schatten – hebt das Band nur minimal ab, ohne
-     jede sichtbare Kante. Großer Blur bei niedriger Deckkraft, in zwei Ebenen
-     gestaffelt, damit der Verlauf ganz sanft im Hintergrund ausläuft. */
-  box-shadow: 0 10px 30px rgba(26,23,18,0.10), 0 26px 70px rgba(26,23,18,0.08);
 }
 .wip-text {
   font-family: var(--grotesk); font-weight: 800;
