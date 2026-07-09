@@ -102,6 +102,30 @@ function setzeSprache(lang) {
 }
 langButtons.forEach((b) => b.addEventListener("click", () => setzeSprache(b.dataset.lang)));
 
+/* 5b) Namens-Label am Cursor + Spiel-Hinweis über dem Wort.
+   Läuft unabhängig vom Wort-Effekt (auch bei reduzierter Bewegung), damit der
+   Name und der Hinweis in jedem Fall erscheinen. Nur auf Zeigegeräten mit Hover:
+   - Cursor über dem Wort → Namens-Label einblenden und der Maus folgen lassen
+   - gleichzeitig den Spiel-Hinweis ausblenden (die Interaktion ist ja entdeckt) */
+const wortFlaeche = document.querySelector("[data-pf]");
+const cursorLabel = document.getElementById("cursor-label");
+const spielHinweis = document.getElementById("spiel-hinweis");
+if (wortFlaeche && window.matchMedia("(hover: hover)").matches) {
+  wortFlaeche.addEventListener("pointerenter", () => {
+    if (cursorLabel) cursorLabel.classList.add("sichtbar");
+    if (spielHinweis) spielHinweis.classList.add("weg");
+  });
+  wortFlaeche.addEventListener("pointermove", (e) => {
+    if (!cursorLabel) return;
+    cursorLabel.style.left = e.clientX + "px";
+    cursorLabel.style.top = e.clientY + "px";
+  }, { passive: true });
+  wortFlaeche.addEventListener("pointerleave", () => {
+    if (cursorLabel) cursorLabel.classList.remove("sichtbar");
+    if (spielHinweis) spielHinweis.classList.remove("weg");
+  });
+}
+
 /* 6) Masthead-Wort „PORTFOLIO" (noth.in-Effekt):
       Grundzustand = flache schwarze Grafik über dem Porträt. Rund um den Cursor
       bläht sich ein KLEINER, stark „flüssiger" (gooey) Bereich zu aufgeblasener
