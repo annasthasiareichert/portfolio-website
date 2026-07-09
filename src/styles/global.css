@@ -21,7 +21,9 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+/* Beiger Grund auch auf dem Wurzel-Element: beim Überscrollen (Gummiband am
+   oberen/unteren Rand) bleibt der Rand beige – kein weißer Standard-Canvas-Streifen. */
+html { background: var(--papier); scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
 body {
   background: var(--papier);
   color: var(--tinte);
@@ -111,14 +113,19 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
 .nav-links a {
   position: relative; font-weight: 500; font-size: 0.95rem;
   text-transform: lowercase;
+  overflow: hidden;
+  transition: font-weight 0.15s ease;
 }
+/* Unsichtbare fette Kopie des Begriffs (data-ghost) reserviert die Breite,
+   damit beim Fett-Werden nichts verrutscht. Höhe 0 → kein Platz nach unten. */
 .nav-links a::after {
-  content: ""; position: absolute; left: 0; bottom: -3px;
-  width: 100%; height: 1px; background: currentColor;
-  transform: scaleX(0); transform-origin: left;
-  transition: transform 0.4s cubic-bezier(0.2,0.8,0.2,1);
+  content: attr(data-ghost);
+  display: block; height: 0; visibility: hidden;
+  font-weight: 700; pointer-events: none;
 }
-.nav-links a:hover::after { transform: scaleX(1); }
+/* Hover & aktueller Menüpunkt: fett statt unterstrichen */
+.nav-links a:hover,
+.nav-links a[aria-current="page"] { font-weight: 700; }
 
 .sprache { display: inline-flex; border: 1px solid var(--haar); border-radius: 999px; overflow: hidden; }
 .sprache button {
@@ -136,38 +143,36 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
    ============================================================ */
 .wip-ecke {
   position: fixed; top: 0; left: 0;
-  width: 150px; height: 150px;
+  width: 172px; height: 172px;
   overflow: hidden;
   z-index: 200;           /* über Kopfzeile (100) & Overlays */
   pointer-events: none;   /* blockiert keine Klicks (Wortmarke bleibt erreichbar) */
 }
+/* Einfarbiges, breiteres Band – kein Etikett-Rahmen mehr, dafür klar sichtbar
+   und durch einen weichen Schlagschatten vom Hintergrund abgehoben. */
 .wip-band {
   position: absolute;
-  left: -46px; top: 33px; width: 210px;
+  left: -54px; top: 40px; width: 240px;
   transform: rotate(-45deg);
-  padding: 6px 0;
+  padding: 11px 0;
   background: var(--tinte); color: var(--papier);
   text-align: center;
-  box-shadow: 0 10px 24px -12px rgba(26,23,18,0.5);
-}
-/* feine Ober-/Unterlinie am Band – wirkt wie ein aufgeklebtes Etikett */
-.wip-band::before {
-  content: ""; position: absolute; inset: 2px 0;
-  border-top: 1px solid rgba(252,251,249,0.26);
-  border-bottom: 1px solid rgba(252,251,249,0.26);
+  /* Weicher, diffuser Schatten ohne harte Kante – verläuft in den Hintergrund.
+     Zwei Ebenen: naher, leiser Halo + weit gestreuter, sehr weicher Verlauf. */
+  box-shadow: 0 4px 16px rgba(26,23,18,0.16), 0 12px 48px rgba(26,23,18,0.18);
 }
 .wip-text {
-  font-family: var(--grotesk); font-weight: 700;
-  font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
+  font-family: var(--grotesk); font-weight: 800;
+  font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase;
   white-space: nowrap;
 }
 /* Wortmarke rückt vom Banner weg (am Desktop ist links Platz) */
 .wortmarke { margin-left: 3rem; }
 
 @media (max-width: 760px) {
-  .wip-ecke { width: 118px; height: 118px; }
-  .wip-band { left: -42px; top: 26px; width: 166px; padding: 5px 0; }
-  .wip-text { font-size: 0.54rem; letter-spacing: 0.11em; }
+  .wip-ecke { width: 138px; height: 138px; }
+  .wip-band { left: -46px; top: 32px; width: 190px; padding: 8px 0; }
+  .wip-text { font-size: 0.6rem; letter-spacing: 0.13em; }
   /* Mobil ist die Kopfzeile voll – kein Platz seitlich. Darum die ganze
      Kopfzeile etwas tiefer setzen, sodass die Wortmarke UNTER der
      Banner-Diagonale sitzt statt seitlich zu kollidieren. */

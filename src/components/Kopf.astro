@@ -1,15 +1,18 @@
 ---
 // Kopfzeile mit Wortmarke, Navigation und DE/EN-Umschalter.
+// data-ghost = fette Breitenreserve (siehe global.css), aria-current markiert
+// den aktuellen Menüpunkt (wird dann fett dargestellt).
+const pfad = Astro.url.pathname;
 ---
 
 <header>
   <a href="/" class="wortmarke"><span class="vn">annasthasia</span> reichert.</a>
   <nav>
     <div class="nav-links">
-      <a href="/#arbeiten" class="nav-arbeiten" data-de="arbeiten" data-en="work">arbeiten</a>
-      <a href="/#ueber" data-de="über mich" data-en="about">über mich</a>
-      <a href="/lebenslauf" data-de="lebenslauf" data-en="resume">lebenslauf</a>
-      <a href="/#kontakt" data-de="kontakt" data-en="contact">kontakt</a>
+      <a href="/#arbeiten" class="nav-arbeiten" data-de="arbeiten" data-en="work" data-ghost="arbeiten">arbeiten</a>
+      <a href="/#ueber" data-de="über mich" data-en="about" data-ghost="über mich">über mich</a>
+      <a href="/lebenslauf" data-de="lebenslauf" data-en="resume" data-ghost="lebenslauf" aria-current={pfad === "/lebenslauf" ? "page" : undefined}>lebenslauf</a>
+      <a href="/#kontakt" data-de="kontakt" data-en="contact" data-ghost="kontakt">kontakt</a>
     </div>
     <div class="sprache" role="group" aria-label="Sprache wählen">
       <button data-lang="de" class="aktiv">DE</button>

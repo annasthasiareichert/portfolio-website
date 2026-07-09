@@ -93,6 +93,11 @@ function setzeSprache(lang) {
   document.querySelectorAll("[data-" + lang + "]").forEach((el) => {
     el.innerHTML = el.getAttribute("data-" + lang);
   });
+  // Fette Breitenreserve der Navigation an die neue Sprache anpassen,
+  // damit der Fett-Hover auch auf Englisch nicht verrutscht.
+  document.querySelectorAll(".nav-links a").forEach((a) => {
+    a.dataset.ghost = a.getAttribute("data-" + lang);
+  });
   langButtons.forEach((b) => b.classList.toggle("aktiv", b.dataset.lang === lang));
 }
 langButtons.forEach((b) => b.addEventListener("click", () => setzeSprache(b.dataset.lang)));
