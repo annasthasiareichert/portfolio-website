@@ -1226,6 +1226,8 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
   font-size: clamp(0.95rem, 1.4vw, 1.2rem); font-weight: 500; letter-spacing: -0.005em;
 }
 .kontakt-daten-block .kontakt-adresse { color: var(--tinte); }
+/* E-Mail hervorgehoben: fett und doppelt so groß wie die übrigen Daten */
+.kontakt-daten-block .kontakt-mail { font-size: clamp(1.9rem, 2.8vw, 2.4rem); font-weight: 800; overflow-wrap: anywhere; }
 .kontakt-daten-block a { transition: opacity 0.3s; }
 .kontakt-daten-block a:hover { opacity: 0.55; }
 
@@ -1238,6 +1240,8 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
     bottom: clamp(-6rem, -8vh, -3rem); opacity: 0.92;
   }
   .kontakt-daten-block { bottom: clamp(1.5rem, 5vh, 3rem); }
+  /* E-Mail bleibt hervorgehoben, passt aber in eine Zeile */
+  .kontakt-daten-block .kontakt-mail { font-size: clamp(1.25rem, 6vw, 1.9rem); }
 }
 
 /* ============================================================
