@@ -1,0 +1,49 @@
+---
+// Projekte — Übersichtsseite. Listet alle Projekte aus src/data/projekte.ts als
+// ruhiges Karten-Raster (Gegenstück zum verspielten Fächer auf der Startseite).
+import Grundgeruest from "../../layouts/Grundgeruest.astro";
+import Kopf from "../../components/Kopf.astro";
+import Fuss from "../../components/Fuss.astro";
+import { projekte } from "../../data/projekte";
+
+const anzahl = projekte.length;
+---
+
+<Grundgeruest
+  titel="Projekte — Annasthasia Reichert"
+  beschreibung="Ausgewählte Projekte von Annasthasia Reichert — Grafik- & UI-Designerin aus Köln."
+>
+  <Kopf />
+
+  <main class="unterseite">
+    <section class="seitenkopf">
+      <p class="mono kopfband-label" data-de="Werkschau" data-en="Portfolio">Werkschau</p>
+      <h1 class="seitentitel">Projekte</h1>
+      <p class="seitenkopf-unter mono" data-de={`0${anzahl} Projekte`} data-en={`0${anzahl} Projects`}>0{anzahl} Projekte</p>
+    </section>
+
+    <div class="projekte-liste-wrap">
+      <ul class="projekte-liste">
+        {projekte.map((p, i) => (
+          <li class="pl-karte auftritt">
+            <a class="pl-link" href={`/projekte/${p.slug}`}>
+              <span class="pl-bild" style={`background-image:url('${p.bild}')`} aria-hidden="true"></span>
+              <span class="pl-info">
+                <span class="pl-nr mono">{String(i + 1).padStart(2, "0")}</span>
+                <span class="pl-titel" data-de={p.titel.de} data-en={p.titel.en}>{p.titel.de}</span>
+                <span class="pl-kunde kursiv" data-de={p.kunde.de} data-en={p.kunde.en}>{p.kunde.de}</span>
+                <span class="pl-meta mono" data-de={p.meta.de} data-en={p.meta.en}>{p.meta.de}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </main>
+
+  <Fuss />
+
+  <script>
+    import "../../scripts/interaktionen.js";
+  </script>
+</Grundgeruest>

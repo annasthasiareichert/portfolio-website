@@ -3,7 +3,7 @@
 // `titel` / `kunde` / `meta` haben je eine deutsche (de) und englische (en) Fassung.
 // Ist keine englische Fassung nötig (z. B. Eigennamen), einfach denselben Text eintragen.
 //
-// DETAILSEITE (jedes Projekt bekommt eine eigene Unterseite /arbeiten/<slug>):
+// DETAILSEITE (jedes Projekt bekommt eine eigene Unterseite /projekte/<slug>):
 // · `slug`         = Adresse der Unterseite (kleingeschrieben, mit Bindestrichen, einmalig).
 // · `beschreibung` = Kurztext für Suchmaschinen/Vorschau (nicht sichtbar, wenn `fall` gesetzt ist).
 // · `leistungen`   = Schlagworte (Pills) im Kopf der Detailseite.
@@ -36,7 +36,7 @@ export type FallBlock =
   | { art: "prozess"; label?: Zwei; schritte: { titel: Zwei; text: Zwei }[] };
 
 export type Projekt = {
-  /* URL der Detailseite: /arbeiten/<slug> */
+  /* URL der Detailseite: /projekte/<slug> */
   slug: string;
   /* Vorschaubild in /public/projekte/… (Pfad ab Website-Wurzel) */
   bild: string;
@@ -56,7 +56,7 @@ export const projekte: Projekt[] = [
   {
     slug: "ticket-ag-rebranding",
     bild: "/projekte/karten/ticket-ag.webp",
-    titel: { de: "rebranding", en: "full rebranding" },
+    titel: { de: "Rebranding", en: "Full Rebranding" },
     kunde: { de: "Ticket AG", en: "Ticket AG" },
     meta:  { de: "Branding, UI · 2025", en: "Branding, UI · 2025" },
     beschreibung: {
@@ -137,7 +137,7 @@ export const projekte: Projekt[] = [
   {
     slug: "echory-logo-redesign",
     bild: "/projekte/karten/echory.webp",
-    titel: { de: "logo redesign", en: "logo redesign" },
+    titel: { de: "Logo Redesign", en: "Logo Redesign" },
     kunde: { de: "echory", en: "echory" },
     meta:  { de: "Logo · 2024", en: "Logo · 2024" },
     beschreibung: {
@@ -149,7 +149,7 @@ export const projekte: Projekt[] = [
   {
     slug: "eisbaeren-berlin-logo",
     bild: "/projekte/karten/eisbaeren.webp",
-    titel: { de: "logo redesign", en: "logo redesign" },
+    titel: { de: "Logo Redesign", en: "Logo Redesign" },
     kunde: { de: "Eisbären Berlin", en: "Eisbären Berlin" },
     meta:  { de: "Sport, Logo · 2024", en: "Sport, Logo · 2024" },
     beschreibung: {
@@ -161,7 +161,7 @@ export const projekte: Projekt[] = [
   {
     slug: "3d-rendering-schuh",
     bild: "/projekte/karten/schuh-3d.webp",
-    titel: { de: "3d-rendering", en: "3d rendering" },
+    titel: { de: "3D-Rendering", en: "3D Rendering" },
     kunde: { de: "Schuh-Modell", en: "Shoe model" },
     meta:  { de: "3D, Produkt · 2024", en: "3D, Product · 2024" },
     beschreibung: {
@@ -173,7 +173,7 @@ export const projekte: Projekt[] = [
   {
     slug: "content-creation",
     bild: "/projekte/karten/content.webp",
-    titel: { de: "content creation", en: "content creation" },
+    titel: { de: "Content Creation", en: "Content Creation" },
     kunde: { de: "Verschiedene Brands", en: "Various brands" },
     meta:  { de: "Social · 2023–25", en: "Social · 2023–25" },
     beschreibung: {
@@ -185,7 +185,7 @@ export const projekte: Projekt[] = [
   {
     slug: "brand-assets-ecostag",
     bild: "/projekte/karten/brand-assets.webp",
-    titel: { de: "brand assets", en: "brand assets" },
+    titel: { de: "Brand Assets", en: "Brand Assets" },
     kunde: { de: "ecostag / stagedates", en: "ecostag / stagedates" },
     meta:  { de: "Branding · 2024", en: "Branding · 2024" },
     beschreibung: {
@@ -197,7 +197,7 @@ export const projekte: Projekt[] = [
   {
     slug: "merchandise-stagedates",
     bild: "/projekte/karten/merch.webp",
-    titel: { de: "merchandise", en: "merchandise" },
+    titel: { de: "Merchandise", en: "Merchandise" },
     kunde: { de: "stagedates", en: "stagedates" },
     meta:  { de: "Merch, Print · 2024", en: "Merch, Print · 2024" },
     beschreibung: {
@@ -209,7 +209,7 @@ export const projekte: Projekt[] = [
   {
     slug: "private-projekte",
     bild: "/projekte/karten/private.webp",
-    titel: { de: "private projekte", en: "personal work" },
+    titel: { de: "Private Projekte", en: "Personal Work" },
     kunde: { de: "Auswahl", en: "Selection" },
     meta:  { de: "Illustration · laufend", en: "Illustration · ongoing" },
     beschreibung: {
@@ -221,7 +221,7 @@ export const projekte: Projekt[] = [
   {
     slug: "lampenwelt-banner",
     bild: "/projekte/karten/lampenwelt.webp",
-    titel: { de: "banner-gestaltung", en: "banner design" },
+    titel: { de: "Banner-Gestaltung", en: "Banner Design" },
     kunde: { de: "Lampenwelt", en: "Lampenwelt" },
     meta:  { de: "Ausblick · 2026", en: "Preview · 2026" },
     beschreibung: {

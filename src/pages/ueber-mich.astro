@@ -1,0 +1,36 @@
+---
+// Über mich — eigene Unterseite (persönlich + später Vorstellungsvideo, siehe
+// docs/domain-model.md D8). Inhalt entsteht noch — vorerst „coming soon".
+import Grundgeruest from "../layouts/Grundgeruest.astro";
+import Kopf from "../components/Kopf.astro";
+import Fuss from "../components/Fuss.astro";
+---
+
+<Grundgeruest
+  titel="Über mich — Annasthasia Reichert"
+  beschreibung="Über Annasthasia Reichert — Grafik- & UI-Designerin aus Köln."
+>
+  <Kopf />
+
+  <main class="unterseite">
+    <section class="seitenkopf">
+      <p class="mono kopfband-label" data-de="Über mich" data-en="About">Über mich</p>
+      <h1 class="seitentitel">Über mich</h1>
+    </section>
+
+    <div class="coming-soon">
+      <p
+        class="coming-soon-text kursiv"
+        data-de="Diese Seite entsteht gerade — bald mehr über mich, meinen Werdegang und was mich antreibt."
+        data-en="This page is being built right now — more about me, my journey and what drives me, coming soon."
+        >Diese Seite entsteht gerade — bald mehr über mich, meinen Werdegang und was mich antreibt.</p>
+      <span class="pill" data-de="Coming soon" data-en="Coming soon">Coming soon</span>
+    </div>
+  </main>
+
+  <Fuss />
+
+  <script>
+    import "../scripts/interaktionen.js";
+  </script>
+</Grundgeruest>

@@ -1,0 +1,49 @@
+---
+// Kontakt — eigene, ungestörte Kontaktseite (siehe docs/domain-model.md D11):
+// kein Formular, klickbare E-Mail + Telefon + Adresse, plus LinkedIn.
+import Grundgeruest from "../layouts/Grundgeruest.astro";
+import Kopf from "../components/Kopf.astro";
+import Fuss from "../components/Fuss.astro";
+---
+
+<Grundgeruest
+  titel="Kontakt — Annasthasia Reichert"
+  beschreibung="Kontaktmöglichkeiten von Annasthasia Reichert — Grafik- & UI-Designerin aus Köln."
+>
+  <Kopf />
+
+  <main class="unterseite">
+    <section class="seitenkopf">
+      <p class="mono kopfband-label" data-de="Kontakt" data-en="Contact">Kontakt</p>
+      <h1 class="seitentitel">Kontakt</h1>
+      <p class="seitenkopf-unter" data-de="Lass uns über dein Projekt sprechen." data-en="Let's talk about your project.">Lass uns über dein Projekt sprechen.</p>
+    </section>
+
+    <div class="kontakt-inhalt">
+      <a class="kontakt-mail-gross" href="mailto:annasthasiareichert@gmx.de">annasthasiareichert@gmx.de</a>
+
+      <dl class="kontakt-daten">
+        <div>
+          <dt class="mono" data-de="Telefon" data-en="Phone">Telefon</dt>
+          <dd><a href="tel:+491725401188">+49 172 5401188</a></dd>
+        </div>
+        <div>
+          <dt class="mono" data-de="Adresse" data-en="Address">Adresse</dt>
+          <dd>Lenbachstraße 9<br />50733 Köln</dd>
+        </div>
+        <div>
+          <dt class="mono" data-de="Social" data-en="Social">Social</dt>
+          <dd>
+            <a href="https://www.linkedin.com/in/annasthasia-leandra-reichert/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </main>
+
+  <Fuss />
+
+  <script>
+    import "../scripts/interaktionen.js";
+  </script>
+</Grundgeruest>

@@ -108,7 +108,6 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
 .nav-links { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center; }
 .nav-links a {
   position: relative; font-weight: 500; font-size: 0.95rem;
-  text-transform: lowercase;
   overflow: hidden;
   transition: font-weight 0.15s ease;
 }
@@ -554,7 +553,7 @@ header.menue-offen .menue-strich:nth-child(3) { transform: translateY(-6px) rota
 }
 .arbeiten .kopf h2 {
   font-family: var(--grotesk); font-weight: 800; font-size: clamp(1.4rem, 3.5vw, 2.4rem);
-  letter-spacing: -0.02em; text-transform: lowercase;
+  letter-spacing: -0.02em;
 }
 
 /* Bühne — die Karten sitzen unten, darüber ist bewusst Luft für das Titel-Wort */
@@ -797,7 +796,7 @@ html.karten-ankunft-still .projekt-inhalt > * { animation: none; }
    ÜBER-TEASER
    ============================================================ */
 .ueber { padding: var(--takt) var(--rand); display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 6vw, 6rem); align-items: end; }
-.ueber h2 { font-family: var(--grotesk); font-weight: 800; text-transform: lowercase; font-size: clamp(1.4rem,3.5vw,2.4rem); letter-spacing: -0.02em; margin-bottom: 1.4rem; }
+.ueber h2 { font-family: var(--grotesk); font-weight: 800; font-size: clamp(1.4rem,3.5vw,2.4rem); letter-spacing: -0.02em; margin-bottom: 1.4rem; }
 .ueber .gross { font-family: var(--serif); font-weight: 300; font-size: clamp(1.5rem, 3.2vw, 2.6rem); line-height: 1.28; }
 .ueber .gross em { font-style: italic; }
 .ueber .rechts { color: var(--ton); max-width: 40ch; }
@@ -839,7 +838,7 @@ footer .rechtslinks a:hover { text-decoration: underline; }
 .seitenkopf.schmal { padding-bottom: clamp(2rem, 5vw, 3rem); }
 .kopfband-label { margin-bottom: 0.9rem; }
 .seitentitel {
-  font-family: var(--grotesk); font-weight: 900; text-transform: lowercase;
+  font-family: var(--grotesk); font-weight: 900;
   font-size: clamp(3.2rem, 15vw, 11rem); line-height: 0.86; letter-spacing: -0.03em;
   color: #1b1b1b;
 }
@@ -885,7 +884,7 @@ footer .rechtslinks a:hover { text-decoration: underline; }
 }
 .ls-block { margin-bottom: clamp(3rem, 8vw, 6rem); }
 .ls-h2 {
-  font-family: var(--grotesk); font-weight: 800; text-transform: lowercase;
+  font-family: var(--grotesk); font-weight: 800;
   font-size: clamp(1.05rem, 1.7vw, 1.3rem); letter-spacing: -0.02em;
   margin-bottom: 1.2rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--haar);
 }
@@ -974,7 +973,7 @@ footer .rechtslinks a:hover { text-decoration: underline; }
 .rechts-fuss { margin-top: clamp(2.5rem, 6vw, 3.5rem); color: var(--ton); }
 
 /* ============================================================
-   PROJEKT-DETAILSEITEN — /arbeiten/<slug>
+   PROJEKT-DETAILSEITEN — /projekte/<slug>
    ============================================================ */
 .projekt-kopf { position: relative; }
 .projekt-zurueck {
@@ -1137,6 +1136,73 @@ footer .rechtslinks a:hover { text-decoration: underline; }
   .fall-buehne { padding: clamp(1.1rem, 5vw, 2rem); border-radius: 10px; }
   .fall-buehne[data-buehne="dunkel"] { padding: clamp(0.7rem, 3vw, 1.2rem); }
   .fall-schritt { grid-template-columns: 2.6rem 1fr; gap: 0.9rem; }
+}
+
+/* ============================================================
+   PROJEKTE — Übersichtsseite (/projekte)
+   Ruhiges, editoriales Karten-Raster aller Projekte (Gegenstück zum
+   verspielten Fächer auf der Startseite) — verlässlich, gut lesbar, mobil einfach.
+   ============================================================ */
+.projekte-liste-wrap { padding: clamp(1rem, 3vw, 2rem) var(--rand) var(--takt); }
+.projekte-liste {
+  list-style: none;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: clamp(1.4rem, 3vw, 2.4rem);
+}
+.pl-link { display: block; }
+.pl-bild {
+  display: block; aspect-ratio: 3 / 4; border-radius: 10px;
+  background-color: var(--sand); background-size: cover; background-position: center;
+  border: 1px solid rgba(26,23,18,0.12);
+  box-shadow: 0 16px 32px -20px rgba(26,23,18,0.4);
+  transition: transform 0.5s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.5s ease;
+}
+.pl-info { display: block; margin-top: 0.9rem; }
+.pl-nr { display: block; margin-bottom: 0.4rem; }
+.pl-titel {
+  display: block; font-family: var(--grotesk); font-weight: 800;
+  font-size: clamp(1.05rem, 2vw, 1.3rem); letter-spacing: -0.02em; line-height: 1.15;
+}
+.pl-kunde { display: block; margin-top: 0.25rem; font-size: 1rem; color: var(--ton); }
+.pl-meta { display: block; margin-top: 0.45rem; }
+@media (hover: hover) and (min-width: 761px) {
+  .pl-link:hover .pl-bild { transform: translateY(-6px); box-shadow: 0 30px 54px -26px rgba(26,23,18,0.5); }
+}
+
+/* ============================================================
+   KONTAKT — eigene, ungestörte Kontaktseite
+   ============================================================ */
+.kontakt-inhalt { padding: clamp(1.5rem, 4vw, 2.5rem) var(--rand) var(--takt); }
+.kontakt-mail-gross {
+  display: inline-block;
+  font-family: var(--grotesk); font-weight: 800; text-transform: lowercase;
+  font-size: clamp(1.6rem, 6vw, 3.6rem); letter-spacing: -0.02em; line-height: 1.05;
+  overflow-wrap: anywhere; transition: opacity 0.3s;
+}
+.kontakt-mail-gross:hover { opacity: 0.6; }
+.kontakt-daten {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: clamp(1.8rem, 4vw, 2.6rem);
+  margin-top: clamp(3rem, 7vw, 4.5rem); padding-top: clamp(1.6rem, 4vw, 2.2rem);
+  border-top: 1px solid var(--haar);
+}
+.kontakt-daten dt { margin-bottom: 0.6rem; }
+.kontakt-daten dd {
+  font-family: var(--grotesk); font-weight: 600;
+  font-size: clamp(1rem, 1.6vw, 1.15rem); letter-spacing: -0.005em; color: var(--tinte);
+}
+.kontakt-daten dd a { border-bottom: 1px solid var(--haar); transition: border-color 0.3s; }
+.kontakt-daten dd a:hover { border-color: var(--tinte); }
+
+/* ============================================================
+   ÜBER MICH — Platzhalterseite (Coming soon)
+   ============================================================ */
+.coming-soon {
+  padding: clamp(2rem, 5vw, 3.5rem) var(--rand) var(--takt);
+  display: flex; flex-direction: column; align-items: flex-start; gap: clamp(1.4rem, 3vw, 2rem);
+}
+.coming-soon-text {
+  font-size: clamp(1.2rem, 2.6vw, 1.8rem); line-height: 1.4; max-width: 46ch; color: var(--tinte);
 }
 
 /* ============================================================
