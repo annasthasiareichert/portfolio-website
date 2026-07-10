@@ -101,13 +101,9 @@ header::before {
   transition: opacity 0.4s ease;
 }
 header.gescrollt::before { opacity: 1; }
-header .wortmarke {
-  font-family: var(--grotesk);
-  font-weight: 800;
-  font-size: 1.05rem;
-  letter-spacing: -0.01em;
-}
-header .wortmarke .vn { font-family: var(--lockup); font-style: italic; font-weight: 400; font-size: 1.35rem; letter-spacing: -0.07em; }
+/* Wortmarke = AR-Logo (schwarzes Favicon), verlinkt zur Startseite. */
+header .wortmarke { display: inline-flex; align-items: center; line-height: 0; }
+.wortmarke-logo { display: block; width: 40px; height: 40px; }
 header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center; }
 .nav-links { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center; }
 .nav-links a {
@@ -141,19 +137,60 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
 .kopf-linkedin-text {
   font-family: var(--grotesk); font-weight: 600; font-size: 0.68rem; letter-spacing: 0.1em;
 }
-/* Mobil bleibt das Icon sichtbar, nur der Schriftzug weicht */
-@media (max-width: 760px) {
-  .kopf-linkedin { padding: 0.35rem 0.5rem; }
-  .kopf-linkedin-text { display: none; }
-}
-
 .sprache { display: inline-flex; border: 1px solid var(--haar); border-radius: 999px; overflow: hidden; }
 .sprache button {
   font-family: var(--grotesk); font-weight: 600; font-size: 0.68rem; letter-spacing: 0.1em;
   padding: 0.35rem 0.7rem; background: transparent; border: none; cursor: pointer; color: var(--ton);
 }
 .sprache button.aktiv { background: var(--tinte); color: var(--papier); }
-@media (max-width: 760px) { .nav-links a:not(.nav-arbeiten) { display: none; } }
+
+/* Hamburger-Knopf — nur auf dem Handy sichtbar, öffnet das Menü-Overlay.
+   Drei Striche, die im offenen Zustand zu einem X werden. */
+.menue-knopf {
+  display: none;                 /* Desktop: ausgeblendet */
+  position: relative; z-index: 101;
+  width: 42px; height: 42px; padding: 0;
+  background: transparent; border: none; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.menue-strich {
+  position: absolute; left: 9px; right: 9px; height: 2px; border-radius: 2px;
+  background: var(--tinte);
+  transition: transform 0.3s ease, opacity 0.2s ease;
+}
+.menue-strich:nth-child(1) { top: 14px; }
+.menue-strich:nth-child(2) { top: 20px; }
+.menue-strich:nth-child(3) { top: 26px; }
+header.menue-offen .menue-strich:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+header.menue-offen .menue-strich:nth-child(2) { opacity: 0; }
+header.menue-offen .menue-strich:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* ---- Mobil: Navigation wird zum ruhigen Vollbild-Menü ---- */
+@media (max-width: 760px) {
+  .menue-knopf { display: block; }
+
+  /* Beim offenen Menü den Frosted-Streifen der Kopfzeile weglassen → sauberes Papier. */
+  header.menue-offen::before { opacity: 0; }
+  body.menue-blockiert { overflow: hidden; }   /* Seite dahinter nicht scrollen */
+
+  /* nav füllt als Papier-Overlay den Bildschirm, alles zentriert untereinander */
+  header nav {
+    position: fixed; inset: 0; z-index: 90;
+    flex-direction: column; justify-content: center; gap: 2.4rem;
+    background: var(--papier);
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity 0.32s ease, visibility 0.32s ease;
+  }
+  header.menue-offen nav { opacity: 1; visibility: visible; pointer-events: auto; }
+
+  /* Menüpunkte groß & untereinander */
+  header nav .nav-links { flex-direction: column; gap: 1.6rem; align-items: center; }
+  header nav .nav-links a { font-size: 1.75rem; font-weight: 600; }
+
+  /* LinkedIn zeigt im Overlay wieder den Schriftzug */
+  .kopf-linkedin { padding: 0.5rem 1rem; }
+  .kopf-linkedin-text { display: inline; font-size: 0.78rem; }
+}
 
 /* ============================================================
    WORK-IN-PROGRESS-BANNER — diagonale Ecke oben links
@@ -182,18 +219,19 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
   font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase;
   white-space: nowrap;
 }
-/* Wortmarke rückt vom Banner weg (am Desktop ist links Platz) */
-.wortmarke { margin-left: 3rem; }
+/* Logo rückt rechts NEBEN das WIP-Band, damit es an keiner Fensterbreite von
+   der Diagonale angeschnitten wird (das Band ist fix 172px, --rand skaliert). */
+.wortmarke { margin-left: 7rem; }
 
 @media (max-width: 760px) {
   .wip-ecke { width: 138px; height: 138px; }
   .wip-band { left: -46px; top: 32px; width: 190px; padding: 8px 0; }
   .wip-text { font-size: 0.6rem; letter-spacing: 0.13em; }
-  /* Mobil ist die Kopfzeile voll – kein Platz seitlich. Darum die ganze
-     Kopfzeile etwas tiefer setzen, sodass die Wortmarke UNTER der
-     Banner-Diagonale sitzt statt seitlich zu kollidieren. */
-  header { padding-top: 2.4rem; }
-  .wortmarke { margin-left: 0; }
+  /* Mobil hängt das AR-Logo etwas nach rechts ein, damit es rechts NEBEN der
+     WIP-Diagonale sitzt und nicht darunter verschwindet. Der Hamburger sitzt
+     ohnehin frei oben rechts. */
+  header { padding-top: 2rem; }
+  .wortmarke { margin-left: 5.5rem; }
 }
 
 /* ============================================================
@@ -279,50 +317,69 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
   font-family: var(--lockup); font-style: italic; font-weight: 400; letter-spacing: -0.07em;
 }
 
-/* Cursor-Label: erscheint beim Hover über den Masthead und folgt der Maus */
-.cursor-label {
-  position: fixed; top: 0; left: 0; z-index: 70;
-  padding: 0.55rem 1rem; border-radius: 999px;
-  background: var(--tinte); color: var(--papier);
-  font-family: var(--grotesk); font-weight: 800; text-transform: lowercase;
-  font-size: 0.9rem; letter-spacing: -0.01em; white-space: nowrap;
-  transform: translate(14px, 16px) scale(0.85);
-  opacity: 0; pointer-events: none;
-  box-shadow: 0 12px 30px -12px rgba(26,23,18,0.55);
-  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.2,0.8,0.2,1);
-}
-.cursor-label.sichtbar { opacity: 1; transform: translate(16px, 18px) scale(1); }
-.cursor-label .vn { font-family: var(--lockup); font-style: italic; font-weight: 400; letter-spacing: -0.04em; }
-@media (hover: none), (max-width: 760px) { .cursor-label { display: none; } }
-
-/* Spiel-Hinweis: kleine „Pille" am Wort, die zum Herumspielen mit der Schrift
-   einlädt (Cursor-Icon + Text). Schwebt sanft und blendet aus, sobald man mit
-   dem Cursor über dem Wort ist – dann ist die Interaktion ja entdeckt. */
-.spiel-hinweis {
-  position: absolute; left: 50%; top: 73%; z-index: 6;
-  transform: translateX(-50%);
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  padding: 0.5rem 0.95rem; border-radius: 999px;
-  background: var(--tinte); color: var(--papier);
-  font-family: var(--grotesk); font-weight: 600; font-size: 0.72rem;
-  letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap;
+/* Wort-Pille: EIN dunkles Pillen-Element über dem Wort. Es trägt zwei Label im
+   selben Raster (deckungsgleich gestapelt) und blendet weich zwischen ihnen um —
+   Ruhezustand „Spiel mit der Schrift", aktiv der Namens-Lockup. Weil es dasselbe
+   Element bleibt, wandert und morpht die Pille zum Cursor, statt hart zu tauschen.
+   Position (transform) und der Zustand .zeigt-name kommen aus interaktionen.js. */
+.wort-pille {
+  position: absolute; left: 0; top: 0; z-index: 6;
   pointer-events: none;
-  box-shadow: 0 12px 30px -14px rgba(26,23,18,0.5);
+  transform: translate(-200vw, 0);      /* geparkt, bis das Skript die Pille misst */
+  transition: transform 0.16s cubic-bezier(0.2,0.8,0.2,1);
+  will-change: transform;
+  /* die dunkle Pille selbst */
+  display: grid; place-items: center;
+  padding: 0.5rem 1rem; border-radius: 999px;
+  background: var(--tinte); color: var(--papier);
+  white-space: nowrap;
+  box-shadow: 0 12px 30px -13px rgba(26,23,18,0.55);
   animation: hinweis-schweben 2.6s ease-in-out infinite;
-  transition: opacity 0.4s ease, transform 0.4s ease;
 }
-.spiel-hinweis svg { flex: none; }
-/* ausgeblendet, solange der Cursor auf dem Wort ist */
-.spiel-hinweis.weg { opacity: 0; transform: translateX(-50%) translateY(8px); }
+/* beide Label liegen in derselben Rasterzelle → die Pille ist so breit wie das
+   breitere Label und ändert beim Morphen ihre Größe nicht (kein Ruckeln) */
+.wp-label {
+  grid-area: 1 / 1;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  transition: opacity 0.42s ease, transform 0.42s cubic-bezier(0.2,0.8,0.2,1), filter 0.42s ease;
+  will-change: opacity, transform, filter;
+}
+.wp-hinweis {
+  font-family: var(--grotesk); font-weight: 600; font-size: 0.72rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+}
+.wp-hinweis svg { flex: none; }
+/* Name ist im Ruhezustand verborgen (weggeblurrt + leicht verkleinert) */
+.wp-name {
+  font-family: var(--grotesk); font-weight: 800; text-transform: lowercase;
+  font-size: 0.9rem; letter-spacing: -0.01em;
+  opacity: 0; filter: blur(6px); transform: scale(0.86);
+}
+.wp-name .vn { font-family: var(--lockup); font-style: italic; font-weight: 400; letter-spacing: -0.04em; }
+
+/* aktiv: Hinweis morpht raus (auf, unscharf, weg), Name morpht rein (scharf, in Form) */
+.wort-pille.zeigt-name .wp-hinweis { opacity: 0; filter: blur(6px); transform: scale(1.1); }
+.wort-pille.zeigt-name .wp-name    { opacity: 1; filter: blur(0);   transform: scale(1); }
+
 @keyframes hinweis-schweben {
   0%, 100% { translate: 0 0; }
   50%      { translate: 0 -5px; }
 }
+
 @media (max-width: 760px) {
-  .spiel-hinweis { top: 78%; font-size: 0.66rem; padding: 0.45rem 0.8rem; gap: 0.4rem; }
+  .wort-pille { padding: 0.45rem 0.85rem; }
+  .wp-hinweis { font-size: 0.66rem; }
+}
+/* ohne Cursor (Touch) gibt es keinen Namens-Morph: die Pille bleibt Einladung */
+@media (hover: none), (max-width: 760px) {
+  .wort-pille.zeigt-name .wp-hinweis { opacity: 1; filter: none; transform: none; }
+  .wort-pille.zeigt-name .wp-name { opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .spiel-hinweis { animation: none; }
+  .wort-pille { animation: none; transition: none; }
+  .wp-label { transition: opacity 0.25s ease; }
+  .wort-pille.zeigt-name .wp-hinweis { filter: none; transform: none; }
+  .wort-pille.zeigt-name .wp-name { filter: none; transform: none; }
 }
 
 .scroll-hinweis {

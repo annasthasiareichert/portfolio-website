@@ -94,20 +94,23 @@
     <!-- Partikel-Ebene über dem Wort -->
     <canvas class="pf-partikel" aria-hidden="true"></canvas>
 
-    <!-- Spiel-Hinweis: lädt sichtbar dazu ein, mit der Schrift zu spielen.
-         Blendet aus, sobald der Cursor über dem Wort ist (Effekt entdeckt). -->
-    <div class="spiel-hinweis" id="spiel-hinweis" aria-hidden="true">
-      <svg viewBox="0 0 24 24" width="15" height="15" fill="none">
-        <path d="M5 2.5 L5 20 L9.4 15.8 L12.2 21.6 L14.6 20.4 L11.8 14.7 L18 14.4 Z" fill="currentColor" />
-        <path d="M18.6 3.4 l0.6 1.8 1.8 0.6 -1.8 0.6 -0.6 1.8 -0.6 -1.8 -1.8 -0.6 1.8 -0.6 z" fill="currentColor" opacity="0.85" />
-      </svg>
-      <span data-de="Spiel mit der Schrift" data-en="Play with the type">Spiel mit der Schrift</span>
+    <!-- Wort-Pille: EIN Element, das zwei Label deckungsgleich stapelt. Ruhezustand
+         lädt zum Spielen ein („Spiel mit der Schrift"); sobald der Cursor ab Lippen-
+         höhe in den Wortbereich kommt, folgt die Pille dem Cursor und ihr Text
+         morpht weich zum Namens-Lockup (Blur + Scale + Überblendung) — dasselbe
+         Element wandert und wandelt sich, statt hart getauscht zu werden.
+         Gesteuert in interaktionen.js. -->
+    <div class="wort-pille" id="wort-pille" aria-hidden="true">
+      <span class="wp-label wp-hinweis">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" aria-hidden="true">
+          <path d="M5 2.5 L5 20 L9.4 15.8 L12.2 21.6 L14.6 20.4 L11.8 14.7 L18 14.4 Z" fill="currentColor" />
+          <path d="M18.6 3.4 l0.6 1.8 1.8 0.6 -1.8 0.6 -0.6 1.8 -0.6 -1.8 -1.8 -0.6 1.8 -0.6 z" fill="currentColor" opacity="0.85" />
+        </svg>
+        <span data-de="Spiel mit der Schrift" data-en="Play with the type">Spiel mit der Schrift</span>
+      </span>
+      <span class="wp-label wp-name"><span class="vn">annasthasia</span> reichert.</span>
     </div>
   </div>
-
-  <!-- Namens-Label, folgt dem Cursor über dem Wort — Name im Lockup-Stil
-       (Vorname Times-kursiv, Nachname Archivo), auf dunklem Grund. -->
-  <p class="cursor-label" id="cursor-label" aria-hidden="true"><span class="vn">annasthasia</span> reichert.</p>
 
   <p class="mh-signatur"><span class="vn">annasthasia</span> reichert.</p>
 

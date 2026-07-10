@@ -1,13 +1,32 @@
 ---
-// Kopfzeile mit Wortmarke, Navigation und DE/EN-Umschalter.
+// Kopfzeile mit AR-Logo (schwarzes Favicon), Navigation und DE/EN-Umschalter.
+// Auf dem Handy klappt alles hinter einem Hamburger-Menü oben rechts zusammen.
 // data-ghost = fette Breitenreserve (siehe global.css), aria-current markiert
 // den aktuellen Menüpunkt (wird dann fett dargestellt).
 const pfad = Astro.url.pathname;
 ---
 
 <header>
-  <a href="/" class="wortmarke"><span class="vn">annasthasia</span> reichert.</a>
-  <nav>
+  <a href="/" class="wortmarke" aria-label="Annasthasia Reichert – zur Startseite">
+    <img class="wortmarke-logo" src="/favicon-dark.png" alt="" width="40" height="40" />
+  </a>
+
+  <!-- Hamburger: öffnet auf dem Handy das Menü. Auf dem Desktop ausgeblendet.
+       Die drei Striche werden im offenen Zustand zu einem X (siehe global.css). -->
+  <button
+    id="menue-knopf"
+    class="menue-knopf"
+    type="button"
+    aria-label="Menü öffnen"
+    aria-expanded="false"
+    aria-controls="hauptmenue"
+  >
+    <span class="menue-strich"></span>
+    <span class="menue-strich"></span>
+    <span class="menue-strich"></span>
+  </button>
+
+  <nav id="hauptmenue">
     <div class="nav-links">
       <a href="/#arbeiten" class="nav-arbeiten" data-de="arbeiten" data-en="work" data-ghost="arbeiten">arbeiten</a>
       <a href="/#ueber" data-de="über mich" data-en="about" data-ghost="über mich">über mich</a>

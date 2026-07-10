@@ -75,28 +75,113 @@ function setzeSprache(lang) {
 }
 langButtons.forEach((b) => b.addEventListener("click", () => setzeSprache(b.dataset.lang)));
 
-/* 5b) Namens-Label am Cursor + Spiel-Hinweis über dem Wort.
-   Läuft unabhängig vom Wort-Effekt (auch bei reduzierter Bewegung), damit der
-   Name und der Hinweis in jedem Fall erscheinen. Nur auf Zeigegeräten mit Hover:
-   - Cursor über dem Wort → Namens-Label einblenden und der Maus folgen lassen
-   - gleichzeitig den Spiel-Hinweis ausblenden (die Interaktion ist ja entdeckt) */
-const wortFlaeche = document.querySelector("[data-pf]");
-const cursorLabel = document.getElementById("cursor-label");
-const spielHinweis = document.getElementById("spiel-hinweis");
-if (wortFlaeche && window.matchMedia("(hover: hover)").matches) {
-  wortFlaeche.addEventListener("pointerenter", () => {
-    if (cursorLabel) cursorLabel.classList.add("sichtbar");
-    if (spielHinweis) spielHinweis.classList.add("weg");
+/* 5a) Hamburger-Menü (nur Handy): Overlay auf/zu.
+   Öffnen/Schließen setzt die Klasse .menue-offen auf die Kopfzeile; das CSS
+   erledigt Sichtbarkeit, X-Animation und Scroll-Sperre. Nach Klick auf einen
+   Menü-Link schließt sich das Menü, beim Sprachwechsel (Buttons) bleibt es offen. */
+const menueKnopf = document.getElementById("menue-knopf");
+if (menueKnopf && kopfzeile) {
+  const menueSchliessen = () => {
+    kopfzeile.classList.remove("menue-offen");
+    document.body.classList.remove("menue-blockiert");
+    menueKnopf.setAttribute("aria-expanded", "false");
+    menueKnopf.setAttribute("aria-label", "Menü öffnen");
+  };
+  const menueUmschalten = () => {
+    const offen = kopfzeile.classList.toggle("menue-offen");
+    document.body.classList.toggle("menue-blockiert", offen);
+    menueKnopf.setAttribute("aria-expanded", offen ? "true" : "false");
+    menueKnopf.setAttribute("aria-label", offen ? "Menü schließen" : "Menü öffnen");
+  };
+  menueKnopf.addEventListener("click", menueUmschalten);
+  document
+    .querySelectorAll("#hauptmenue a")
+    .forEach((a) => a.addEventListener("click", menueSchliessen));
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") menueSchliessen();
   });
-  wortFlaeche.addEventListener("pointermove", (e) => {
-    if (!cursorLabel) return;
-    cursorLabel.style.left = e.clientX + "px";
-    cursorLabel.style.top = e.clientY + "px";
-  }, { passive: true });
-  wortFlaeche.addEventListener("pointerleave", () => {
-    if (cursorLabel) cursorLabel.classList.remove("sichtbar");
-    if (spielHinweis) spielHinweis.classList.remove("weg");
-  });
+}
+
+/* --- Gemeinsame Wort-Zone -------------------------------------------------
+   Früher begann der Effekt erst an der Box des Wortes (das tief sitzt) — man
+   musste fast auf die Schrift zielen. Jetzt spannen wir eine Zone auf, die schon
+   ab LIPPEN-HÖHE des Porträts beginnt und bis zur Wort-Unterkante reicht. Sowohl
+   der Verzerr-Effekt (Block 6) als auch die Label-Pille (unten) hören auf dasselbe
+   Signal „Cursor in der Wort-Zone?". Der Anteil 0.375 ist an der Bildhöhe des
+   Porträts gemessen (Mundlinie); das Porträt füllt die Bühne, also = Anteil der
+   Bühnenhöhe. */
+const pf = document.querySelector("[data-pf]");
+const masthead = document.querySelector(".masthead");
+const pfFigur = document.querySelector(".pf-figur");
+const LIP_ANTEIL = 0.375;
+let zOben = -1, zUnten = -1, zLinks = -1, zRechts = -1;
+function zoneMessen() {
+  if (!pf || !pfFigur) return;
+  const f = pfFigur.getBoundingClientRect();
+  const w = pf.getBoundingClientRect();
+  zOben = f.top + f.height * LIP_ANTEIL;   // Lippenlinie (Viewport-px)
+  zUnten = Math.max(w.bottom, zOben + 1);  // hinunter bis zur Wort-Unterkante
+  zLinks = w.left; zRechts = w.right;      // waagerecht = Breite des Wortes
+}
+function imZone(x, y) {
+  return x >= zLinks && x <= zRechts && y >= zOben && y <= zUnten;
+}
+zoneMessen();
+window.addEventListener("resize", zoneMessen, { passive: true });
+window.addEventListener("scroll", zoneMessen, { passive: true });
+
+/* 5b) EINE Pille über dem Wort, die weich vom Spiel-Hinweis zum Namens-Lockup
+   morpht. Nur auf Zeigegeräten mit Hover (Touch zeigt dauerhaft die Einladung).
+   Sobald der Cursor in die Wort-Zone (ab Lippenhöhe) kommt, folgt die Pille dem
+   Cursor und ihr Text wandelt sich — dasselbe Element, also ein echter Übergang
+   statt hartem Austausch. */
+const wortPille = document.getElementById("wort-pille");
+if (pf && masthead && wortPille) {
+  let pw = 0, ph = 0, pilleAktiv = false;
+  const messePille = () => { pw = wortPille.offsetWidth; ph = wortPille.offsetHeight; };
+  const setzePille = (x, y) => { wortPille.style.transform = `translate(${x}px, ${y}px)`; };
+  // Ruheplatz: mittig über dem Wort (aus dem echten Wort-Rechteck, damit es auf
+  // Handy wie Desktop passt — dort sitzt das Wort tiefer).
+  const nachHause = () => {
+    const m = masthead.getBoundingClientRect();
+    const w = pf.getBoundingClientRect();
+    if (w.width < 10) return;                      // Layout noch nicht bereit → geparkt lassen
+    const cx = (w.left - m.left) + w.width / 2;    // Wortmitte, masthead-lokal
+    const cy = (w.top - m.top) + w.height * 0.60;  // knapp unter der Wortmitte
+    setzePille(cx - pw / 2, cy - ph / 2);
+  };
+  const initPille = () => {
+    messePille();
+    wortPille.style.transition = "none";  // erstes Setzen ohne Einflug von -200vw
+    nachHause();
+    void wortPille.offsetWidth;           // Layout erzwingen
+    wortPille.style.transition = "";
+  };
+  initPille();
+  // erneut messen/setzen, sobald Fonts und Bilder final sind (korrekte Wortmaße)
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(initPille);
+  window.addEventListener("load", initPille);
+  window.addEventListener("resize", () => { messePille(); if (!pilleAktiv) nachHause(); }, { passive: true });
+
+  // Folgen + Morphen nur auf Zeigegeräten mit Hover. Auf Touch bleibt die Pille
+  // an ihrem Ruheplatz und zeigt dauerhaft die Einladung (CSS blendet den Namen dort aus).
+  if (window.matchMedia("(hover: hover)").matches) {
+    masthead.addEventListener("pointermove", (e) => {
+      if (imZone(e.clientX, e.clientY)) {
+        if (!pilleAktiv) { pilleAktiv = true; wortPille.classList.add("zeigt-name"); }
+        const m = masthead.getBoundingClientRect();
+        let x = e.clientX - m.left + 16, y = e.clientY - m.top + 18;  // unter/rechts vom Cursor
+        x = Math.min(Math.max(x, 6), m.width - pw - 6);               // in der Bühne halten
+        y = Math.min(Math.max(y, 6), m.height - ph - 6);
+        setzePille(x, y);
+      } else if (pilleAktiv) {
+        pilleAktiv = false; wortPille.classList.remove("zeigt-name"); nachHause();
+      }
+    }, { passive: true });
+    masthead.addEventListener("pointerleave", () => {
+      if (pilleAktiv) { pilleAktiv = false; wortPille.classList.remove("zeigt-name"); nachHause(); }
+    });
+  }
 }
 
 /* 6) Masthead-Wort „PORTFOLIO" (noth.in-Effekt):
@@ -114,9 +199,9 @@ if (wortFlaeche && window.matchMedia("(hover: hover)").matches) {
       KLICKEN-UND-HALTEN klebt sie am Cursor: Ziehen nimmt die Materie mit (auch
       über die Kontur hinaus), Loslassen federt wackelnd zurück. Die Physik dazu
       (Zug, Feder, Quetscher) steht hier unten; gezeichnet wird im Modul.
-      Ohne WebGL läuft alles wie bisher über die DOM-Ebenen + SVG-Maske. */
-const pf = document.querySelector("[data-pf]");
-const masthead = document.querySelector(".masthead");
+      Ohne WebGL läuft alles wie bisher über die DOM-Ebenen + SVG-Maske.
+      Eingaben kommen jetzt von der Bühne (masthead) + Zonen-Check imZone(), damit
+      der Effekt schon ab Lippenhöhe greift statt erst an der Wort-Box. */
 if (pf && masthead && !reduziert) {
   const mats = Array.from(pf.querySelectorAll(".pf-mat"));
   const canvas = masthead.querySelector(".pf-partikel");
@@ -256,40 +341,56 @@ if (pf && masthead && !reduziert) {
 
   let letzteMX = 0, letzteMY = 0, habePrev = false;
   if (hoverGeraet) {
-    pf.addEventListener("pointerenter", (e) => {
+    // Aktivierung hängt jetzt an der Wort-Zone (ab Lippenhöhe), nicht mehr an der
+    // Wort-Box: Bewegungen werden auf der ganzen Bühne verfolgt und mit imZone()
+    // geprüft. So „greift" die Verformung schon, wenn der Cursor auf Höhe der
+    // Lippen über dem Wort schwebt — die Schrift beult ihm entgegen.
+    const aktivieren = (e) => {
       ladeMaterialien(); messen();
       zx = e.clientX - pfRect.left; zy = e.clientY - pfRect.top;
       bx = zx; by = zy; // Blob am Cursor einblenden, nicht hereinfliegen
       aktiv = true; pf.classList.add("aktiv");
-    });
-    pf.addEventListener("pointermove", (e) => {
-      zx = e.clientX - pfRect.left; zy = e.clientY - pfRect.top;
-      const mx = e.clientX - mastRect.left, my = e.clientY - mastRect.top;
-      if (habePrev) spawnPartikel(mx, my, mx - letzteMX, my - letzteMY);
-      letzteMX = mx; letzteMY = my; habePrev = true;
-    }, { passive: true });
-    pf.addEventListener("pointerleave", () => {
+    };
+    const deaktivieren = () => {
+      if (griffAktiv) return; // beim Ziehen aktiv bleiben, auch außerhalb der Zone
       aktiv = false; pf.classList.remove("aktiv"); habePrev = false;
-    });
+    };
+    masthead.addEventListener("pointermove", (e) => {
+      const drin = imZone(e.clientX, e.clientY);
+      if (drin && !aktiv) aktivieren(e);
+      else if (!drin && aktiv) deaktivieren();
+      if (aktiv) {
+        zx = e.clientX - pfRect.left; zy = e.clientY - pfRect.top;
+        const mx = e.clientX - mastRect.left, my = e.clientY - mastRect.top;
+        if (habePrev) spawnPartikel(mx, my, mx - letzteMX, my - letzteMY);
+        letzteMX = mx; letzteMY = my; habePrev = true;
+      }
+    }, { passive: true });
+    masthead.addEventListener("pointerleave", deaktivieren);
   } else {
     // Touch / kein Hover: sanfter Dauer-Sweep über das Wort
     ladeMaterialien();
     aktiv = true; pf.classList.add("aktiv");
   }
 
-  // Klicken-und-Halten: die Schrift am Cursor festhalten und mitziehen.
-  // Nur sinnvoll, wenn der WebGL-Gummi läuft (der DOM-Weg kann nicht verformen).
+  // Klicken-und-Halten: die Schrift am Cursor festhalten und mitziehen. Nur mit
+  // WebGL-Gummi sinnvoll (der DOM-Weg kann nicht verformen). Zupacken überall in
+  // der Wort-Zone (also auch schon ab Lippenhöhe).
   if (gummi) {
     // Cursor-Position auf der Gummi-Leinwand immer mitschreiben
-    pf.addEventListener("pointermove", (e) => {
+    masthead.addEventListener("pointermove", (e) => {
       mausX = e.clientX - glRect.left;
       mausY = e.clientY - glRect.top;
     }, { passive: true });
 
-    pf.addEventListener("pointerdown", (e) => {
+    masthead.addEventListener("pointerdown", (e) => {
+      if (!imZone(e.clientX, e.clientY)) return; // nur im Wortbereich zupacken
       ladeMaterialien(); messen();
       mausX = e.clientX - glRect.left;
       mausY = e.clientY - glRect.top;
+      zx = e.clientX - pfRect.left; zy = e.clientY - pfRect.top;
+      bx = zx; by = zy;
+      aktiv = true; pf.classList.add("aktiv"); // Reveal auch beim reinen Klick zeigen
       griffAktiv = true;
       griffX = mausX; griffY = mausY;
       griffZX = mausX; griffZY = mausY;
@@ -298,7 +399,7 @@ if (pf && masthead && !reduziert) {
       pf.classList.add("gegriffen");
       // Zeiger „einfangen": Bewegungen kommen weiter bei uns an,
       // auch wenn der Cursor das Wort beim Ziehen verlässt
-      try { pf.setPointerCapture(e.pointerId); } catch (_) {}
+      try { masthead.setPointerCapture(e.pointerId); } catch (_) {}
       // Maus: keine native Bild-Zieh-Geste/Textauswahl starten
       if (e.pointerType !== "touch") e.preventDefault();
     });

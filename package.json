@@ -12,6 +12,8 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@fontsource/archivo": "^5.2.8",
+    "@fontsource/newsreader": "^5.2.10",
     "astro": "^7.0.6"
   }
 }

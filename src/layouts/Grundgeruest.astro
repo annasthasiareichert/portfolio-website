@@ -1,6 +1,21 @@
 ---
 // Grund-Layout: HTML-Rahmen, Kopfdaten (<head>), Schriften und globales CSS.
 // Jede Seite wird in dieses Gerüst gesteckt (über <slot />).
+
+// Schriften selbst gehostet (Fontsource) statt von Google geladen — beim Seitenaufruf
+// wird keine IP-Adresse mehr an Google übermittelt (siehe Datenschutzerklärung).
+// · Archivo    = aufrechte Grotesk, Gewichte 400–900
+// · Newsreader = ruhige Serifen-KURSIV (300–500) für Eigennamen & editoriale Zeilen
+// (Times New Roman im Namens-Lockup ist eine Systemschrift und wird nicht geladen.)
+import "@fontsource/archivo/400.css";
+import "@fontsource/archivo/500.css";
+import "@fontsource/archivo/600.css";
+import "@fontsource/archivo/700.css";
+import "@fontsource/archivo/800.css";
+import "@fontsource/archivo/900.css";
+import "@fontsource/newsreader/300-italic.css";
+import "@fontsource/newsreader/400-italic.css";
+import "@fontsource/newsreader/500-italic.css";
 import "../styles/global.css";
 
 interface Props {
@@ -27,18 +42,12 @@ const {
     <title>{titel}</title>
 
     <!--
-      Schriften nach dem Vorbild des Lebenslaufs:
+      Schriften werden selbst gehostet (Fontsource-Import im Frontmatter oben) und nicht
+      mehr von Google Fonts geladen — dadurch wird keine IP-Adresse an Google übermittelt.
       · Times New Roman = kursiver Vorname im Namens-Lockup (Systemschrift, kein Laden nötig)
       · Archivo         = fette, kleingeschriebene Grotesk (Nachname, Überschriften, Titel)
       · Newsreader      = ruhige Serifen-Kursiv für Eigennamen & editoriale Zeilen
-      Archivo & Newsreader sind lizenzfrei (Open Font License) und später selbst hostbar.
     -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Newsreader:ital,opsz,wght@1,6..72,300..500&display=swap"
-      rel="stylesheet"
-    />
   </head>
   <body>
     <!--
