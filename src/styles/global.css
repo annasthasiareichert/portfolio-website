@@ -830,32 +830,20 @@ footer .rechtslinks a:hover { text-decoration: underline; }
    ============================================================ */
 .unterseite { background: var(--papier); }
 
-/* Sand-Band unter der fixierten Kopfzeile — plakativer Titel wie im Hero */
+/* Sand-Band unter der fixierten Kopfzeile — kompakt & einheitlich über alle Unterseiten (Maßstab: Impressum) */
 .seitenkopf {
   background: var(--sand);
-  padding: clamp(7rem, 14vw, 11rem) var(--rand) clamp(2.5rem, 6vw, 4rem);
+  padding: clamp(5.5rem, 10vw, 7.5rem) var(--rand) clamp(1.4rem, 3vw, 2rem);
 }
-.seitenkopf.schmal { padding-bottom: clamp(2rem, 5vw, 3rem); }
-.kopfband-label { margin-bottom: 0.9rem; }
+.seitenkopf.schmal { padding-bottom: clamp(1.2rem, 2.5vw, 1.7rem); }
+.kopfband-label { margin-bottom: 0.6rem; }
 .seitentitel {
   font-family: var(--grotesk); font-weight: 900;
-  font-size: clamp(3.2rem, 15vw, 11rem); line-height: 0.86; letter-spacing: -0.03em;
+  font-size: clamp(2rem, 5vw, 3.1rem); line-height: 0.95; letter-spacing: -0.02em;
   color: #1b1b1b;
 }
-/* Lebenslauf ist eine echte Inhaltsseite → Titel bewusst kompakt (nahm zu viel Raum ein) */
-.lebenslauf .seitentitel {
-  font-size: clamp(2.4rem, 6.5vw, 4rem); line-height: 0.92; letter-spacing: -0.02em;
-}
-/* Rechtsseiten: Titel sind rein zweckdienlich → deutlich kleiner + kompakteres Band */
-.rechtsseite .seitenkopf {
-  padding-top: clamp(6rem, 11vw, 8rem);
-  padding-bottom: clamp(1.4rem, 3vw, 2rem);
-}
-.rechtsseite .seitentitel {
-  font-size: clamp(2rem, 5vw, 3.1rem); line-height: 0.95; letter-spacing: -0.02em;
-}
 .seitenkopf-unter {
-  margin-top: 1.2rem; font-size: clamp(1rem, 2.2vw, 1.35rem); color: var(--tinte);
+  margin-top: 0.9rem; font-size: clamp(1rem, 2.2vw, 1.35rem); color: var(--tinte);
 }
 .seitenkopf-unter .vn {
   font-family: var(--lockup); font-style: italic; font-weight: 400; letter-spacing: -0.05em;
@@ -878,6 +866,11 @@ footer .rechtslinks a:hover { text-decoration: underline; }
 /* ============================================================
    LEBENSLAUF
    ============================================================ */
+.lebenslauf-titelzeile {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: clamp(1rem, 3vw, 2rem); flex-wrap: wrap;
+}
+.lebenslauf-titelzeile .knopf { margin-top: 0; flex-shrink: 0; }
 .ls-inhalt {
   padding: clamp(2.5rem, 6vw, 4.5rem) var(--rand) var(--takt);
   max-width: none; font-size: 0.9rem; line-height: 1.55;

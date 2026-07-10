@@ -19,12 +19,14 @@ import {
     <!-- Kopfband -->
     <section class="seitenkopf">
       <p class="mono kopfband-label" data-de="Werdegang" data-en="Resume">Werdegang</p>
-      <h1 class="seitentitel">Lebenslauf</h1>
+      <div class="lebenslauf-titelzeile">
+        <h1 class="seitentitel">Lebenslauf</h1>
+        <a class="knopf" href={pdfPfad} download>
+          <span data-de="Als PDF herunterladen" data-en="Download as PDF">Als PDF herunterladen</span>
+          <span class="knopf-pfeil" aria-hidden="true">↓</span>
+        </a>
+      </div>
       <p class="seitenkopf-unter"><span class="vn">annasthasia</span> reichert · {untertitel}</p>
-      <a class="knopf" href={pdfPfad} download>
-        <span data-de="Als PDF herunterladen" data-en="Download as PDF">Als PDF herunterladen</span>
-        <span class="knopf-pfeil" aria-hidden="true">↓</span>
-      </a>
     </section>
 
     <div class="ls-inhalt">
