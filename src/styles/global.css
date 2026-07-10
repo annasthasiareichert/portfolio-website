@@ -103,7 +103,7 @@ header::before {
 header.gescrollt::before { opacity: 1; }
 /* Wortmarke = AR-Logo (schwarzes Favicon), verlinkt zur Startseite. */
 header .wortmarke { display: inline-flex; align-items: center; line-height: 0; }
-.wortmarke-logo { display: block; width: 40px; height: 40px; }
+.wortmarke-logo { display: block; width: 44px; height: 44px; }
 header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center; }
 .nav-links { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center; }
 .nav-links a {
@@ -218,9 +218,10 @@ header.menue-offen .menue-strich:nth-child(3) { transform: translateY(-6px) rota
   font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase;
   white-space: nowrap;
 }
-/* Logo rückt rechts NEBEN das WIP-Band, damit es an keiner Fensterbreite von
-   der Diagonale angeschnitten wird (das Band ist fix 172px, --rand skaliert). */
-.wortmarke { margin-left: 7rem; }
+/* Logo sitzt in der oberen linken Ecke (natürlicher Kopf-Rand). Es liegt bewusst
+   unter dem WIP-Band – sobald das Band entfällt, steht es bereits an der richtigen
+   Stelle. */
+.wortmarke { margin-left: 0; }
 
 @media (max-width: 760px) {
   .wip-ecke { width: 138px; height: 138px; }
@@ -230,7 +231,7 @@ header.menue-offen .menue-strich:nth-child(3) { transform: translateY(-6px) rota
      WIP-Diagonale sitzt und nicht darunter verschwindet. Der Hamburger sitzt
      ohnehin frei oben rechts. */
   header { padding-top: 2rem; }
-  .wortmarke { margin-left: 5.5rem; }
+  .wortmarke { margin-left: 0; }
 }
 
 /* ============================================================
@@ -824,6 +825,10 @@ footer .zeile { display: flex; justify-content: space-between; flex-wrap: wrap; 
 footer .rechtslinks { display: flex; gap: 1.4rem; }
 footer .rechtslinks a:hover { text-decoration: underline; }
 
+/* Schlichter Footer (Kontaktseite): nur die untere Zeile, ohne Abstand & Trennlinie */
+footer.fuss-schlicht { padding-top: 1.6rem; }
+footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
+
 /* ============================================================
    SCROLL-AUFTRITT
    ============================================================ */
@@ -1168,29 +1173,72 @@ footer .rechtslinks a:hover { text-decoration: underline; }
 }
 
 /* ============================================================
-   KONTAKT — eigene, ungestörte Kontaktseite
+   KONTAKT — plakative Vollbild-Bühne
+   Kleines weißes „Kontakt“ (Maßstab der Unterseiten-Titel) über dem
+   Namens-Lockup, Porträt bündig rechts unten, Kontaktdaten unten links.
+   Grund = Sand.
    ============================================================ */
-.kontakt-inhalt { padding: clamp(1.5rem, 4vw, 2.5rem) var(--rand) var(--takt); }
-.kontakt-mail-gross {
-  display: inline-block;
-  font-family: var(--grotesk); font-weight: 800; text-transform: lowercase;
-  font-size: clamp(1.6rem, 6vw, 3.6rem); letter-spacing: -0.02em; line-height: 1.05;
-  overflow-wrap: anywhere; transition: opacity 0.3s;
+.kontakt-seite { background: var(--sand); }
+.kontakt-buehne {
+  position: relative;
+  min-height: 100svh;
+  background: var(--sand);
+  overflow: hidden;
+  padding: clamp(6.5rem, 15vh, 10rem) var(--rand) clamp(2rem, 5vh, 3.5rem);
 }
-.kontakt-mail-gross:hover { opacity: 0.6; }
-.kontakt-daten {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: clamp(1.8rem, 4vw, 2.6rem);
-  margin-top: clamp(3rem, 7vw, 4.5rem); padding-top: clamp(1.6rem, 4vw, 2.2rem);
-  border-top: 1px solid var(--haar);
+
+/* Titel-Block: kleines weißes „Kontakt“ + großer Name darunter */
+.kontakt-titel { position: relative; z-index: 3; }
+.kontakt-riese {
+  display: block;
+  font-family: var(--grotesk); font-weight: 900; text-transform: uppercase;
+  color: #fff;
+  font-size: clamp(2.6rem, 6.6vw, 4.6rem);
+  line-height: 0.95; letter-spacing: -0.01em;
 }
-.kontakt-daten dt { margin-bottom: 0.6rem; }
-.kontakt-daten dd {
-  font-family: var(--grotesk); font-weight: 600;
-  font-size: clamp(1rem, 1.6vw, 1.15rem); letter-spacing: -0.005em; color: var(--tinte);
+.kontakt-name {
+  display: block;
+  /* leichter negativer Abstand → der kursive Name überlappt „Kontakt“ etwas */
+  margin-top: clamp(-1.1rem, -2vw, -1.8rem);
+  font-family: var(--lockup); font-style: italic; font-weight: 400;
+  color: var(--tinte);
+  font-size: clamp(1.4rem, 3.6vw, 2.9rem);
+  letter-spacing: -0.02em; line-height: 1; white-space: nowrap;
 }
-.kontakt-daten dd a { border-bottom: 1px solid var(--haar); transition: border-color 0.3s; }
-.kontakt-daten dd a:hover { border-color: var(--tinte); }
+
+/* Porträt bündig rechts, tief gesetzt → viel Gesicht, wenig T-Shirt */
+.kontakt-portraet {
+  position: absolute; z-index: 2;
+  right: 0; bottom: clamp(-13rem, -14vh, -6rem);
+  height: min(82svh, 56rem); width: auto;
+  object-fit: contain; object-position: bottom right;
+  pointer-events: none; user-select: none;
+}
+
+/* Kontaktdaten unten links */
+.kontakt-daten-block {
+  position: absolute; z-index: 3;
+  left: var(--rand); bottom: clamp(2rem, 7vh, 4.5rem);
+  font-style: normal; font-family: var(--grotesk); color: var(--tinte);
+  line-height: 1.75;
+}
+.kontakt-daten-block p {
+  font-size: clamp(0.95rem, 1.4vw, 1.2rem); font-weight: 500; letter-spacing: -0.005em;
+}
+.kontakt-daten-block .kontakt-adresse { color: var(--tinte); }
+.kontakt-daten-block a { transition: opacity 0.3s; }
+.kontakt-daten-block a:hover { opacity: 0.55; }
+
+/* Handy: Porträt tritt zurück, Titel & Daten bleiben lesbar */
+@media (max-width: 760px) {
+  .kontakt-buehne { padding-top: clamp(7rem, 18vh, 10rem); }
+  .kontakt-name { font-size: clamp(1.5rem, 6vw, 2.7rem); }
+  .kontakt-portraet {
+    height: min(58svh, 34rem); right: clamp(-2rem, -2vw, 0px);
+    bottom: clamp(-6rem, -8vh, -3rem); opacity: 0.92;
+  }
+  .kontakt-daten-block { bottom: clamp(1.5rem, 5vh, 3rem); }
+}
 
 /* ============================================================
    ÜBER MICH — Platzhalterseite (Coming soon)

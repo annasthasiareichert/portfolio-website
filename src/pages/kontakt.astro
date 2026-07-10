@@ -12,36 +12,29 @@ import Fuss from "../components/Fuss.astro";
 >
   <Kopf />
 
-  <main class="unterseite">
-    <section class="seitenkopf">
-      <p class="mono kopfband-label" data-de="Kontakt" data-en="Contact">Kontakt</p>
-      <h1 class="seitentitel">Kontakt</h1>
-      <p class="seitenkopf-unter" data-de="Lass uns über dein Projekt sprechen." data-en="Let's talk about your project.">Lass uns über dein Projekt sprechen.</p>
+  <main class="unterseite kontakt-seite">
+    <section class="kontakt-buehne">
+      <h1 class="visually-hidden">Kontakt — Annasthasia Reichert</h1>
+
+      <!-- Titel: kleines weißes „Kontakt“ über dem Namens-Lockup -->
+      <div class="kontakt-titel" aria-hidden="true">
+        <span class="kontakt-riese">Kontakt</span>
+        <span class="kontakt-name">annasthasia reichert</span>
+      </div>
+
+      <!-- Porträt, bündig in der rechten unteren Ecke -->
+      <img class="kontakt-portraet" src="/portraet-kontakt.png" alt="Porträt von Annasthasia Reichert" width="884" height="1180" />
+
+      <!-- Kontaktdaten unten links -->
+      <address class="kontakt-daten-block">
+        <p class="kontakt-adresse">Lenbachstraße 9, 50733 Köln</p>
+        <p><a href="tel:+491725401188">+49 172 5401188</a></p>
+        <p><a href="mailto:annasthasiareichert@gmx.de">annasthasiareichert@gmx.de</a></p>
+      </address>
     </section>
-
-    <div class="kontakt-inhalt">
-      <a class="kontakt-mail-gross" href="mailto:annasthasiareichert@gmx.de">annasthasiareichert@gmx.de</a>
-
-      <dl class="kontakt-daten">
-        <div>
-          <dt class="mono" data-de="Telefon" data-en="Phone">Telefon</dt>
-          <dd><a href="tel:+491725401188">+49 172 5401188</a></dd>
-        </div>
-        <div>
-          <dt class="mono" data-de="Adresse" data-en="Address">Adresse</dt>
-          <dd>Lenbachstraße 9<br />50733 Köln</dd>
-        </div>
-        <div>
-          <dt class="mono" data-de="Social" data-en="Social">Social</dt>
-          <dd>
-            <a href="https://www.linkedin.com/in/annasthasia-leandra-reichert/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          </dd>
-        </div>
-      </dl>
-    </div>
   </main>
 
-  <Fuss />
+  <Fuss schlicht />
 
   <script>
     import "../scripts/interaktionen.js";

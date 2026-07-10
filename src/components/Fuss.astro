@@ -1,21 +1,29 @@
 ---
 // Fußzeile / Kontakt.
+// schlicht = nur die untere Zeile (Copyright + Rechtslinks) – ohne großen
+// E-Mail-Block, Label und Karo-Ecke. Für die Kontaktseite, die die
+// Kontaktdaten selbst zeigt.
+const { schlicht = false } = Astro.props;
 const jahr = 2026;
 ---
 
-<footer id="kontakt">
-  <div class="karo-ecke karo"></div>
+<footer id="kontakt" class={schlicht ? "fuss-schlicht" : undefined}>
+  {!schlicht && <div class="karo-ecke karo"></div>}
   <div class="inhalt">
-    <p class="mono kontakt-label" data-de="Kontaktiere mich gerne!" data-en="Feel free to reach out!">Kontaktiere mich gerne!</p>
-    <p class="kontakt-gross auftritt">
-      <a href="mailto:annasthasiareichert@gmx.de">
-        <svg class="mail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-          <rect x="2.5" y="4.5" width="19" height="15" rx="2.2"/>
-          <path d="m3.3 5.8 8.7 7 8.7-7"/>
-        </svg>
-        annasthasiareichert@gmx.de
-      </a>
-    </p>
+    {!schlicht && (
+      <>
+        <p class="mono kontakt-label" data-de="Kontaktiere mich gerne!" data-en="Feel free to reach out!">Kontaktiere mich gerne!</p>
+        <p class="kontakt-gross auftritt">
+          <a href="mailto:annasthasiareichert@gmx.de">
+            <svg class="mail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <rect x="2.5" y="4.5" width="19" height="15" rx="2.2"/>
+              <path d="m3.3 5.8 8.7 7 8.7-7"/>
+            </svg>
+            annasthasiareichert@gmx.de
+          </a>
+        </p>
+      </>
+    )}
     <div class="zeile mono">
       <span>© {jahr} Annasthasia Reichert · Köln</span>
       <div class="rechtslinks">
