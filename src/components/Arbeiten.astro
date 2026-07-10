@@ -7,7 +7,6 @@
 // Auf dem Handy wird derselbe Kartenstapel zu einem wischbaren Karussell.
 import { projekte } from "../data/projekte";
 const anzahl = projekte.length;
-const jahre = "2023–2026";
 ---
 
 <section class="arbeiten" id="arbeiten">
@@ -15,10 +14,6 @@ const jahre = "2023–2026";
     <h2>
       <a href="/projekte" data-de="Ausgewählte Arbeiten." data-en="Selected Work.">Ausgewählte Arbeiten.</a>
     </h2>
-    <span
-      class="mono"
-      data-de={`0${anzahl} Projekte · ${jahre}`}
-      data-en={`0${anzahl} Projects · ${jahre}`}>0{anzahl} Projekte · {jahre}</span>
   </div>
 
   <div class="faecher auftritt" id="faecher">

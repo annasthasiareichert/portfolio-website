@@ -260,7 +260,7 @@ header.menue-offen .menue-strich:nth-child(3) { transform: translateY(-6px) rota
   overflow: hidden;
   will-change: transform, opacity;
 }
-.hero .eyebrow { position: absolute; top: 6.5rem; left: var(--rand); z-index: 5; margin: 0; }
+.hero .eyebrow { position: absolute; top: 6.5rem; left: 50%; transform: translateX(-50%); z-index: 5; margin: 0; text-align: center; }
 
 /* Bühne, in der Schrift-Ebenen und Porträt deckungsgleich übereinanderliegen */
 .masthead {
@@ -367,8 +367,9 @@ header.menue-offen .menue-strich:nth-child(3) { transform: translateY(-6px) rota
 }
 
 @media (max-width: 760px) {
-  .wort-pille { padding: 0.45rem 0.85rem; }
-  .wp-hinweis { font-size: 0.66rem; }
+  /* Auf dem Handy gibt es kein „Spielen mit der Schrift" (kein Cursor) —
+     die Hinweis-Pille wird daher ausgeblendet */
+  .wort-pille { display: none; }
 }
 /* ohne Cursor (Touch) gibt es keinen Namens-Morph: die Pille bleibt Einladung */
 @media (hover: none), (max-width: 760px) {
@@ -393,7 +394,12 @@ header.menue-offen .menue-strich:nth-child(3) { transform: translateY(-6px) rota
 @keyframes pulsieren { 0%,100%{ transform: scaleX(0.35);} 50%{ transform: scaleX(1);} }
 
 @media (max-width: 760px) {
-  .masthead { height: min(64svh, 480px); }
+  /* Header kompakter: Komposition sitzt oben (statt vertikal zentriert) und die
+     Sektion sizet sich nach dem Inhalt → wenig Leerraum unter dem Porträt.
+     Der Masthead endet knapp unter dem Porträt (bottom: 10%), statt weit darüber
+     hinauszuragen; padding-bottom klein, damit der Scroll-Hinweis nah aufschließt. */
+  .hero { justify-content: flex-start; padding-top: 10rem; padding-bottom: 2.5rem; min-height: auto; }
+  .masthead { height: min(42svh, 340px); }
   .mh-signatur { bottom: 1.6rem; }
 }
 
@@ -519,14 +525,15 @@ header.menue-offen .menue-strich:nth-child(3) { transform: translateY(-6px) rota
 }
 
 @media (max-width: 760px) {
-  /* Wort auf Halshöhe: die Kette schneidet es im oberen Drittel — wie im Desktop-Bild */
-  .pf-solid, .pf { width: 94vw; top: 80%; }
+  /* Wort auf Halshöhe: die Kette schneidet es im oberen Drittel — wie im Desktop-Bild.
+     Zusammen mit dem Porträt weiter nach oben gerückt, damit beide verschmolzen bleiben. */
+  .pf-solid, .pf { width: 94vw; top: 73%; }
 
   /* Porträt schmaler als das Wort und an der Bühnen-Unterkante verankert:
      links und rechts der Schultern bleiben die Lettern voll schwarz sichtbar,
      und die Fade-Maske greift wirklich auf den sichtbaren Pullover-Saum */
   .pf-figur {
-    top: auto; bottom: 0; height: auto;
+    top: auto; bottom: 10%; height: auto;
     width: min(82%, 330px); max-width: none;
     -webkit-mask-image: linear-gradient(#000 70%, rgba(0,0,0,0.4) 88%, transparent 99%);
             mask-image: linear-gradient(#000 70%, rgba(0,0,0,0.4) 88%, transparent 99%);
@@ -802,7 +809,11 @@ html.karten-ankunft-still .projekt-inhalt > * { animation: none; }
 .ueber .gross em { font-style: italic; }
 .ueber .rechts { font-family: var(--grotesk); font-weight: 400; color: var(--tinte); max-width: 40ch; }
 .pfeil-link { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.4rem; font-weight: 600; color: var(--tinte); border-bottom: 1px solid var(--tinte); padding-bottom: 2px; }
-@media (max-width: 760px) { .ueber { grid-template-columns: 1fr; } }
+@media (max-width: 760px) {
+  .ueber { grid-template-columns: 1fr; }
+  /* Mobil: der nicht-fette Absatz genauso groß wie der fette darüber (.gross) */
+  .ueber .rechts { font-size: clamp(0.75rem, 1.6vw, 1.3rem); line-height: 1.28; }
+}
 
 /* ============================================================
    FUSSZEILE / KONTAKT
@@ -828,6 +839,14 @@ footer .rechtslinks a:hover { text-decoration: underline; }
 /* Schlichter Footer (Kontaktseite): nur die untere Zeile, ohne Abstand & Trennlinie */
 footer.fuss-schlicht { padding-top: 1.6rem; }
 footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
+
+/* Mobil: E-Mail-Adresse kleiner und garantiert einzeilig (kein Umbruch) */
+@media (max-width: 760px) {
+  footer .kontakt-gross a {
+    font-size: clamp(0.95rem, 4.6vw, 1.35rem);
+    white-space: nowrap; overflow-wrap: normal;
+  }
+}
 
 /* ============================================================
    SCROLL-AUFTRITT
@@ -1226,6 +1245,8 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
   font-size: clamp(0.95rem, 1.4vw, 1.2rem); font-weight: 500; letter-spacing: -0.005em;
 }
 .kontakt-daten-block .kontakt-adresse { color: var(--tinte); }
+/* Standard (Desktop): Straße + Ort einzeilig mit Komma dazwischen */
+.kontakt-adresse .ort-strasse::after { content: ", "; white-space: pre; }
 /* E-Mail hervorgehoben: fett und doppelt so groß wie die übrigen Daten */
 .kontakt-daten-block .kontakt-mail { font-size: clamp(1.9rem, 2.8vw, 2.4rem); font-weight: 800; overflow-wrap: anywhere; }
 .kontakt-daten-block a { transition: opacity 0.3s, color 0.3s; }
@@ -1233,17 +1254,50 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
 /* E-Mail wird beim Hover weiß statt nur abgedimmt */
 .kontakt-daten-block .kontakt-mail a:hover { opacity: 1; color: #fff; }
 
-/* Handy: Porträt tritt zurück, Titel & Daten bleiben lesbar */
+/* Handy: kompaktes Grid — Titel oben, darunter Kontaktdaten (links) neben dem
+   kleineren, auf Kopf & Schultern zugeschnittenen Porträt (rechts). Beide sind
+   unten bündig, sodass die Unterkante der Mailadresse mit der Unterkante des
+   Porträts abschließt. */
 @media (max-width: 760px) {
-  .kontakt-buehne { padding-top: clamp(7rem, 18vh, 10rem); }
-  .kontakt-name { font-size: clamp(1.5rem, 6vw, 2.7rem); }
-  .kontakt-portraet {
-    height: min(58svh, 34rem); right: clamp(-2rem, -2vw, 0px);
-    bottom: clamp(-6rem, -8vh, -3rem); opacity: 0.92;
+  .kontakt-buehne {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "titel    titel"
+      "daten    portrait";
+    align-items: end;
+    align-content: space-between;
+    row-gap: clamp(2rem, 6vh, 4rem);
+    column-gap: clamp(0.75rem, 3vw, 1.5rem);
+    min-height: 74svh;
+    padding-top: clamp(7rem, 16vh, 9rem);
+    padding-bottom: clamp(2.5rem, 7vh, 4.5rem);
   }
-  .kontakt-daten-block { bottom: clamp(1.5rem, 5vh, 3rem); }
-  /* E-Mail bleibt hervorgehoben, passt aber in eine Zeile */
-  .kontakt-daten-block .kontakt-mail { font-size: clamp(1.25rem, 6vw, 1.9rem); }
+  .kontakt-titel { grid-area: titel; }
+  .kontakt-name { font-size: clamp(1.5rem, 6vw, 2.7rem); }
+
+  /* Porträt: nur Kopf & Schultern (etwa unterhalb der Schultern abgeschnitten),
+     insgesamt kleiner. aspect-ratio + object-fit:cover zeigen die oberen ~68 %
+     der Bildhöhe (object-position:top), der Rest wird abgeschnitten. */
+  .kontakt-portraet {
+    grid-area: portrait; position: static; justify-self: end;
+    width: clamp(7.5rem, 32vw, 11rem); height: auto;
+    aspect-ratio: 11 / 10;
+    object-fit: cover; object-position: top center;
+    opacity: 1;
+  }
+
+  .kontakt-daten-block {
+    grid-area: daten; position: static; align-self: end;
+    left: auto; right: auto; bottom: auto;
+    line-height: 1.5;
+  }
+  .kontakt-daten-block p { font-size: clamp(0.8rem, 3vw, 1rem); }
+  .kontakt-daten-block .kontakt-mail { font-size: clamp(0.8rem, 3.3vw, 1rem); line-height: 1.2; }
+
+  /* Adresse: PLZ + Stadt in die nächste Zeile (ohne Komma) */
+  .kontakt-adresse .ort-stadt { display: block; }
+  .kontakt-adresse .ort-strasse::after { content: none; }
 }
 
 /* ============================================================
