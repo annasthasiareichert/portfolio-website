@@ -1228,8 +1228,10 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
 .kontakt-daten-block .kontakt-adresse { color: var(--tinte); }
 /* E-Mail hervorgehoben: fett und doppelt so groß wie die übrigen Daten */
 .kontakt-daten-block .kontakt-mail { font-size: clamp(1.9rem, 2.8vw, 2.4rem); font-weight: 800; overflow-wrap: anywhere; }
-.kontakt-daten-block a { transition: opacity 0.3s; }
+.kontakt-daten-block a { transition: opacity 0.3s, color 0.3s; }
 .kontakt-daten-block a:hover { opacity: 0.55; }
+/* E-Mail wird beim Hover weiß statt nur abgedimmt */
+.kontakt-daten-block .kontakt-mail a:hover { opacity: 1; color: #fff; }
 
 /* Handy: Porträt tritt zurück, Titel & Daten bleiben lesbar */
 @media (max-width: 760px) {
