@@ -56,7 +56,7 @@ export const projekte: Projekt[] = [
   {
     slug: "ticket-ag-rebranding",
     bild: "/projekte/karten/ticket-ag.webp",
-    titel: { de: "ganzheitliches rebranding", en: "full rebranding" },
+    titel: { de: "rebranding", en: "full rebranding" },
     kunde: { de: "Ticket AG", en: "Ticket AG" },
     meta:  { de: "Branding, UI · 2025", en: "Branding, UI · 2025" },
     beschreibung: {

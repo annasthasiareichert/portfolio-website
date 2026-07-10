@@ -16,6 +16,22 @@ const beobachter = new IntersectionObserver((es) => {
 }, { threshold: 0.15 });
 document.querySelectorAll(".auftritt").forEach((el) => beobachter.observe(el));
 
+/* 1a) „design.“-Wasserzeichen im Zwischenspiel: blendet erst ein, sobald die
+       Sektion unterhalb der Projekt-Karten ins Blickfeld scrollt */
+const zwischenspiel = document.querySelector(".zwischenspiel");
+const driftWort = document.querySelector(".zwischenspiel .drift");
+if (zwischenspiel && driftWort) {
+  const driftBeobachter = new IntersectionObserver((es) => {
+    es.forEach((e) => {
+      if (e.isIntersecting) {
+        driftWort.classList.add("sichtbar");
+        driftBeobachter.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  driftBeobachter.observe(zwischenspiel);
+}
+
 /* 1b) Kopfzeile: am Seitenanfang mit dem Hintergrund verschmelzen (kein Streifen),
        beim Scrollen den Frosted-Streifen einblenden (Klasse .gescrollt) */
 const kopfzeile = document.querySelector("header");
