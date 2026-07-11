@@ -1,12 +1,31 @@
 ---
 // Projekte — Übersichtsseite. Listet alle Projekte aus src/data/projekte.ts als
 // ruhiges Karten-Raster (Gegenstück zum verspielten Fächer auf der Startseite).
+// Oben eine Filterleiste: die Kategorien/Labels der Projekte lassen sich einzeln
+// an-/abwählen (Mehrfachauswahl). Standard = alle aktiv, also alle Projekte sichtbar.
 import Grundgeruest from "../../layouts/Grundgeruest.astro";
 import Kopf from "../../components/Kopf.astro";
 import Fuss from "../../components/Fuss.astro";
 import { projekte } from "../../data/projekte";
 
 const anzahl = projekte.length;
+
+// Stabiler Schlüssel je Label (sprachunabhängig) — dient dem Filter-Abgleich.
+const zuId = (s: string) =>
+  s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
+// Alle Labels in Reihenfolge ihrer ersten Nennung einsammeln (ohne Dubletten).
+const alleLabels: { id: string; de: string; en: string }[] = [];
+const gesehen = new Set<string>();
+for (const p of projekte) {
+  for (const l of p.labels ?? []) {
+    const id = zuId(l.de);
+    if (!gesehen.has(id)) {
+      gesehen.add(id);
+      alleLabels.push({ id, de: l.de, en: l.en });
+    }
+  }
+}
 ---
 
 <Grundgeruest
@@ -18,13 +37,23 @@ const anzahl = projekte.length;
   <main class="unterseite">
     <section class="seitenkopf">
       <h1 class="seitentitel">Projekte</h1>
-      <p class="seitenkopf-unter mono" data-de={`0${anzahl} Projekte`} data-en={`0${anzahl} Projects`}>0{anzahl} Projekte</p>
+      <p class="seitenkopf-unter mono" id="projekte-zaehler" data-de={`0${anzahl} Projekte`} data-en={`0${anzahl} Projects`}>0{anzahl} Projekte</p>
     </section>
+
+    <!-- Filterleiste: „Alle" schaltet komplett an/aus, jede Pille ein Label.
+         aria-pressed spiegelt den Zustand; JS in scripts/projekt-filter.js. -->
+    <nav class="filterleiste" aria-label="Projekte nach Kategorie filtern" data-projekt-filter>
+      <button type="button" class="filter-pille filter-alle aktiv" data-alle aria-pressed="true" data-de="Alle" data-en="All">Alle</button>
+      <span class="filter-trenner" aria-hidden="true"></span>
+      {alleLabels.map((l) => (
+        <button type="button" class="filter-pille aktiv" data-label={l.id} aria-pressed="true" data-de={l.de} data-en={l.en}>{l.de}</button>
+      ))}
+    </nav>
 
     <div class="projekte-liste-wrap">
       <ul class="projekte-liste">
         {projekte.map((p, i) => (
-          <li class="pl-karte auftritt">
+          <li class="pl-karte auftritt" data-labels={(p.labels ?? []).map((l) => zuId(l.de)).join(" ")}>
             <a class="pl-link" href={`/projekte/${p.slug}`}>
               <span class="pl-bild" style={`background-image:url('${p.bild}')`} aria-hidden="true"></span>
               <span class="pl-info">
@@ -37,6 +66,7 @@ const anzahl = projekte.length;
           </li>
         ))}
       </ul>
+      <p class="projekte-leer mono" hidden data-de="Keine Projekte in dieser Auswahl." data-en="No projects in this selection.">Keine Projekte in dieser Auswahl.</p>
     </div>
   </main>
 
@@ -44,5 +74,6 @@ const anzahl = projekte.length;
 
   <script>
     import "../../scripts/interaktionen.js";
+    import "../../scripts/projekt-filter.js";
   </script>
 </Grundgeruest>

@@ -1165,11 +1165,53 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
    Ruhiges, editoriales Karten-Raster aller Projekte (Gegenstück zum
    verspielten Fächer auf der Startseite) — verlässlich, gut lesbar, mobil einfach.
    ============================================================ */
+/* ---- Filterleiste (Projekte-Übersicht) ------------------------------------
+   Kategorie-Pillen zum An-/Abwählen. Aktiv = gefüllt (Tinte), abgewählt =
+   Umriss/gedämpft. „Alle" schaltet komplett. Mehrfachauswahl möglich. */
+.filterleiste {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;
+  padding: clamp(1.2rem, 3vw, 2rem) var(--rand) 0;
+}
+.filter-pille {
+  font-family: var(--grotesk); font-weight: 700;
+  font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.5rem 0.95rem; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--tinte);
+  background: var(--tinte); color: var(--papier);
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+}
+/* abgewählt: leerer Umriss, gedämpft */
+.filter-pille[aria-pressed="false"] {
+  background: transparent; color: var(--ton); border-color: var(--haar);
+}
+@media (hover: hover) {
+  .filter-pille[aria-pressed="false"]:hover { color: var(--tinte); border-color: var(--tinte); }
+  .filter-pille[aria-pressed="true"]:hover { opacity: 0.82; }
+}
+.filter-alle { font-weight: 800; letter-spacing: 0.1em; }
+.filter-trenner {
+  align-self: stretch; width: 1px; margin: 0.15rem 0.35rem;
+  background: var(--haar);
+}
+.projekte-leer {
+  padding: clamp(2rem, 6vw, 4rem) 0; text-align: center; color: var(--ton);
+}
+
 .projekte-liste-wrap { padding: clamp(1rem, 3vw, 2rem) var(--rand) var(--takt); }
 .projekte-liste {
   list-style: none;
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  display: grid;
+  /* Handy: eine Karte pro Zeile (wie in der Mobile-Optimierung). Nach oben hin
+     in festen Stufen mehr Spalten — auf Desktop 5 pro Zeile, sodass 9 Projekte
+     genau zweizeilig stehen. Feste Spaltenzahl statt auto-fill, damit es auch
+     auf sehr breiten Schirmen bei 5 bleibt. */
+  grid-template-columns: 1fr;
   gap: clamp(1.4rem, 3vw, 2.4rem);
+}
+@media (min-width: 560px)  { .projekte-liste { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 820px)  { .projekte-liste { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1080px) {
+  .projekte-liste { grid-template-columns: repeat(5, 1fr); gap: clamp(1rem, 1.8vw, 1.6rem); }
 }
 .pl-link { display: block; }
 .pl-bild {
@@ -1179,14 +1221,14 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
   box-shadow: 0 16px 32px -20px rgba(26,23,18,0.4);
   transition: transform 0.5s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.5s ease;
 }
-.pl-info { display: block; margin-top: 0.9rem; }
-.pl-nr { display: block; margin-bottom: 0.4rem; }
+.pl-info { display: block; margin-top: 0.75rem; }
+.pl-nr { display: block; margin-bottom: 0.35rem; }
 .pl-titel {
   display: block; font-family: var(--grotesk); font-weight: 800;
-  font-size: clamp(1.05rem, 2vw, 1.3rem); letter-spacing: -0.02em; line-height: 1.15;
+  font-size: clamp(1rem, 1.5vw, 1.2rem); letter-spacing: -0.02em; line-height: 1.15;
 }
-.pl-kunde { display: block; margin-top: 0.25rem; font-size: 1rem; color: var(--ton); }
-.pl-meta { display: block; margin-top: 0.45rem; }
+.pl-kunde { display: block; margin-top: 0.25rem; font-size: 0.92rem; color: var(--ton); }
+.pl-meta { display: block; margin-top: 0.4rem; }
 @media (hover: hover) and (min-width: 761px) {
   .pl-link:hover .pl-bild { transform: translateY(-6px); box-shadow: 0 30px 54px -26px rgba(26,23,18,0.5); }
 }

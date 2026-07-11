@@ -43,6 +43,9 @@ export type Projekt = {
   titel: { de: string; en: string };
   kunde: { de: string; en: string };
   meta: { de: string; en: string };
+  /* Kategorien/Labels — Grundlage für die Filter auf der Projekte-Übersicht.
+     Reihenfolge der ersten Nennung = Reihenfolge in der Filterleiste. */
+  labels?: Zwei[];
   /* --- Detailseite --- */
   beschreibung?: { de: string; en: string };
   leistungen?: string[];
@@ -59,6 +62,7 @@ export const projekte: Projekt[] = [
     titel: { de: "Rebranding", en: "Full Rebranding" },
     kunde: { de: "Ticket AG", en: "Ticket AG" },
     meta:  { de: "Branding, UI · 2025", en: "Branding, UI · 2025" },
+    labels: [{ de: "Branding", en: "Branding" }, { de: "UI", en: "UI" }],
     beschreibung: {
       de: "Ganzheitliches Rebranding für die Ticket AG – von der Markenstrategie über die visuelle Identität bis zum UI-Design der Ticketing-Plattform.",
       en: "A full rebranding for Ticket AG – from brand strategy and visual identity to the UI design of the ticketing platform.",
@@ -140,6 +144,7 @@ export const projekte: Projekt[] = [
     titel: { de: "Logo Redesign", en: "Logo Redesign" },
     kunde: { de: "echory", en: "echory" },
     meta:  { de: "Logo · 2024", en: "Logo · 2024" },
+    labels: [{ de: "Logo", en: "Logo" }],
     beschreibung: {
       de: "Logo-Redesign für echory – eine klare, moderne Bildmarke.",
       en: "Logo redesign for echory – a clean, modern brand mark.",
@@ -152,6 +157,7 @@ export const projekte: Projekt[] = [
     titel: { de: "Logo Redesign", en: "Logo Redesign" },
     kunde: { de: "Eisbären Berlin", en: "Eisbären Berlin" },
     meta:  { de: "Sport, Logo · 2024", en: "Sport, Logo · 2024" },
+    labels: [{ de: "Sport", en: "Sport" }, { de: "Logo", en: "Logo" }],
     beschreibung: {
       de: "Logo-Redesign im Sport-Kontext für die Eisbären Berlin.",
       en: "Logo redesign in a sports context for Eisbären Berlin.",
@@ -164,6 +170,7 @@ export const projekte: Projekt[] = [
     titel: { de: "3D-Rendering", en: "3D Rendering" },
     kunde: { de: "Schuh-Modell", en: "Shoe model" },
     meta:  { de: "3D, Produkt · 2024", en: "3D, Product · 2024" },
+    labels: [{ de: "3D", en: "3D" }, { de: "Produkt", en: "Product" }],
     beschreibung: {
       de: "Fotorealistisches 3D-Rendering eines Schuh-Modells zur Produktvisualisierung.",
       en: "Photorealistic 3D rendering of a shoe model for product visualisation.",
@@ -176,6 +183,7 @@ export const projekte: Projekt[] = [
     titel: { de: "Content Creation", en: "Content Creation" },
     kunde: { de: "Verschiedene Brands", en: "Various brands" },
     meta:  { de: "Social · 2023–25", en: "Social · 2023–25" },
+    labels: [{ de: "Social", en: "Social" }],
     beschreibung: {
       de: "Content Creation für verschiedene Brands – Social-Media-Gestaltung über mehrere Formate.",
       en: "Content creation for various brands – social media design across multiple formats.",
@@ -188,6 +196,7 @@ export const projekte: Projekt[] = [
     titel: { de: "Brand Assets", en: "Brand Assets" },
     kunde: { de: "ecostag / stagedates", en: "ecostag / stagedates" },
     meta:  { de: "Branding · 2024", en: "Branding · 2024" },
+    labels: [{ de: "Branding", en: "Branding" }],
     beschreibung: {
       de: "Brand Assets für ecostag / stagedates – konsistente Bausteine für die Markenwelt.",
       en: "Brand assets for ecostag / stagedates – consistent building blocks for the brand world.",
@@ -200,6 +209,7 @@ export const projekte: Projekt[] = [
     titel: { de: "Merchandise", en: "Merchandise" },
     kunde: { de: "stagedates", en: "stagedates" },
     meta:  { de: "Merch, Print · 2024", en: "Merch, Print · 2024" },
+    labels: [{ de: "Merch", en: "Merch" }, { de: "Print", en: "Print" }],
     beschreibung: {
       de: "Merchandise- und Print-Gestaltung für stagedates.",
       en: "Merchandise and print design for stagedates.",
@@ -212,6 +222,7 @@ export const projekte: Projekt[] = [
     titel: { de: "Private Projekte", en: "Personal Work" },
     kunde: { de: "Auswahl", en: "Selection" },
     meta:  { de: "Illustration · laufend", en: "Illustration · ongoing" },
+    labels: [{ de: "Illustration", en: "Illustration" }],
     beschreibung: {
       de: "Eine Auswahl persönlicher Illustrationsprojekte – laufend erweitert.",
       en: "A selection of personal illustration projects – ongoing.",
@@ -224,6 +235,7 @@ export const projekte: Projekt[] = [
     titel: { de: "Banner-Gestaltung", en: "Banner Design" },
     kunde: { de: "Lampenwelt", en: "Lampenwelt" },
     meta:  { de: "Ausblick · 2026", en: "Preview · 2026" },
+    labels: [{ de: "Banner", en: "Banner" }],
     beschreibung: {
       de: "Banner-Gestaltung für Lampenwelt (Ausblick 2026).",
       en: "Banner design for Lampenwelt (preview 2026).",
