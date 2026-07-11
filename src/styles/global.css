@@ -1276,14 +1276,17 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
   .kontakt-titel { grid-area: titel; }
   .kontakt-name { font-size: clamp(1.5rem, 6vw, 2.7rem); }
 
-  /* Porträt: nur Kopf & Schultern (etwa unterhalb der Schultern abgeschnitten),
-     insgesamt kleiner. aspect-ratio + object-fit:cover zeigen die oberen ~68 %
-     der Bildhöhe (object-position:top), der Rest wird abgeschnitten. */
+  /* Porträt: nur Kopf & Schultern (etwa unterhalb der Schultern abgeschnitten).
+     aspect-ratio + object-fit:cover zeigen die oberen ~68 % der Bildhöhe
+     (object-position:top), der Rest wird abgeschnitten. Insgesamt präsenter:
+     größer, ragt per negativem Rand etwas über die Mail-Schrift (die Mailadresse
+     überlappt so sichtbar das Porträt). Seitenverhältnis + Ausschnitt bleiben. */
   .kontakt-portraet {
     grid-area: portrait; position: static; justify-self: end;
-    width: clamp(7.5rem, 32vw, 11rem); height: auto;
+    width: clamp(11rem, 52vw, 15.5rem); height: auto;
     aspect-ratio: 11 / 10;
     object-fit: cover; object-position: top center;
+    margin-left: clamp(-3.5rem, -14vw, -2rem);
     opacity: 1;
   }
 
@@ -1293,7 +1296,9 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
     line-height: 1.5;
   }
   .kontakt-daten-block p { font-size: clamp(0.8rem, 3vw, 1rem); }
-  .kontakt-daten-block .kontakt-mail { font-size: clamp(0.8rem, 3.3vw, 1rem); line-height: 1.2; }
+  /* Mail einzeilig lassen, damit sie sauber über das Porträt läuft (statt an
+     „.de" umzubrechen). Sie darf über die linke Spalte ins Porträt hineinragen. */
+  .kontakt-daten-block .kontakt-mail { font-size: clamp(0.8rem, 3.3vw, 1rem); line-height: 1.2; white-space: nowrap; overflow-wrap: normal; }
 
   /* Adresse: PLZ + Stadt in die nächste Zeile (ohne Komma) */
   .kontakt-adresse .ort-stadt { display: block; }
