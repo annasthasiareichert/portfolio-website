@@ -2,8 +2,13 @@
 // Läuft im Browser, nachdem die Seite geladen ist.
 
 import { starteWortGummi } from "./wort-gummi.js";
+import { starteHeaderMobil } from "./header-mobil.js";
 
 const reduziert = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+// Breiter Schirm (Desktop/Tablet quer): nur hier läuft der einzeilige Masthead
+// mit Maus/Hover. Auf schmalen Schirmen übernimmt header-mobil.js das zweizeilige
+// Wort — so bleibt der Desktop-Header unverändert.
+const breit = window.matchMedia("(min-width: 761px)").matches;
 
 /* 1) Erscheinen beim Scrollen */
 const beobachter = new IntersectionObserver((es) => {
@@ -217,8 +222,9 @@ if (pf && masthead && wortPille) {
       (Zug, Feder, Quetscher) steht hier unten; gezeichnet wird im Modul.
       Ohne WebGL läuft alles wie bisher über die DOM-Ebenen + SVG-Maske.
       Eingaben kommen jetzt von der Bühne (masthead) + Zonen-Check imZone(), damit
-      der Effekt schon ab Lippenhöhe greift statt erst an der Wort-Box. */
-if (pf && masthead && !reduziert) {
+      der Effekt schon ab Lippenhöhe greift statt erst an der Wort-Box.
+      Nur auf breiten Schirmen — auf dem Handy übernimmt header-mobil.js. */
+if (pf && masthead && !reduziert && breit) {
   const mats = Array.from(pf.querySelectorAll(".pf-mat"));
   const canvas = masthead.querySelector(".pf-partikel");
   const ctx = canvas ? canvas.getContext("2d") : null;
@@ -571,3 +577,7 @@ if (pf && masthead && !reduziert) {
   if ("requestIdleCallback" in window) requestIdleCallback(ladeMaterialien, { timeout: 2500 });
   else setTimeout(ladeMaterialien, 1800);
 }
+
+/* 7) Mobile-Header (zweizeiliges Wort): auf schmalen Touch-Screens statt des
+      Desktop-Einzeilers. Das Modul prüft selbst, ob es aktiv werden soll. */
+starteHeaderMobil();

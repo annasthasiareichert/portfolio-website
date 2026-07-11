@@ -307,7 +307,9 @@ export function starteWortGummi(teile) {
 
       // vorne: Kontur + Reveal. Materialien, die noch nicht geladen sind, zählen
       // nicht mit — sonst würde der Blob die Kontur ausstanzen und Leere zeigen.
-      const eff = z.matOp.map((o, i) => (texMats[i].ok ? o : 0));
+      // texMats kann kürzer sein als matOp (mobil: nur eine Pink-Ebene) —
+      // fehlende Slots zählen als „nicht geladen" (0).
+      const eff = z.matOp.map((o, i) => (texMats[i] && texMats[i].ok ? o : 0));
       const soll = z.matOp[0] + z.matOp[1] + z.matOp[2] + z.matOp[3];
       const ist = eff[0] + eff[1] + eff[2] + eff[3];
       const reveal = z.reveal * (soll > 0.001 ? Math.min(1, ist / soll) : 0);

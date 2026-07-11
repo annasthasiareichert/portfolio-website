@@ -508,6 +508,11 @@ header.menue-offen .menue-strich:nth-child(3) { transform: translateY(-6px) rota
   z-index: 4; pointer-events: none;
 }
 
+/* Mobile Wort-Ebenen (zweizeilig): auf breiten Schirmen komplett aus —
+   dort läuft weiter der Desktop-Einzeiler. Nur die Mobile-Media-Query unten
+   holt sie hervor. */
+.pfm-img, .pfm-gl, .pfm-partikel { display: none; }
+
 /* Weicher Schleier am Bühnenrand unten — nur mobil sichtbar. Er legt eine
    zunehmende Unschärfe + einen Verlauf in Sand über die Porträt-Unterkante,
    sodass die Figur in den Hintergrund „verdunstet" statt hart zu enden. */
@@ -528,26 +533,59 @@ header.menue-offen .menue-strich:nth-child(3) { transform: translateY(-6px) rota
 }
 
 @media (max-width: 760px) {
-  /* Wort auf Halshöhe: die Kette schneidet es im oberen Drittel — wie im Desktop-Bild.
-     Zusammen mit dem Porträt weiter nach oben gerückt, damit beide verschmolzen bleiben. */
-  .pf-solid, .pf { width: 94vw; top: 73%; }
+  /* Auf dem Handy übernimmt das eigenständige zweizeilige Wort (pfm-*).
+     Der Desktop-Einzeiler samt seiner Leinwände wird daher ausgeblendet. */
+  .pf-solid, .pf, .pf-gl, .pf-partikel { display: none !important; }
 
-  /* Porträt schmaler als das Wort und an der Bühnen-Unterkante verankert:
-     links und rechts der Schultern bleiben die Lettern voll schwarz sichtbar,
-     und die Fade-Maske greift wirklich auf den sichtbaren Pullover-Saum */
+  /* Bühne etwas höher für die zweizeilige Komposition; pan-y = senkrechtes
+     Wischen scrollt die Seite, waagerechtes greift das Wort (Griff/Verzerrung). */
+  .masthead { height: min(56svh, 460px); touch-action: pan-y; }
+
+  /* Porträt kleiner & unten verankert: links und rechts der Schultern bleibt
+     Platz, damit die äußeren Lettern (P… …O) neben den Schultern sichtbar sind. */
   .pf-figur {
-    top: auto; bottom: 10%; height: auto;
-    width: min(82%, 330px); max-width: none;
-    -webkit-mask-image: linear-gradient(#000 70%, rgba(0,0,0,0.4) 88%, transparent 99%);
-            mask-image: linear-gradient(#000 70%, rgba(0,0,0,0.4) 88%, transparent 99%);
+    top: auto; bottom: 8%; height: auto;
+    width: min(112%, 448px); max-width: none;
+    -webkit-mask-image: linear-gradient(#000 72%, rgba(0,0,0,0.4) 90%, transparent 99%);
+            mask-image: linear-gradient(#000 72%, rgba(0,0,0,0.4) 90%, transparent 99%);
   }
+
+  /* Gemeinsame Lage/Größe aller zweizeiligen Wort-Grafiken. Das Wort ist breiter
+     als das Porträt (ragt neben die Schultern) und sitzt auf Brusthöhe/darunter,
+     damit das Gesicht frei bleibt (top = Abstand vom Bühnenoberrand). */
+  .pfm-img {
+    display: block; position: absolute; left: 50%; top: 44%;
+    transform: translateX(-50%);
+    width: 94vw; max-width: 430px; height: auto;
+    margin: 0; user-select: none; pointer-events: none;
+  }
+  .pfm-solid   { z-index: 1; }               /* hinter dem Porträt */
+  .pfm-outline { z-index: 3; }               /* vor dem Porträt */
+  .pfm-pink    { z-index: 3; opacity: 0; }   /* nur im Reveal (Canvas übernimmt) */
+
+  /* Gummi-Leinwände: deckungsgleich über der Bühne, mit Rand für gezogene Materie */
+  .pfm-gl {
+    display: block; position: absolute; left: -60px; top: -60px;
+    width: calc(100% + 120px); height: calc(100% + 120px); pointer-events: none;
+  }
+  .pfm-gl-hinten { z-index: 1; }
+  .pfm-gl-vorne  { z-index: 3; }
+  .pfm-partikel {
+    display: block; position: absolute; inset: 0; width: 100%; height: 100%;
+    z-index: 4; pointer-events: none;
+  }
+
+  /* Sobald WebGL zeichnet, ersetzen die Leinwände die <img>-Ebenen. */
+  .masthead.pfm-gl-an .pfm-img { opacity: 0; }
 
   .figur-schleier { display: block; }
 }
 
-/* Ohne Bewegungswunsch: statische Schrift (Solid + Outline), kein Reveal/Partikel/Gummi */
+/* Ohne Bewegungswunsch: statische Schrift (Solid + Outline), kein Reveal/Partikel/Gummi —
+   gilt für Desktop-Einzeiler wie für die zweizeiligen Mobile-Leinwände. */
 @media (prefers-reduced-motion: reduce) {
-  .pf-reveal, .pf-partikel, .pf-gl { display: none; }
+  .pf-reveal, .pf-partikel, .pf-gl,
+  .pfm-partikel, .pfm-gl { display: none; }
 }
 
 /* ============================================================

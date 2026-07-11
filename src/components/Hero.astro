@@ -94,6 +94,23 @@
     <!-- Partikel-Ebene über dem Wort -->
     <canvas class="pf-partikel" aria-hidden="true"></canvas>
 
+    <!-- ============================================================
+         NUR MOBIL: zweizeiliges „PORTFOLIO" (eigene Grafiken).
+         Desktop-Einzeiler oben bleibt unberührt; diese Ebenen sind auf
+         breiten Schirmen per CSS ausgeblendet. Aufbau wie Desktop:
+           • Solid (schwarz)  HINTER dem Porträt  → füllt neben den Schultern
+           • Outline          VOR  dem Porträt    → Kontur über der Brust
+           • Pink (bubbly)    erscheint im Reveal beim horizontalen Wischen
+         Gezeichnet & verformt wird per WebGL (header-mobil.js); die <img>
+         sind Textur-Quelle und statischer Fallback (reduced-motion/kein WebGL).
+         ============================================================ -->
+    <img class="pfm-img pfm-solid"   src="/header/mobil-solid.webp"   width="762" height="397" alt="" aria-hidden="true" decoding="async" />
+    <canvas class="pfm-gl pfm-gl-hinten" aria-hidden="true"></canvas>
+    <img class="pfm-img pfm-outline" src="/header/mobil-outline.webp" width="762" height="397" alt="" aria-hidden="true" decoding="async" />
+    <img class="pfm-img pfm-pink"    data-src="/header/mobil-pink.webp" width="762" height="397" alt="" aria-hidden="true" decoding="async" />
+    <canvas class="pfm-gl pfm-gl-vorne" aria-hidden="true"></canvas>
+    <canvas class="pfm-partikel" aria-hidden="true"></canvas>
+
     <!-- Wort-Pille: EIN Element, das zwei Label deckungsgleich stapelt. Ruhezustand
          lädt zum Spielen ein („Spiel mit der Schrift"); sobald der Cursor ab Lippen-
          höhe in den Wortbereich kommt, folgt die Pille dem Cursor und ihr Text
