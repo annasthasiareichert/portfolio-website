@@ -28,6 +28,7 @@ const pfad = Astro.url.pathname;
 
   <nav id="hauptmenue">
     <div class="nav-links">
+      <a href="/" data-de="Home" data-en="Home" data-ghost="Home" aria-current={pfad === "/" ? "page" : undefined}>Home</a>
       <a href="/projekte" class="nav-arbeiten" data-de="Projekte" data-en="Projects" data-ghost="Projekte" aria-current={pfad.startsWith("/projekte") ? "page" : undefined}>Projekte</a>
       <a href="/ueber-mich" data-de="Über mich" data-en="About" data-ghost="Über mich" aria-current={pfad === "/ueber-mich" ? "page" : undefined}>Über mich</a>
       <a href="/lebenslauf" data-de="Lebenslauf" data-en="Resume" data-ghost="Lebenslauf" aria-current={pfad === "/lebenslauf" ? "page" : undefined}>Lebenslauf</a>

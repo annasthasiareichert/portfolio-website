@@ -260,7 +260,10 @@ header.menue-offen .menue-strich:nth-child(3) { transform: translateY(-6px) rota
   overflow: hidden;
   will-change: transform, opacity;
 }
-.hero .eyebrow { position: absolute; top: 6.5rem; left: 50%; transform: translateX(-50%); z-index: 5; margin: 0; text-align: center; }
+.hero .eyebrow { position: absolute; top: 6.5rem; left: var(--rand); z-index: 5; margin: 0; text-align: left; }
+@media (max-width: 760px) {
+  .hero .eyebrow { left: 50%; transform: translateX(-50%); text-align: center; }
+}
 
 /* Bühne, in der Schrift-Ebenen und Porträt deckungsgleich übereinanderliegen */
 .masthead {
