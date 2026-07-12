@@ -1142,10 +1142,11 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
   width: 0.5rem; height: 1px; background: var(--tinte); opacity: 0.6;
 }
 
-/* Kleines, randbündiges Vorschaubild (Platzhalter, bis finale Bilder vorliegen) */
-.projekt-vorschau { margin: 0 0 clamp(2.5rem, 6vw, 4rem); max-width: clamp(180px, 26vw, 300px); }
-.projekt-vorschau-rechts { margin-left: auto; }
-.projekt-vorschau-links  { margin-right: auto; }
+/* Kleines Vorschaubild (Platzhalter, bis finale Bilder vorliegen) — der Fließtext läuft
+   daneben um die Grafik herum, damit der Platz neben dem Bild genutzt wird. */
+.projekt-vorschau { max-width: clamp(180px, 26vw, 300px); margin: 0.4rem 0 clamp(1.4rem, 3vw, 2rem); }
+.projekt-vorschau-rechts { float: right; margin-left: clamp(2rem, 5vw, 4rem); }
+.projekt-vorschau-links  { float: left;  margin-right: clamp(2rem, 5vw, 4rem); }
 .projekt-vorschau img {
   display: block; width: 100%; height: auto; border-radius: 10px;
   background: var(--sand); border: 1px solid rgba(26,23,18,0.12);
@@ -1153,6 +1154,17 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
 }
 .projekt-vorschau figcaption {
   margin-top: 0.6rem; font-size: 0.7rem; letter-spacing: 0.06em; color: var(--ton);
+}
+/* Der erste Textabschnitt soll oben neben dem Bild starten (nicht darunter). */
+.projekt-vorschau + .fall-abschnitt { margin-top: 0; }
+/* Weiter blättern erst wieder in voller Breite unterhalb der Grafik. */
+.projekt-nav { clear: both; }
+/* Mobil ist zu wenig Breite für Umfluss → Bild stapeln, randbündig. */
+@media (max-width: 640px) {
+  .projekt-vorschau { float: none; max-width: clamp(150px, 52vw, 220px); }
+  .projekt-vorschau-rechts { margin-left: auto; }
+  .projekt-vorschau-links  { margin-right: auto; }
+  .projekt-vorschau + .fall-abschnitt { margin-top: clamp(2rem, 6vw, 3rem); }
 }
 
 /* Prozess — nummerierte Schritte (Hover: Nummer färbt sich, Titel rückt vor) */
