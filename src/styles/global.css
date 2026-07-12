@@ -401,8 +401,7 @@ header.menue-offen .menue-strich:nth-child(3) { transform: translateY(-6px) rota
      Sektion sizet sich nach dem Inhalt → wenig Leerraum unter dem Porträt.
      Der Masthead endet knapp unter dem Porträt (bottom: 10%), statt weit darüber
      hinauszuragen; padding-bottom klein, damit der Scroll-Hinweis nah aufschließt. */
-  .hero { justify-content: flex-start; padding-top: 10rem; padding-bottom: 2.5rem; min-height: auto; }
-  .masthead { height: min(42svh, 340px); }
+  .hero { justify-content: flex-start; padding-top: 12rem; padding-bottom: 2.5rem; min-height: auto; }
   .mh-signatur { bottom: 1.6rem; }
 }
 
@@ -537,9 +536,11 @@ header.menue-offen .menue-strich:nth-child(3) { transform: translateY(-6px) rota
      Der Desktop-Einzeiler samt seiner Leinwände wird daher ausgeblendet. */
   .pf-solid, .pf, .pf-gl, .pf-partikel { display: none !important; }
 
-  /* Bühne etwas höher für die zweizeilige Komposition; pan-y = senkrechtes
-     Wischen scrollt die Seite, waagerechtes greift das Wort (Griff/Verzerrung). */
-  .masthead { height: min(56svh, 460px); touch-action: pan-y; }
+  /* Feste Bühnenhöhe (NICHT svh): das unten verankerte Porträt behält so auf
+     jeder Displayhöhe dieselbe Lage. Sonst schrumpft die Bühne auf kurzen
+     Screens und das Porträt wandert unter die Eyebrow-Zeile.
+     pan-y = senkrechtes Wischen scrollt die Seite, waagerechtes greift das Wort. */
+  .masthead { height: 460px; touch-action: pan-y; }
 
   /* Porträt kleiner & unten verankert: links und rechts der Schultern bleibt
      Platz, damit die äußeren Lettern (P… …O) neben den Schultern sichtbar sind. */
