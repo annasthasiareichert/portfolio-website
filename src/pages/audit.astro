@@ -1,0 +1,275 @@
+---
+// DESIGN-AUDIT — Poster-Ansicht zum Reduzieren/Konsolidieren des Systems.
+// Zeigt Ist-Zustand (Familien, Schnitte, Größen Desktop+Mobil, Farben) und markiert
+// Reduktions-Chancen (grün behalten · gelb prüfen · rot redundant). Echte Projekt-
+// Schriften + Farb-Tokens. Für ein Bild: als Screenshot exportieren. Löschbar.
+import Grundgeruest from "../layouts/Grundgeruest.astro";
+
+// Kennzahlen
+const kpis = [
+  { z: "3", l: "Schriftfamilien", s: "gesund", t: "ok" },
+  { z: "10 → 6", l: "Schriftschnitte", s: "geladen → Ziel", t: "warn" },
+  { z: "8 → 4", l: "Farbwerte", s: "genutzt → Kern", t: "warn" },
+  { z: "22 → 8", l: "Größen (Desktop)", s: "verschieden → Tokens", t: "warn" },
+];
+
+// Farben
+const farben = [
+  { n: "Papier",  hex: "#FCFBF9", rolle: "Hauptfläche / Body", tag: "ok",   note: "Kernfarbe" },
+  { n: "Sand",    hex: "#D9D7D1", rolle: "Bänder (Hero, Fuß, Köpfe, Kontakt)", tag: "ok", note: "Kernfarbe" },
+  { n: "Tinte",   hex: "#1A1712", rolle: "Text & dunkle Flächen", tag: "ok", note: "Kernfarbe", dunkel: true },
+  { n: "Ton",     hex: "#8A857B", rolle: "Meta, Nebeninfos, Kunden", tag: "ok", note: "Kernfarbe", dunkel: true },
+  { n: "Sand-Linie", hex: "#C7C4BB", rolle: "Karo-Textur · Prozess-Nr. (Ruhe)", tag: "warn", note: "Ableitung — nur Linien/Textur" },
+  { n: "Haar",    hex: "#DAD8D3", rolle: "Trenner / Umrisse", tag: "warn", note: "= Tinte 16 % · keine eigene Farbe" },
+  { n: "Display-Schwarz", hex: "#1b1b1b", rolle: "Titel, Masthead, Signatur", tag: "bad", note: "≈ Tinte #1A1712 → zusammenlegen", dunkel: true },
+  { n: "Reinweiß", hex: "#FFFFFF", rolle: "Kontakt-Titel · Hover", tag: "warn", note: "nur Akzent — sonst Papier" },
+];
+
+// Schnitte je Familie
+const familien = [
+  {
+    fam: "Times New Roman — italic", famStyle: '"Times New Roman", Times, serif', italic: true,
+    probe: "annasthasia", info: "Systemschrift · Namens-Lockup",
+    schnitte: [{ w: 400, n: "italic", tag: "ok", wo: "Namens-Lockup, Signaturen" }],
+  },
+  {
+    fam: "Archivo", famStyle: '"Archivo", sans-serif', italic: false,
+    probe: "reichert.", info: "Arbeitspferd · 6 Schnitte geladen",
+    schnitte: [
+      { w: 400, n: "Regular",   tag: "ok",   wo: "Fließtext" },
+      { w: 500, n: "Medium",    tag: "warn", wo: "nur Nav + Kontaktdaten → 400/600" },
+      { w: 600, n: "SemiBold",  tag: "ok",   wo: "Labels, Pillen, UI" },
+      { w: 700, n: "Bold",      tag: "warn", wo: "Rechtstext-H2, Filter, Button → 800/600" },
+      { w: 800, n: "ExtraBold", tag: "ok",   wo: "Überschriften" },
+      { w: 900, n: "Black",     tag: "ok",   wo: "Display, Titel, Nachname" },
+    ],
+  },
+  {
+    fam: "Newsreader — italic", famStyle: '"Newsreader", Georgia, serif', italic: true,
+    probe: "Ticket AG", info: "Editorial · 3 geladen, 2 genutzt",
+    schnitte: [
+      { w: 300, n: "Light",   tag: "warn", wo: "Lead/Profil → auf 400" },
+      { w: 400, n: "Regular", tag: "ok",   wo: "Eigennamen, Kunden" },
+      { w: 500, n: "Medium",  tag: "bad",  wo: "geladen, nirgends genutzt → Import raus" },
+    ],
+  },
+];
+
+// Größen-Skala (Vorschlag: 8 Tokens) — px aus dem Browser gemessen (Desktop 1440 / Mobil 375)
+const tiers = [
+  { tok: "Display", d: "224", m: "62", fam: "Archivo 900", farbe: "Tinte", rollen: "Masthead „PORTFOLIO“ (Hero)", tag: "ok", note: "Einzelstück" },
+  { tok: "Dekor",   d: "130–288", m: "38–80", fam: "Archivo 900", farbe: "Tinte 5–14 %", rollen: "Fächer-Titelwort, Wasserzeichen „design.“", tag: "ok", note: "dekorativ, transparent" },
+  { tok: "Titel",   d: "50–74", m: "32–42", fam: "Archivo 900", farbe: "Tinte / Weiß", rollen: "Seitentitel, Kontakt-Riese", tag: "ok", note: "" },
+  { tok: "H2",      d: "32–38", m: "22–30", fam: "Archivo 800 · 600", farbe: "Tinte / Ton", rollen: "Sektions-H2, Kontakt-Mail, Fuß-Mail", tag: "warn", note: "3 Schnitte in einem Tier → vereinheitlichen" },
+  { tok: "H3 / Lead", d: "19–26", m: "15–18", fam: "Newsreader 300·400 · Archivo 800·500·900", farbe: "Tinte / Ton", rollen: "Projekt-Intro, Lead, Kunde, kleine H2, Kontaktdaten, Nachname", tag: "bad", note: "6 Rollen, 5 Größen → auf 2 (24 Serif · 20 Sans)" },
+  { tok: "Body",    d: "15–18", m: "15–16", fam: "Archivo 400·500·700 · News. 400", farbe: "Tinte", rollen: "Fließtext, Nav, Rechtstext-H2, Kursiv", tag: "warn", note: "Nav & Rechtstext-H2 hier einsortieren" },
+  { tok: "Small",   d: "14", m: "14", fam: "Archivo 400 · 700", farbe: "Tinte / Papier", rollen: "Kleintext, Download-Button", tag: "ok", note: "" },
+  { tok: "Label",   d: "10–12", m: "10–12", fam: "Archivo 600·700·800", farbe: "Ton / Papier", rollen: "Meta, Pillen, WIP, Filter, Bildunterschrift", tag: "bad", note: "4 Größen (9,9–11,8) → EINE (11,5), ein Schnitt (600)" },
+];
+
+// Empfehlungen
+const empf = [
+  "#1b1b1b überall durch Tinte (#1A1712) ersetzen — spart eine fast identische Schwarz-Variante.",
+  "Newsreader auf einen Schnitt: Import 300 & 500 entfernen, nur italic 400 behalten.",
+  "Archivo 500 & 700 auslaufen lassen → 400 (Body) · 600 (UI) · 800 (Titel) · 900 (Display).",
+  "Label-Größen 9,9–11,8 px auf eine Größe (11,5) mit einem Schnitt (600) zusammenlegen.",
+  "Mittelband 19–26 px auf 2 Tokens verdichten: 24 (Serif-Lead) · 20 (Sans-H3).",
+  "Ergebnis: 3 Familien · 6 Schnitte · 4 Kernfarben · 8 Größen-Tokens.",
+];
+
+const tagLabel = { ok: "behalten", warn: "prüfen", bad: "reduzieren" };
+---
+
+<Grundgeruest titel="Design-Audit — Annasthasia Reichert" beschreibung="Audit: Schriften, Schnitte, Größen, Farben — Reduktions-Chancen.">
+  <main class="au">
+    <div class="au-head">
+      <p class="au-kicker">Design-Audit · Stand 12.07.2026</p>
+      <h1 class="au-h1">Wo lässt sich reduzieren?</h1>
+      <p class="au-legende">
+        <span class="lg ok">behalten</span>
+        <span class="lg warn">prüfen / zusammenlegen</span>
+        <span class="lg bad">redundant → reduzieren</span>
+      </p>
+    </div>
+
+    <!-- KPIs -->
+    <section class="au-kpis">
+      {kpis.map((k) => (
+        <div class={"au-kpi " + k.t}>
+          <span class="au-kpi-z">{k.z}</span>
+          <span class="au-kpi-l">{k.l}</span>
+          <span class="au-kpi-s">{k.s}</span>
+        </div>
+      ))}
+    </section>
+
+    <!-- FARBEN -->
+    <section class="au-sec">
+      <h2 class="au-h2"><span class="au-nr">1</span> Farben — 8 Werte, Kern = 4</h2>
+      <div class="au-farben">
+        {farben.map((f) => (
+          <div class={"au-farbe t-" + f.tag}>
+            <span class="au-swatch" style={`background:${f.hex}`}></span>
+            <div class="au-farbe-txt">
+              <div class="au-farbe-kopf">
+                <strong>{f.n}</strong>
+                <code>{f.hex}</code>
+                <span class={"chip " + f.tag}>{tagLabel[f.tag]}</span>
+              </div>
+              <span class="au-farbe-rolle">{f.rolle}</span>
+              <span class="au-farbe-note">{f.note}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- SCHRIFTEN -->
+    <section class="au-sec">
+      <h2 class="au-h2"><span class="au-nr">2</span> Schriften &amp; Schnitte — 10 geladen, Ziel 6</h2>
+      <div class="au-fams">
+        {familien.map((fa) => (
+          <div class="au-fam">
+            <div class="au-fam-kopf">
+              <span class="au-fam-probe" style={`font-family:${fa.famStyle}; font-style:${fa.italic ? "italic" : "normal"}`}>{fa.probe}</span>
+              <div class="au-fam-meta">
+                <strong>{fa.fam}</strong>
+                <span>{fa.info}</span>
+              </div>
+            </div>
+            <ul class="au-schnitte">
+              {fa.schnitte.map((s) => (
+                <li class={"t-" + s.tag}>
+                  <span class="au-w" style={`font-family:${fa.famStyle}; font-weight:${s.w}; font-style:${fa.italic ? "italic" : "normal"}`}>{s.w}</span>
+                  <span class="au-w-n">{s.n}</span>
+                  <span class="au-w-wo">{s.wo}</span>
+                  <span class={"chip " + s.tag}>{tagLabel[s.tag]}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- GRÖSSEN -->
+    <section class="au-sec">
+      <h2 class="au-h2"><span class="au-nr">3</span> Größen — 22 verschiedene, Vorschlag: 8 Tokens</h2>
+      <div class="au-tabelle" role="table">
+        <div class="au-tr au-th" role="row">
+          <span>Token</span><span>Desktop</span><span>Mobil</span><span>Schnitt</span><span>Heutige Rollen &amp; Hinweis</span>
+        </div>
+        {tiers.map((t) => (
+          <div class={"au-tr t-" + t.tag} role="row">
+            <span class="au-td-tok"><span class={"punkt " + t.tag}></span>{t.tok}</span>
+            <span class="au-td-px">{t.d}<i>px</i></span>
+            <span class="au-td-px">{t.m}<i>px</i></span>
+            <span class="au-td-fam">{t.fam}</span>
+            <span class="au-td-rollen">{t.rollen}{t.note ? <em class="au-merge"> — {t.note}</em> : null}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- EMPFEHLUNGEN -->
+    <section class="au-sec">
+      <h2 class="au-h2"><span class="au-nr">4</span> Konkrete Reduktion</h2>
+      <ol class="au-empf">
+        {empf.map((e, i) => (
+          <li class={i === empf.length - 1 ? "au-final" : ""}>{e}</li>
+        ))}
+      </ol>
+    </section>
+  </main>
+</Grundgeruest>
+
+<style>
+  .au { max-width: 820px; margin: 0 auto; padding: clamp(2.5rem, 6vw, 3.5rem) clamp(1.1rem, 4vw, 2rem) 4rem; }
+  /* Werkzeug-Seite: WIP-Diagonale ausblenden, damit das Poster sauber exportiert */
+  :global(.wip-ecke) { display: none; }
+  /* Analyse-Ampel (bewusst außerhalb der Markenpalette, nur als Werkzeug) */
+  .au { --ok:#2f7d55; --ok-bg:#e7f1ea; --warn:#9a6a12; --warn-bg:#f6eddb; --bad:#a33a34; --bad-bg:#f4e4e2; }
+
+  .au-head { margin-bottom: 1.6rem; }
+  .au-kicker { font-family: var(--grotesk); font-weight: 600; font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ton); }
+  .au-h1 { font-family: var(--grotesk); font-weight: 900; font-size: clamp(1.9rem, 6vw, 2.8rem); letter-spacing: -0.03em; line-height: 1; margin: 0.5rem 0 0.9rem; color: #1b1b1b; }
+  .au-legende { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .lg { font-family: var(--grotesk); font-weight: 700; font-size: 0.66rem; letter-spacing: 0.04em; padding: 0.28rem 0.6rem; border-radius: 999px; }
+  .lg.ok { background: var(--ok-bg); color: var(--ok); } .lg.warn { background: var(--warn-bg); color: var(--warn); } .lg.bad { background: var(--bad-bg); color: var(--bad); }
+
+  /* KPIs */
+  .au-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.7rem; margin-bottom: 2.2rem; }
+  .au-kpi { border: 1px solid var(--haar); border-radius: 12px; padding: 0.9rem 0.8rem; display: flex; flex-direction: column; gap: 0.15rem; border-top: 3px solid; }
+  .au-kpi.ok { border-top-color: var(--ok); } .au-kpi.warn { border-top-color: var(--warn); }
+  .au-kpi-z { font-family: var(--grotesk); font-weight: 900; font-size: clamp(1.1rem, 3vw, 1.5rem); letter-spacing: -0.02em; color: var(--tinte); }
+  .au-kpi-l { font-family: var(--grotesk); font-weight: 700; font-size: 0.76rem; color: var(--tinte); }
+  .au-kpi-s { font-size: 0.68rem; color: var(--ton); }
+
+  .au-sec { margin-top: 2.2rem; }
+  .au-h2 { font-family: var(--grotesk); font-weight: 800; font-size: clamp(1.05rem, 2.6vw, 1.35rem); letter-spacing: -0.02em; color: var(--tinte); display: flex; align-items: center; gap: 0.55rem; margin-bottom: 1rem; padding-bottom: 0.55rem; border-bottom: 1px solid var(--haar); }
+  .au-nr { display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--tinte); color: var(--papier); font-size: 0.8rem; font-weight: 800; }
+
+  /* Chips / Punkte */
+  .chip { font-family: var(--grotesk); font-weight: 700; font-size: 0.6rem; letter-spacing: 0.03em; padding: 0.16rem 0.5rem; border-radius: 999px; white-space: nowrap; }
+  .chip.ok { background: var(--ok-bg); color: var(--ok); } .chip.warn { background: var(--warn-bg); color: var(--warn); } .chip.bad { background: var(--bad-bg); color: var(--bad); }
+  .punkt { width: 0.55rem; height: 0.55rem; border-radius: 50%; display: inline-block; margin-right: 0.4rem; flex: none; }
+  .punkt.ok { background: var(--ok); } .punkt.warn { background: var(--warn); } .punkt.bad { background: var(--bad); }
+
+  /* Farben */
+  .au-farben { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+  .au-farbe { display: flex; gap: 0.7rem; align-items: stretch; border: 1px solid var(--haar); border-radius: 10px; padding: 0.55rem; }
+  .au-farbe.t-bad { border-color: var(--bad); } .au-farbe.t-warn { border-color: color-mix(in srgb, var(--warn) 45%, var(--haar)); }
+  .au-swatch { flex: none; width: 46px; border-radius: 7px; border: 1px solid rgba(26,23,18,0.14); }
+  .au-farbe-txt { display: flex; flex-direction: column; gap: 0.12rem; min-width: 0; }
+  .au-farbe-kopf { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+  .au-farbe-kopf strong { font-family: var(--grotesk); font-weight: 800; font-size: 0.82rem; }
+  .au-farbe-kopf code { font-family: ui-monospace, Menlo, monospace; font-size: 0.66rem; color: var(--ton); }
+  .au-farbe-rolle { font-size: 0.72rem; color: var(--tinte); }
+  .au-farbe-note { font-size: 0.68rem; color: var(--ton); }
+
+  /* Schriften */
+  .au-fams { display: flex; flex-direction: column; gap: 0.9rem; }
+  .au-fam { border: 1px solid var(--haar); border-radius: 12px; padding: 0.9rem 1rem; }
+  .au-fam-kopf { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.7rem; }
+  .au-fam-probe { font-size: clamp(1.6rem, 5vw, 2.4rem); line-height: 1; color: #1b1b1b; flex: none; }
+  .au-fam-meta { display: flex; flex-direction: column; }
+  .au-fam-meta strong { font-family: var(--grotesk); font-weight: 800; font-size: 0.92rem; }
+  .au-fam-meta span { font-size: 0.72rem; color: var(--ton); }
+  .au-schnitte { list-style: none; display: flex; flex-direction: column; gap: 0.28rem; }
+  .au-schnitte li { display: grid; grid-template-columns: 2.6rem 4.2rem 1fr auto; align-items: center; gap: 0.6rem; padding: 0.3rem 0.5rem; border-radius: 7px; }
+  .au-schnitte li.t-warn { background: var(--warn-bg); } .au-schnitte li.t-bad { background: var(--bad-bg); }
+  .au-w { font-size: 1.35rem; color: var(--tinte); text-align: center; }
+  .au-w-n { font-family: var(--grotesk); font-weight: 700; font-size: 0.72rem; color: var(--tinte); }
+  .au-w-wo { font-size: 0.72rem; color: var(--ton); }
+
+  /* Größen-Tabelle */
+  .au-tabelle { border: 1px solid var(--haar); border-radius: 12px; overflow: hidden; }
+  .au-tr { display: grid; grid-template-columns: 5.2rem 4.4rem 4rem 8.5rem 1fr; gap: 0.5rem; padding: 0.55rem 0.8rem; align-items: center; border-top: 1px solid var(--haar); }
+  .au-tr:first-child { border-top: none; }
+  .au-th { background: var(--sand); font-family: var(--grotesk); font-weight: 700; font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tinte); }
+  .au-tr.t-warn { background: var(--warn-bg); } .au-tr.t-bad { background: var(--bad-bg); }
+  .au-td-tok { display: flex; align-items: center; font-family: var(--grotesk); font-weight: 800; font-size: 0.78rem; color: var(--tinte); }
+  .au-td-px { font-family: var(--grotesk); font-weight: 700; font-size: 0.82rem; color: var(--tinte); }
+  .au-td-px i { font-style: normal; font-size: 0.6rem; color: var(--ton); margin-left: 0.1rem; }
+  .au-td-fam { font-size: 0.68rem; color: var(--ton); }
+  .au-td-rollen { font-size: 0.72rem; color: var(--tinte); }
+  .au-merge { font-style: normal; font-weight: 700; color: var(--bad); }
+  .au-tr.t-warn .au-merge { color: var(--warn); }
+
+  /* Empfehlungen */
+  .au-empf { list-style: none; counter-reset: e; display: flex; flex-direction: column; gap: 0.55rem; }
+  .au-empf li { counter-increment: e; position: relative; padding: 0.6rem 0.8rem 0.6rem 2.4rem; border: 1px solid var(--haar); border-radius: 9px; font-size: 0.8rem; color: var(--tinte); line-height: 1.4; }
+  .au-empf li::before { content: counter(e); position: absolute; left: 0.6rem; top: 0.6rem; width: 1.35rem; height: 1.35rem; display: grid; place-items: center; background: var(--tinte); color: var(--papier); border-radius: 50%; font-family: var(--grotesk); font-weight: 800; font-size: 0.72rem; }
+  .au-empf .au-final { background: var(--tinte); color: var(--papier); border-color: var(--tinte); font-family: var(--grotesk); font-weight: 700; }
+  .au-empf .au-final::before { background: var(--papier); color: var(--tinte); }
+
+  @media (max-width: 620px) {
+    .au-kpis { grid-template-columns: 1fr 1fr; }
+    .au-farben { grid-template-columns: 1fr; }
+    .au-schnitte li { grid-template-columns: 2.2rem 1fr auto; }
+    .au-schnitte .au-w-n { display: none; }
+    .au-tr { grid-template-columns: 4.4rem 3.6rem 3.2rem 1fr; }
+    .au-td-fam { display: none; }
+    .au-th span:nth-child(4) { display: none; }
+  }
+</style>

@@ -5,10 +5,9 @@
   /* Farben (aus dem CV gemessen) */
   --papier:     #FCFBF9;   /* warmes Weiß, Hauptfläche (Body des CV)     */
   --sand:       #D9D7D1;   /* Greige/Taupe-Band (Kopf-/Fußband des CV)   */
-  --sand-linie: #C7C4BB;   /* feine Karolinien in der Textur             */
-  --tinte:      #1A1712;   /* warmes Schwarz, Text                       */
+  --tinte:      #1A1712;   /* warmes Schwarz, Text & Display             */
   --ton:        #8A857B;   /* gedämpftes Grau, Nebeninfos / Meta         */
-  --haar:       rgba(26,23,18,0.16); /* Haarlinien / Trenner             */
+  --haar:       rgba(26,23,18,0.16); /* Tinte 16 % — Haarlinien, Trenner, Karo-Textur, ruhende Prozess-Nr. */
 
   /* Typo */
   --lockup: "Times New Roman", Times, serif;  /* Vorname im Namens-Lockup, kursiv gesetzt */
@@ -71,8 +70,8 @@ a { color: inherit; text-decoration: none; }
 /* Karopapier-Textur (wie die Grid-Ecke im CV) */
 .karo {
   background-image:
-    linear-gradient(var(--sand-linie) 1px, transparent 1px),
-    linear-gradient(90deg, var(--sand-linie) 1px, transparent 1px);
+    linear-gradient(var(--haar) 1px, transparent 1px),
+    linear-gradient(90deg, var(--haar) 1px, transparent 1px);
   background-size: 22px 22px;
 }
 
@@ -107,7 +106,7 @@ header .wortmarke { display: inline-flex; align-items: center; line-height: 0; }
 header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center; }
 .nav-links { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center; }
 .nav-links a {
-  position: relative; font-weight: 500; font-size: 0.95rem;
+  position: relative; font-weight: 600; font-size: 0.95rem;
   overflow: hidden;
   transition: font-weight 0.15s ease;
 }
@@ -116,11 +115,11 @@ header nav { display: flex; gap: clamp(1rem, 2.5vw, 2.2rem); align-items: center
 .nav-links a::after {
   content: attr(data-ghost);
   display: block; height: 0; visibility: hidden;
-  font-weight: 700; pointer-events: none;
+  font-weight: 800; pointer-events: none;
 }
 /* Hover & aktueller Menüpunkt: fett statt unterstrichen */
 .nav-links a:hover,
-.nav-links a[aria-current="page"] { font-weight: 700; }
+.nav-links a[aria-current="page"] { font-weight: 800; }
 
 /* LinkedIn direkt in der Kopfzeile — auf den ersten Blick sichtbar, ohne zu scrollen.
    Gleiche Formensprache wie der Sprach-Umschalter (Hairline-Pille, monochrom). */
@@ -291,8 +290,8 @@ header.menue-offen .menue-strich:nth-child(3) { transform: translateY(-6px) rota
 .mh-wort.serif { font-family: var(--lockup); font-style: italic; font-weight: 400;
   font-size: clamp(3.2rem, 20vw, 17rem); letter-spacing: -0.04em; opacity: 0; }
 /* gefüllt (hinter dem Porträt) vs. nur Kontur (vor dem Porträt) */
-.mh-wort.solid { color: #1b1b1b; z-index: 1; }
-.mh-wort.line  { color: transparent; -webkit-text-stroke: 1.6px #1b1b1b; z-index: 3; }
+.mh-wort.solid { color: var(--tinte); z-index: 1; }
+.mh-wort.line  { color: transparent; -webkit-text-stroke: 1.6px var(--tinte); z-index: 3; }
 
 /* das Porträt liegt zwischen gefüllter Ebene (hinten) und Kontur (vorne) */
 .mh-figur {
@@ -314,7 +313,7 @@ header.menue-offen .menue-strich:nth-child(3) { transform: translateY(-6px) rota
 .mh-signatur {
   position: absolute; right: var(--rand); bottom: 2.3rem; z-index: 5;
   font-family: var(--grotesk); font-weight: 900; text-transform: lowercase;
-  font-size: clamp(1.05rem, 2.1vw, 1.6rem); letter-spacing: -0.02em; color: #1b1b1b;
+  font-size: clamp(1.05rem, 2.1vw, 1.6rem); letter-spacing: -0.02em; color: var(--tinte);
 }
 .mh-signatur .vn {
   font-family: var(--lockup); font-style: italic; font-weight: 400; letter-spacing: -0.07em;
@@ -872,7 +871,7 @@ footer .kontakt-gross a {
   font-size: clamp(1.7rem, 2.8vw, 2rem); letter-spacing: -0.005em;
   transition: color 0.3s; overflow-wrap: anywhere;
 }
-footer .kontakt-gross a:hover { color: #fff; }
+footer .kontakt-gross a:hover { color: var(--papier); }
 footer .kontakt-gross .mail-icon { width: 0.7em; height: 0.7em; flex-shrink: 0; }
 footer .zeile { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.2rem; margin-top: clamp(3rem, 8vw, 5rem); padding-top: 1.6rem; border-top: 1px solid var(--haar); }
 footer .rechtslinks { display: flex; gap: 1.4rem; }
@@ -910,7 +909,7 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
 .seitentitel {
   font-family: var(--grotesk); font-weight: 900;
   font-size: clamp(2rem, 5vw, 3.1rem); line-height: 0.95; letter-spacing: -0.02em;
-  color: #1b1b1b;
+  color: var(--tinte);
 }
 .seitenkopf-unter {
   margin-top: 0.9rem; font-size: clamp(1rem, 2.2vw, 1.35rem); color: var(--tinte);
@@ -923,7 +922,7 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
 .knopf {
   display: inline-flex; align-items: center; gap: 0.7rem; margin-top: clamp(1.5rem, 4vw, 2.3rem);
   background: var(--tinte); color: var(--papier);
-  font-family: var(--grotesk); font-weight: 700; font-size: 0.9rem;
+  font-family: var(--grotesk); font-weight: 600; font-size: 0.9rem;
   letter-spacing: 0.02em; padding: 0.85rem 1.5rem; border-radius: 999px;
   transition: transform 0.3s cubic-bezier(0.2,0.8,0.2,1), opacity 0.3s;
 }
@@ -952,7 +951,7 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
   margin-bottom: 1.2rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--haar);
 }
 .ls-profil {
-  font-family: var(--serif); font-weight: 300; font-style: italic;
+  font-family: var(--serif); font-weight: 400; font-style: italic;
   font-size: clamp(1.05rem, 1.8vw, 1.3rem); line-height: 1.4; max-width: none;
 }
 .ls-untertitel { margin: 1.6rem 0 0.7rem; }
@@ -1019,7 +1018,7 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
   max-width: none; line-height: 1.55; font-size: 0.9rem;
 }
 .rechtstext h2 {
-  font-family: var(--grotesk); font-weight: 700; font-size: clamp(0.95rem, 1.4vw, 1.12rem);
+  font-family: var(--grotesk); font-weight: 800; font-size: clamp(0.95rem, 1.4vw, 1.12rem);
   letter-spacing: -0.005em; margin: clamp(1.6rem, 3.5vw, 2.3rem) 0 0.5rem;
 }
 .rechtstext h2:first-child { margin-top: 0; }
@@ -1089,7 +1088,7 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
 .projekt-nav .pfeil-link { margin-top: 0; }
 .naechstes-projekt {
   margin-left: auto; text-align: right;
-  font-family: var(--grotesk); font-weight: 700; font-size: clamp(1rem, 2.2vw, 1.3rem);
+  font-family: var(--grotesk); font-weight: 800; font-size: clamp(1rem, 2.2vw, 1.3rem);
   letter-spacing: -0.01em; transition: opacity 0.3s;
 }
 .naechstes-projekt:hover { opacity: 0.6; }
@@ -1123,7 +1122,7 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
 
 /* Textabschnitt — erste Zeile als große Serifen-Kursiv-Aussage (lead) */
 .fall-lead {
-  font-family: var(--serif); font-style: italic; font-weight: 300;
+  font-family: var(--serif); font-style: italic; font-weight: 400;
   font-size: clamp(1.05rem, 1.7vw, 1.35rem); line-height: 1.5; letter-spacing: -0.005em;
   color: var(--tinte); max-width: none;
 }
@@ -1177,7 +1176,7 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
 .fall-prozess-liste .fall-schritt:last-child { border-bottom: 1px solid var(--haar); }
 .fall-schritt-nr {
   font-family: var(--grotesk); font-weight: 800; font-size: clamp(1.5rem, 3.6vw, 2.4rem);
-  line-height: 1; letter-spacing: -0.02em; color: var(--sand-linie);
+  line-height: 1; letter-spacing: -0.02em; color: var(--haar);
   transition: color 0.4s ease;
 }
 .fall-schritt-titel {
@@ -1254,7 +1253,7 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
   padding: clamp(1.2rem, 3vw, 2rem) var(--rand) 0;
 }
 .filter-pille {
-  font-family: var(--grotesk); font-weight: 700;
+  font-family: var(--grotesk); font-weight: 600;
   font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase;
   padding: 0.5rem 0.95rem; border-radius: 999px; cursor: pointer;
   border: 1px solid var(--tinte);
@@ -1333,7 +1332,7 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
 .kontakt-riese {
   display: block;
   font-family: var(--grotesk); font-weight: 900; text-transform: uppercase;
-  color: #fff;
+  color: var(--papier);
   font-size: clamp(2.6rem, 6.6vw, 4.6rem);
   line-height: 0.95; letter-spacing: -0.01em;
 }
@@ -1364,7 +1363,7 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
   line-height: 1.75;
 }
 .kontakt-daten-block p {
-  font-size: clamp(0.95rem, 1.4vw, 1.2rem); font-weight: 500; letter-spacing: -0.005em;
+  font-size: clamp(0.95rem, 1.4vw, 1.2rem); font-weight: 600; letter-spacing: -0.005em;
 }
 .kontakt-daten-block .kontakt-adresse { color: var(--tinte); }
 /* Standard (Desktop): Straße + Ort einzeilig mit Komma dazwischen */
@@ -1374,7 +1373,7 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
 .kontakt-daten-block a { transition: opacity 0.3s, color 0.3s; }
 .kontakt-daten-block a:hover { opacity: 0.55; }
 /* E-Mail wird beim Hover weiß statt nur abgedimmt */
-.kontakt-daten-block .kontakt-mail a:hover { opacity: 1; color: #fff; }
+.kontakt-daten-block .kontakt-mail a:hover { opacity: 1; color: var(--papier); }
 
 /* Handy: kompaktes Grid — Titel oben, darunter Kontaktdaten (links) neben dem
    kleineren, auf Kopf & Schultern zugeschnittenen Porträt (rechts). Beide sind

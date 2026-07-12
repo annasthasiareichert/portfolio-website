@@ -1,0 +1,398 @@
+---
+// STYLEGUIDE — interne Design-Übersicht (nicht in der Navigation verlinkt).
+// Ganzheitliche Referenz aller Schriften, Schriftschnitte, Größen und Farben,
+// gerendert mit den ECHTEN Projekt-Schriften (Archivo, Newsreader, Times) und
+// den ECHTEN Farb-Tokens aus global.css. Die Größen wachsen per clamp() mit dem
+// Viewport → beim Umschalten Desktop ↔ Mobil rechnet die Live-Anzeige neu.
+// Diese Seite ist ein Arbeitswerkzeug; sie kann jederzeit gelöscht werden.
+import Grundgeruest from "../layouts/Grundgeruest.astro";
+
+// ---- Farben (exakt aus global.css) -------------------------------------------
+const farben = [
+  { name: "Papier",     var: "--papier",     wert: "#FCFBF9",              rolle: "Warmes Weiß · Hauptfläche / Body", dunkel: false },
+  { name: "Sand",       var: "--sand",       wert: "#D9D7D1",              rolle: "Greige · Bänder (Hero, Fuß, Seitenköpfe, Kontakt)", dunkel: false },
+  { name: "Sand-Linie", var: "--sand-linie", wert: "#C7C4BB",              rolle: "Karolinien-Textur · Prozess-Nummern (Ruhe)", dunkel: false },
+  { name: "Tinte",      var: "--tinte",      wert: "#1A1712",              rolle: "Warmes Schwarz · Text & dunkle Flächen", dunkel: true },
+  { name: "Ton",        var: "--ton",        wert: "#8A857B",              rolle: "Gedämpftes Grau · Meta, Nebeninfos, Kundennamen", dunkel: true },
+  { name: "Haar",       var: "--haar",       wert: "rgba(26,23,18,0.16)",  rolle: "Haarlinien / Trenner / Umrisse (16 % Tinte)", dunkel: false },
+  { name: "Display-Schwarz", var: "—",       wert: "#1b1b1b",              rolle: "Fast-Schwarz · Display-Schrift (Masthead, Titel, Signatur) — minimal heller als Tinte", dunkel: true },
+  { name: "Reinweiß",   var: "—",            wert: "#FFFFFF",              rolle: "Kontakt-Riesentitel & Hover-Highlights", dunkel: false },
+];
+
+// ---- Schriftfamilien ---------------------------------------------------------
+const familien = [
+  {
+    name: "Times New Roman — italic",
+    fam: '"Times New Roman", Times, serif', italic: true,
+    token: "--lockup", geladen: "Systemschrift (kein Laden nötig)",
+    gewichte: "400 (kursiv)",
+    rolle: "Namens-Lockup „annasthasia“, Signaturen, kursiver Vorname überall.",
+    probe: "annasthasia",
+  },
+  {
+    name: "Archivo",
+    fam: '"Archivo", "Helvetica Neue", Arial, sans-serif', italic: false,
+    token: "--grotesk", geladen: "Selbst gehostet · Gewichte 400 · 500 · 600 · 700 · 800 · 900",
+    gewichte: "400–900",
+    rolle: "Arbeitspferd: Nachname, Überschriften, Titel, Fließtext, Labels, Buttons.",
+    probe: "reichert.",
+  },
+  {
+    name: "Newsreader — italic",
+    fam: '"Newsreader", Georgia, serif', italic: true,
+    token: "--serif", geladen: "Selbst gehostet · Gewichte 300 · 400 · 500 (nur kursiv)",
+    gewichte: "300–500 (kursiv)",
+    rolle: "Ruhige Serifen-Kursiv: Eigennamen, Kundennamen, editoriale Lead-Zeilen.",
+    probe: "Ticket AG",
+  },
+];
+
+// Archivo-Gewichtsleiter
+const gewichte = [
+  { w: 400, n: "Regular" }, { w: 500, n: "Medium" }, { w: 600, n: "SemiBold" },
+  { w: 700, n: "Bold" }, { w: 800, n: "ExtraBold" }, { w: 900, n: "Black" },
+];
+
+// ---- Typo-Rollen (jede Stelle der Seite, konsolidiert nach Funktion) ----------
+// famVar: welche Familie · color/bg: echte Tokens · size: exakter CSS-Wert
+const rollen = [
+  // — Display / Signature —
+  { gruppe: "Display & Signature", k: "masthead", name: "Masthead-Wort „PORTFOLIO“", wo: "Startseite-Hero (real als WebP-Grafik; hier Typo-Spezifikation + Serif-Hover)",
+    famVar: "var(--grotesk)", fam: "Archivo", weight: 900, style: "normal", size: "clamp(2.6rem, 16.5vw, 14rem)", tracking: "-0.02em", transform: "uppercase", color: "#1b1b1b", bg: "var(--sand)", probe: "PORTFOLIO" },
+  { gruppe: "Display & Signature", k: "masthead-serif", name: "Masthead-Wort · Hover-Zustand", wo: "Startseite-Hero, Verwandlung Grotesk → Serifen-Kursiv",
+    famVar: "var(--lockup)", fam: "Times italic", weight: 400, style: "italic", size: "clamp(3.2rem, 20vw, 17rem)", tracking: "-0.04em", transform: "uppercase", color: "#1b1b1b", bg: "var(--sand)", probe: "Portfolio" },
+  { gruppe: "Display & Signature", k: "seitentitel", name: "Seiten-/Sektionstitel", wo: "Lebenslauf, Impressum, Datenschutz, Projekt-Detail",
+    famVar: "var(--grotesk)", fam: "Archivo", weight: 900, style: "normal", size: "clamp(2rem, 5vw, 3.1rem)", tracking: "-0.02em", transform: "none", color: "#1b1b1b", bg: "var(--sand)", probe: "lebenslauf" },
+  { gruppe: "Display & Signature", k: "kontakt-riese", name: "Kontakt-Riesentitel", wo: "Kontaktseite",
+    famVar: "var(--grotesk)", fam: "Archivo", weight: 900, style: "normal", size: "clamp(2.6rem, 6.6vw, 4.6rem)", tracking: "-0.01em", transform: "uppercase", color: "#FFFFFF", bg: "var(--sand)", probe: "KONTAKT" },
+  { gruppe: "Display & Signature", k: "faecher-wort", name: "Fächer-Titelwort (hinter Karten)", wo: "Startseite „Arbeiten“ (Opazität 14 %)",
+    famVar: "var(--grotesk)", fam: "Archivo", weight: 900, style: "normal", size: "clamp(2.4rem, 9vw, 8.2rem)", tracking: "-0.03em", transform: "lowercase", color: "var(--tinte)", bg: "var(--papier)", probe: "ticket ag", opacity: 0.14 },
+  { gruppe: "Display & Signature", k: "drift", name: "Wasserzeichen „design.“", wo: "Zwischenspiel-Parallax (Opazität 5 %)",
+    famVar: "var(--grotesk)", fam: "Archivo", weight: 900, style: "normal", size: "clamp(5rem, 20vw, 18rem)", tracking: "-0.02em", transform: "lowercase", color: "var(--tinte)", bg: "var(--sand)", probe: "design.", opacity: 0.12 },
+
+  // — Namens-Lockup —
+  { gruppe: "Namens-Lockup", k: "lockup-vor", name: "Lockup · Vorname (kursiv)", wo: "Signatur Hero, Wort-Pille, Seitenkopf-Unterzeile, Kontakt-Name",
+    famVar: "var(--lockup)", fam: "Times italic", weight: 400, style: "italic", size: "clamp(1.4rem, 3.6vw, 2.9rem)", tracking: "-0.05em", transform: "none", color: "var(--tinte)", bg: "var(--sand)", probe: "annasthasia" },
+  { gruppe: "Namens-Lockup", k: "lockup-nach", name: "Lockup · Nachname (fett)", wo: "Signatur / Wortmarke — Archivo Black, klein & mit Punkt",
+    famVar: "var(--grotesk)", fam: "Archivo", weight: 900, style: "normal", size: "clamp(1.05rem, 2.1vw, 1.6rem)", tracking: "-0.02em", transform: "lowercase", color: "#1b1b1b", bg: "var(--sand)", probe: "reichert." },
+
+  // — Überschriften —
+  { gruppe: "Überschriften", k: "h2-gross", name: "H2 · groß", wo: "Arbeiten-Kopf, Über-Teaser",
+    famVar: "var(--grotesk)", fam: "Archivo", weight: 800, style: "normal", size: "clamp(1.4rem, 3.5vw, 2.4rem)", tracking: "-0.02em", transform: "none", color: "var(--tinte)", bg: "var(--papier)", probe: "ausgewählte arbeiten" },
+  { gruppe: "Überschriften", k: "h2-klein", name: "H2 · klein / Titelzeile", wo: "Lebenslauf-Block, Prozess-Titel, Stations-Rolle, Projektkarten-Titel, „nächstes Projekt“",
+    famVar: "var(--grotesk)", fam: "Archivo", weight: 800, style: "normal", size: "clamp(1.05rem, 1.7vw, 1.3rem)", tracking: "-0.02em", transform: "none", color: "var(--tinte)", bg: "var(--papier)", probe: "Ganzheitliches Rebranding" },
+  { gruppe: "Überschriften", k: "rechts-h2", name: "H2 · Rechtsseiten", wo: "Impressum, Datenschutz — Zwischentitel",
+    famVar: "var(--grotesk)", fam: "Archivo", weight: 700, style: "normal", size: "clamp(0.95rem, 1.4vw, 1.12rem)", tracking: "-0.005em", transform: "none", color: "var(--tinte)", bg: "var(--papier)", probe: "Verantwortlich für den Inhalt" },
+
+  // — Editorial / Serifen-Kursiv —
+  { gruppe: "Editorial (Serif)", k: "lead", name: "Editorial-Lead", wo: "Lebenslauf-Profil, Fall-Lead im Projekt",
+    famVar: "var(--serif)", fam: "Newsreader italic", weight: 300, style: "italic", size: "clamp(1.05rem, 1.8vw, 1.35rem)", tracking: "-0.005em", transform: "none", color: "var(--tinte)", bg: "var(--papier)", probe: "Gestaltung, die aus der Masse heraussticht." },
+  { gruppe: "Editorial (Serif)", k: "intro", name: "Projekt-Intro", wo: "Projekt-Detailseite (Teaser-Absatz)",
+    famVar: "var(--serif)", fam: "Newsreader italic", weight: 400, style: "italic", size: "clamp(1.15rem, 2.4vw, 1.6rem)", tracking: "0", transform: "none", color: "var(--tinte)", bg: "var(--papier)", probe: "Ein ganzheitliches Rebranding von Grund auf." },
+  { gruppe: "Editorial (Serif)", k: "kursiv", name: "Serifen-Kursiv inline", wo: "Eigennamen im Text, Kunden in Stationen (.kursiv)",
+    famVar: "var(--serif)", fam: "Newsreader italic", weight: 400, style: "italic", size: "1rem", tracking: "0", transform: "none", color: "var(--tinte)", bg: "var(--papier)", probe: "Eisbären Berlin" },
+  { gruppe: "Editorial (Serif)", k: "kunde", name: "Fächer-Kundenname", wo: "Startseite „Arbeiten“ unter dem Fächer",
+    famVar: "var(--serif)", fam: "Newsreader italic", weight: 400, style: "italic", size: "clamp(1rem, 2vw, 1.5rem)", tracking: "0", transform: "none", color: "var(--ton)", bg: "var(--papier)", probe: "echory" },
+
+  // — Fließtext —
+  { gruppe: "Fließtext", k: "body", name: "Fließtext · Standard", wo: "Body, Über-Teaser, Fall-Absätze",
+    famVar: "var(--grotesk)", fam: "Archivo", weight: 400, style: "normal", size: "clamp(1rem, 0.92rem + 0.35vw, 1.12rem)", tracking: "0", transform: "none", color: "var(--tinte)", bg: "var(--papier)", probe: "Layout leise, Arbeiten dürfen laut sein — warme Neutraltöne, viel Weißraum." },
+  { gruppe: "Fließtext", k: "body-klein", name: "Fließtext · klein", wo: "Rechtstext, Lebenslauf-Inhalt, Stations-Firma",
+    famVar: "var(--grotesk)", fam: "Archivo", weight: 400, style: "normal", size: "0.9rem", tracking: "0", transform: "none", color: "var(--tinte)", bg: "var(--papier)", probe: "Editorial, ruhig, viel Weißraum. Farbe kommt über die Projektinhalte." },
+
+  // — Labels & Meta —
+  { gruppe: "Labels & Meta", k: "meta", name: "Meta-Label / Mono", wo: ".mono, Fall-Label, Zwischenspiel-Aussage",
+    famVar: "var(--grotesk)", fam: "Archivo", weight: 600, style: "normal", size: "0.72rem", tracking: "0.16em", transform: "uppercase", color: "var(--ton)", bg: "var(--papier)", probe: "Ausgewählte Arbeiten" },
+  { gruppe: "Labels & Meta", k: "meta-klein", name: "Meta-Label · klein", wo: "Stations-Art, Paar-Caption",
+    famVar: "var(--grotesk)", fam: "Archivo", weight: 600, style: "normal", size: "0.62rem", tracking: "0.12em", transform: "uppercase", color: "var(--ton)", bg: "var(--papier)", probe: "Festanstellung" },
+  { gruppe: "Labels & Meta", k: "bildunterschrift", name: "Bildunterschrift", wo: "Fall-Unterschrift unter Bild-Bühnen",
+    famVar: "var(--grotesk)", fam: "Archivo", weight: 600, style: "normal", size: "0.74rem", tracking: "0.05em", transform: "none", color: "var(--ton)", bg: "var(--papier)", probe: "Logo vorher / nachher" },
+  { gruppe: "Labels & Meta", k: "wip", name: "Work-in-Progress-Band", wo: "Diagonal-Banner oben links (invertiert)",
+    famVar: "var(--grotesk)", fam: "Archivo", weight: 800, style: "normal", size: "0.72rem", tracking: "0.16em", transform: "uppercase", color: "var(--papier)", bg: "var(--tinte)", probe: "Work in Progress" },
+
+  // — Navigation & Interaktion —
+  { gruppe: "Navigation & Interaktion", k: "nav", name: "Navigationslink", wo: "Kopfzeile (Hover/aktiv → 700; mobil 1.75rem/600)",
+    famVar: "var(--grotesk)", fam: "Archivo", weight: 500, style: "normal", size: "0.95rem", tracking: "0", transform: "none", color: "var(--tinte)", bg: "var(--papier)", probe: "Arbeiten" },
+  { gruppe: "Navigation & Interaktion", k: "pille", name: "Outline-Pille", wo: "Badge im CV-Stil (.pill), Leistungen",
+    famVar: "var(--grotesk)", fam: "Archivo", weight: 600, style: "normal", size: "0.72rem", tracking: "0.08em", transform: "uppercase", color: "var(--tinte)", bg: "var(--papier)", probe: "Branding", border: true },
+  { gruppe: "Navigation & Interaktion", k: "kleinpille", name: "Kopf-Pille (LinkedIn / Sprache)", wo: "Kopfzeile rechts",
+    famVar: "var(--grotesk)", fam: "Archivo", weight: 600, style: "normal", size: "0.68rem", tracking: "0.1em", transform: "none", color: "var(--tinte)", bg: "var(--papier)", probe: "LinkedIn", border: true },
+  { gruppe: "Navigation & Interaktion", k: "filter", name: "Filter-Pille (aktiv)", wo: "Projekte-Übersicht (invertiert = ausgewählt)",
+    famVar: "var(--grotesk)", fam: "Archivo", weight: 700, style: "normal", size: "0.72rem", tracking: "0.08em", transform: "uppercase", color: "var(--papier)", bg: "var(--tinte)", probe: "Logo" },
+  { gruppe: "Navigation & Interaktion", k: "knopf", name: "Download-Knopf", wo: "Lebenslauf-PDF-Button (Tinte-Pille)",
+    famVar: "var(--grotesk)", fam: "Archivo", weight: 700, style: "normal", size: "0.9rem", tracking: "0.02em", transform: "none", color: "var(--papier)", bg: "var(--tinte)", probe: "Lebenslauf als PDF", border: false },
+
+  // — Kontakt & Fuß —
+  { gruppe: "Kontakt & Fuß", k: "kontakt-mail", name: "Kontakt-Mail (groß)", wo: "Kontaktseite (Hover → Reinweiß)",
+    famVar: "var(--grotesk)", fam: "Archivo", weight: 800, style: "normal", size: "clamp(1.9rem, 2.8vw, 2.4rem)", tracking: "0", transform: "none", color: "var(--tinte)", bg: "var(--sand)", probe: "annasthasiareichert@gmx.de" },
+  { gruppe: "Kontakt & Fuß", k: "kontakt-daten", name: "Kontaktdaten", wo: "Kontaktseite (Adresse, Telefon)",
+    famVar: "var(--grotesk)", fam: "Archivo", weight: 500, style: "normal", size: "clamp(0.95rem, 1.4vw, 1.2rem)", tracking: "-0.005em", transform: "none", color: "var(--tinte)", bg: "var(--sand)", probe: "Lenbachstraße 9, 50733 Köln" },
+  { gruppe: "Kontakt & Fuß", k: "footer-mail", name: "Fußzeilen-Mail", wo: "Startseiten-Fuß (Ton → Reinweiß bei Hover)",
+    famVar: "var(--grotesk)", fam: "Archivo", weight: 600, style: "normal", size: "clamp(1.7rem, 2.8vw, 2rem)", tracking: "-0.005em", transform: "none", color: "var(--ton)", bg: "var(--sand)", probe: "schreib mir" },
+];
+
+// Farb-Anwendungsmatrix („Schriften jeweils in den Farben“)
+const kombis = [
+  { text: "var(--tinte)",  bg: "var(--papier)", tl: "Tinte",   bl: "auf Papier",   note: "Standard-Text" },
+  { text: "var(--ton)",    bg: "var(--papier)", tl: "Ton",     bl: "auf Papier",   note: "Meta / Nebeninfo" },
+  { text: "#1b1b1b",       bg: "var(--papier)", tl: "Display", bl: "auf Papier",   note: "Titel / Masthead" },
+  { text: "var(--tinte)",  bg: "var(--sand)",   tl: "Tinte",   bl: "auf Sand",     note: "Text auf Bändern" },
+  { text: "var(--ton)",    bg: "var(--sand)",   tl: "Ton",     bl: "auf Sand",     note: "Meta auf Bändern" },
+  { text: "#FFFFFF",       bg: "var(--sand)",   tl: "Reinweiß",bl: "auf Sand",     note: "Kontakt-Riese" },
+  { text: "var(--papier)", bg: "var(--tinte)",  tl: "Papier",  bl: "auf Tinte",    note: "Buttons / WIP (invertiert)" },
+  { text: "#FFFFFF",       bg: "var(--tinte)",  tl: "Reinweiß",bl: "auf Tinte",    note: "Hover-Highlight" },
+];
+
+const gruppen = [...new Set(rollen.map((r) => r.gruppe))];
+---
+
+<Grundgeruest titel="Styleguide — Annasthasia Reichert" beschreibung="Interne Design-Übersicht: Schriften, Schnitte, Größen und Farben.">
+  <!-- Viewport-Badge: zeigt live, ob gerade Desktop oder Mobil gemessen wird -->
+  <div class="sg-badge" id="sg-badge" aria-live="polite"></div>
+
+  <main class="sg">
+    <div class="sg-head">
+      <p class="sg-kicker">Design-Übersicht</p>
+      <h1 class="sg-h1">Schriften, Schnitte, Größen &amp; Farben</h1>
+      <p class="sg-intro">
+        Alle verwendeten Schriften an allen Orten der Website — gerendert mit den echten
+        Projekt-Schriften und Farb-Tokens. Die Größen sind <strong>responsiv</strong> (per
+        <code>clamp()</code>): jede Probe zeigt ihre aktuell gemessene Größe. Schmale das Fenster
+        auf Handybreite (≤ 760 px), um die Mobil-Werte zu sehen — das Badge oben rechts sagt dir,
+        in welchem Modus du gerade bist.
+      </p>
+    </div>
+
+    <!-- ===================== FARBEN ===================== -->
+    <section class="sg-section">
+      <h2 class="sg-h2">1 · Farbpalette</h2>
+      <p class="sg-lead">Neutral, kein bunter Akzent — Farbe kommt ausschließlich über die Projektinhalte.</p>
+      <div class="sg-farbgitter">
+        {farben.map((f) => (
+          <div class="sg-farbkarte">
+            <div class="sg-farbfeld" style={`background:${f.wert}`}>
+              <span class={"sg-farbhex " + (f.dunkel ? "hell" : "dunkel")}>{f.wert}</span>
+            </div>
+            <div class="sg-farbtext">
+              <strong>{f.name}</strong>
+              <code>{f.var}</code>
+              <span>{f.rolle}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ===================== SCHRIFTEN ===================== -->
+    <section class="sg-section">
+      <h2 class="sg-h2">2 · Schriftfamilien</h2>
+      <p class="sg-lead">Drei Familien, klar getrennte Rollen.</p>
+      <div class="sg-fam-liste">
+        {familien.map((fa) => (
+          <div class="sg-fam">
+            <div class="sg-fam-probe" style={`font-family:${fa.fam}; font-style:${fa.italic ? "italic" : "normal"}`}>
+              {fa.probe}
+            </div>
+            <div class="sg-fam-meta">
+              <strong>{fa.name}</strong>
+              <span class="sg-tag">{fa.token}</span>
+              <p>{fa.rolle}</p>
+              <p class="sg-fein">{fa.geladen}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <h3 class="sg-h3">Archivo — Gewichtsleiter (geladen)</h3>
+      <div class="sg-gewichte">
+        {gewichte.map((g) => (
+          <div class="sg-gewicht">
+            <span class="sg-gewicht-probe" style={`font-family:var(--grotesk); font-weight:${g.w}`}>Aa</span>
+            <span class="sg-gewicht-label">{g.w} · {g.n}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ===================== TYPO-ROLLEN ===================== -->
+    <section class="sg-section">
+      <h2 class="sg-h2">3 · Typo-Rollen — jede Stelle der Seite</h2>
+      <p class="sg-lead">
+        Jede Karte zeigt die echte Schrift in ihrer echten Farbe auf ihrem echten Untergrund.
+        <strong>Größe</strong> = live gemessen (aktueller Viewport) · dahinter der responsive
+        <code>clamp()</code>-Bereich.
+      </p>
+
+      {gruppen.map((g) => (
+        <div class="sg-gruppe">
+          <h3 class="sg-h3">{g}</h3>
+          <div class="sg-karten">
+            {rollen.filter((r) => r.gruppe === g).map((r) => (
+              <article class="sg-karte">
+                <div class="sg-probe-flaeche" style={`background:${r.bg}`}>
+                  <span
+                    class="sg-probe"
+                    data-k={r.k}
+                    style={`font-family:${r.famVar}; font-weight:${r.weight}; font-style:${r.style};
+                            font-size:${r.size}; letter-spacing:${r.tracking};
+                            text-transform:${r.transform}; color:${r.color};
+                            ${r.opacity ? `opacity:${r.opacity};` : ""}
+                            ${r.border ? "border:1px solid " + r.color + "; border-radius:999px; padding:0.5rem 1.1rem;" : ""}
+                            ${!r.border && (r.k === "knopf" || r.k === "filter") ? "border-radius:999px; padding:0.55rem 1.2rem;" : ""}`}
+                  >{r.probe}</span>
+                </div>
+                <div class="sg-karte-meta">
+                  <strong class="sg-karte-name">{r.name}</strong>
+                  <p class="sg-wo">{r.wo}</p>
+                  <dl class="sg-specs">
+                    <div><dt>Familie</dt><dd>{r.fam}</dd></div>
+                    <div><dt>Gewicht</dt><dd>{r.weight}{r.style === "italic" ? " · kursiv" : ""}</dd></div>
+                    <div><dt>Tracking</dt><dd>{r.tracking}</dd></div>
+                    <div><dt>Transform</dt><dd>{r.transform === "none" ? "—" : r.transform}</dd></div>
+                    <div class="sg-spec-farbe"><dt>Farbe</dt><dd><span class="sg-farbpunkt" style={`background:${r.color}`}></span>{r.color.replace("var(","").replace(")","")}</dd></div>
+                    <div class="sg-spec-groesse"><dt>Größe</dt><dd><b class="sg-live" data-live={r.k}>–</b> <span class="sg-clamp">{r.size}</span></dd></div>
+                  </dl>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      ))}
+    </section>
+
+    <!-- ===================== FARB-ANWENDUNG ===================== -->
+    <section class="sg-section">
+      <h2 class="sg-h2">4 · Schrift in Farbe — Kombinationen</h2>
+      <p class="sg-lead">Welche Text- auf welcher Hintergrundfarbe tatsächlich vorkommt.</p>
+      <div class="sg-kombis">
+        {kombis.map((c) => (
+          <div class="sg-kombi" style={`background:${c.bg}`}>
+            <span class="sg-kombi-text" style={`color:${c.text}`}>Annasthasia Reichert</span>
+            <span class="sg-kombi-label" style={`color:${c.text}`}>{c.tl} {c.bl}</span>
+            <span class="sg-kombi-note" style={`color:${c.text}; opacity:0.7`}>{c.note}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <div class="sg-fuss">
+      <p>Interne Referenz · nicht in der Navigation verlinkt · Quelle: <code>src/styles/global.css</code></p>
+    </div>
+  </main>
+</Grundgeruest>
+
+<style>
+  /* Der Styleguide bekommt einen ruhigen, eigenen Rahmen (Papier-Grund). */
+  .sg { max-width: 1200px; margin: 0 auto; padding: clamp(6rem, 12vw, 8rem) var(--rand) var(--takt); }
+
+  .sg-badge {
+    position: fixed; top: 1rem; right: 1rem; z-index: 300;
+    font-family: var(--grotesk); font-weight: 700; font-size: 0.68rem; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 0.5rem 0.85rem; border-radius: 999px;
+    background: var(--tinte); color: var(--papier);
+    box-shadow: 0 10px 26px -12px rgba(26,23,18,0.5);
+  }
+
+  .sg-head { margin-bottom: clamp(3rem, 7vw, 5rem); }
+  .sg-kicker { font-family: var(--grotesk); font-weight: 600; font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ton); }
+  .sg-h1 { font-family: var(--grotesk); font-weight: 900; font-size: clamp(2rem, 6vw, 3.4rem); letter-spacing: -0.03em; line-height: 1; margin: 0.6rem 0 1.2rem; color: #1b1b1b; }
+  .sg-intro { max-width: 62ch; color: var(--tinte); line-height: 1.6; }
+  .sg-intro code, .sg-lead code, .sg-fuss code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.85em; background: var(--sand); padding: 0.05em 0.35em; border-radius: 4px; }
+
+  .sg-section { margin-top: clamp(3.5rem, 9vw, 6rem); }
+  .sg-h2 { font-family: var(--grotesk); font-weight: 800; font-size: clamp(1.5rem, 3.5vw, 2.2rem); letter-spacing: -0.02em; color: var(--tinte); }
+  .sg-lead { max-width: 60ch; margin-top: 0.5rem; color: var(--ton); line-height: 1.55; }
+  .sg-h3 { font-family: var(--grotesk); font-weight: 700; font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ton); margin: clamp(2rem, 5vw, 3rem) 0 1.2rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--haar); }
+
+  /* Farben */
+  .sg-farbgitter { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.2rem; margin-top: 1.8rem; }
+  .sg-farbkarte { border: 1px solid var(--haar); border-radius: 12px; overflow: hidden; background: #fff; }
+  .sg-farbfeld { height: 108px; display: flex; align-items: flex-end; padding: 0.7rem; }
+  .sg-farbhex { font-family: ui-monospace, Menlo, monospace; font-size: 0.72rem; padding: 0.2rem 0.5rem; border-radius: 5px; }
+  .sg-farbhex.dunkel { color: var(--tinte); background: rgba(255,255,255,0.6); }
+  .sg-farbhex.hell { color: #fff; background: rgba(0,0,0,0.28); }
+  .sg-farbtext { padding: 0.85rem 0.9rem 1rem; display: flex; flex-direction: column; gap: 0.25rem; }
+  .sg-farbtext strong { font-family: var(--grotesk); font-weight: 800; font-size: 0.95rem; }
+  .sg-farbtext code { font-family: ui-monospace, Menlo, monospace; font-size: 0.72rem; color: var(--ton); }
+  .sg-farbtext span { font-size: 0.82rem; color: var(--ton); line-height: 1.4; }
+
+  /* Familien */
+  .sg-fam-liste { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.8rem; }
+  .sg-fam { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 1.5rem; align-items: center; border: 1px solid var(--haar); border-radius: 14px; padding: clamp(1.2rem, 3vw, 2rem); background: var(--papier); }
+  .sg-fam-probe { font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1; color: #1b1b1b; overflow: hidden; }
+  .sg-fam-meta strong { font-family: var(--grotesk); font-weight: 800; font-size: 1.05rem; display: block; }
+  .sg-tag { display: inline-block; margin: 0.4rem 0 0.6rem; font-family: ui-monospace, Menlo, monospace; font-size: 0.72rem; color: var(--ton); border: 1px solid var(--haar); border-radius: 999px; padding: 0.1rem 0.6rem; }
+  .sg-fam-meta p { color: var(--tinte); line-height: 1.5; font-size: 0.9rem; }
+  .sg-fam-meta .sg-fein { color: var(--ton); font-size: 0.8rem; margin-top: 0.3rem; }
+
+  .sg-gewichte { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.8rem; }
+  .sg-gewicht { border: 1px solid var(--haar); border-radius: 10px; padding: 1rem; text-align: center; background: var(--papier); }
+  .sg-gewicht-probe { display: block; font-size: 2.4rem; line-height: 1; color: var(--tinte); }
+  .sg-gewicht-label { display: block; margin-top: 0.6rem; font-size: 0.72rem; letter-spacing: 0.04em; color: var(--ton); }
+
+  /* Typo-Karten */
+  .sg-gruppe { margin-top: 0.5rem; }
+  .sg-karten { display: grid; grid-template-columns: 1fr; gap: 1.1rem; }
+  @media (min-width: 900px) { .sg-karten { grid-template-columns: 1fr 1fr; } }
+  .sg-karte { border: 1px solid var(--haar); border-radius: 14px; overflow: hidden; background: var(--papier); display: flex; flex-direction: column; }
+  .sg-probe-flaeche { padding: clamp(1.4rem, 4vw, 2.4rem); display: flex; align-items: center; justify-content: center; min-height: 120px; overflow: hidden; }
+  .sg-probe { display: inline-block; max-width: 100%; text-align: center; word-break: break-word; line-height: 1.05; }
+  .sg-karte-meta { padding: 1rem 1.1rem 1.2rem; border-top: 1px solid var(--haar); }
+  .sg-karte-name { font-family: var(--grotesk); font-weight: 800; font-size: 0.98rem; }
+  .sg-wo { color: var(--ton); font-size: 0.8rem; line-height: 1.45; margin: 0.3rem 0 0.9rem; }
+  .sg-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1rem; }
+  .sg-specs > div { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+  .sg-specs dt { font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ton); }
+  .sg-specs dd { font-family: var(--grotesk); font-weight: 600; font-size: 0.82rem; color: var(--tinte); }
+  .sg-spec-groesse { grid-column: 1 / -1; }
+  .sg-live { font-weight: 800; color: #1b1b1b; }
+  .sg-clamp { font-family: ui-monospace, Menlo, monospace; font-weight: 400; font-size: 0.72rem; color: var(--ton); }
+  .sg-farbpunkt { display: inline-block; width: 0.7em; height: 0.7em; border-radius: 50%; border: 1px solid var(--haar); margin-right: 0.35em; vertical-align: baseline; }
+  .sg-spec-farbe dd { display: flex; align-items: center; }
+
+  /* Farb-Kombinationen */
+  .sg-kombis { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; margin-top: 1.8rem; }
+  .sg-kombi { border-radius: 12px; padding: 1.4rem 1.2rem; border: 1px solid var(--haar); display: flex; flex-direction: column; gap: 0.3rem; }
+  .sg-kombi-text { font-family: var(--grotesk); font-weight: 800; font-size: 1.3rem; letter-spacing: -0.01em; }
+  .sg-kombi-label { font-family: var(--grotesk); font-weight: 600; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.4rem; }
+  .sg-kombi-note { font-size: 0.78rem; }
+
+  .sg-fuss { margin-top: clamp(3rem, 7vw, 5rem); padding-top: 1.4rem; border-top: 1px solid var(--haar); color: var(--ton); font-size: 0.8rem; }
+
+  @media (max-width: 760px) {
+    .sg-fam { grid-template-columns: 1fr; }
+    .sg-specs { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+
+<script>
+  // Live-Größen + Viewport-Badge. Liest die tatsächlich gerenderte font-size jeder
+  // Probe (clamp aufgelöst) und schreibt sie neben die clamp-Formel. Aktualisiert
+  // bei jedem Resize → Desktop- und Mobil-Werte werden direkt sichtbar.
+  const proben = Array.from(document.querySelectorAll<HTMLElement>(".sg-probe"));
+  const badge = document.getElementById("sg-badge");
+
+  function px(el: HTMLElement) {
+    const fs = getComputedStyle(el).fontSize;
+    return Math.round(parseFloat(fs) * 10) / 10 + " px";
+  }
+
+  function aktualisiere() {
+    const b = window.innerWidth;
+    const modus = b <= 760 ? "Mobil" : "Desktop";
+    if (badge) badge.textContent = `${modus} · ${b} px`;
+    proben.forEach((el) => {
+      const k = el.getAttribute("data-k");
+      const ziel = document.querySelector<HTMLElement>(`.sg-live[data-live="${k}"]`);
+      if (ziel) ziel.textContent = px(el);
+    });
+  }
+
+  aktualisiere();
+  let t: number | undefined;
+  window.addEventListener("resize", () => {
+    window.clearTimeout(t);
+    t = window.setTimeout(aktualisiere, 80);
+  });
+  document.fonts?.ready.then(aktualisiere);
+</script>
