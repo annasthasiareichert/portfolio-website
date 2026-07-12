@@ -907,7 +907,6 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
   padding: clamp(5.5rem, 10vw, 7.5rem) var(--rand) clamp(1.4rem, 3vw, 2rem);
 }
 .seitenkopf.schmal { padding-bottom: clamp(1.2rem, 2.5vw, 1.7rem); }
-.kopfband-label { margin-bottom: 0.6rem; }
 .seitentitel {
   font-family: var(--grotesk); font-weight: 900;
   font-size: clamp(2rem, 5vw, 3.1rem); line-height: 0.95; letter-spacing: -0.02em;
@@ -1057,8 +1056,11 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
   font-size: clamp(1.9rem, 5vw, 3rem); line-height: 0.95; letter-spacing: -0.02em;
 }
 .projektseite .projekt-zurueck { margin-bottom: clamp(0.7rem, 1.8vw, 1rem); }
-.projektseite .kopfband-label { margin-bottom: 0.55rem; }
 .projektseite .seitenkopf-unter { margin-top: 0.7rem; font-size: clamp(0.95rem, 1.7vw, 1.15rem); }
+/* Unternehmen (Serifen-Kursiv) und Jahr (Mono) auf einer Zeile, durch „·" getrennt */
+.projekt-kopf-unter { display: flex; align-items: baseline; flex-wrap: wrap; }
+.projekt-jahr { margin-left: 0.7rem; color: var(--ton); font-size: 0.82em; }
+.projekt-jahr::before { content: "·"; margin-right: 0.7rem; }
 .projekt-leistungen { margin-top: clamp(0.9rem, 2vw, 1.2rem); }
 
 .projekt-inhalt { padding: clamp(2.2rem, 5vw, 3.6rem) var(--rand) var(--takt); }
@@ -1264,7 +1266,6 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
   transition: transform 0.5s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.5s ease;
 }
 .pl-info { display: block; margin-top: 0.75rem; }
-.pl-nr { display: block; margin-bottom: 0.35rem; }
 .pl-titel {
   display: block; font-family: var(--grotesk); font-weight: 800;
   font-size: clamp(1rem, 1.5vw, 1.2rem); letter-spacing: -0.02em; line-height: 1.15;

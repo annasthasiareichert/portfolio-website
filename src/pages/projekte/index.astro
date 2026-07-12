@@ -57,7 +57,6 @@ for (const p of projekte) {
             <a class="pl-link" href={`/projekte/${p.slug}`}>
               <span class="pl-bild" style={`background-image:url('${p.bild}')`} aria-hidden="true"></span>
               <span class="pl-info">
-                <span class="pl-nr mono">{String(i + 1).padStart(2, "0")}</span>
                 <span class="pl-titel" data-de={p.titel.de} data-en={p.titel.en}>{p.titel.de}</span>
                 <span class="pl-kunde kursiv" data-de={p.kunde.de} data-en={p.kunde.en}>{p.kunde.de}</span>
                 <span class="pl-meta mono" data-de={p.meta.de} data-en={p.meta.en}>{p.meta.de}</span>

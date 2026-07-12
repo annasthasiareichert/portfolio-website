@@ -20,8 +20,11 @@ export function getStaticPaths() {
   }));
 }
 
-const { projekt, index, naechstes } = Astro.props;
-const nr = String(index + 1).padStart(2, "0");
+const { projekt, naechstes } = Astro.props;
+// Jahr aus dem meta-Feld ("Kategorie · Jahr") — je Sprache getrennt, da z. B.
+// "laufend" / "ongoing" abweichen. Wird neben dem Unternehmensnamen gezeigt.
+const jahrDe = projekt.meta.de.split("·").pop()?.trim() ?? "";
+const jahrEn = projekt.meta.en.split("·").pop()?.trim() ?? "";
 const hatFall = !!(projekt.fall && projekt.fall.length);
 // Galerie (einfache Variante): zusätzliche Bilder, sonst nur das Vorschaubild
 const galerie = projekt.bilder && projekt.bilder.length ? projekt.bilder : [projekt.bild];
@@ -65,9 +68,11 @@ const galerie = projekt.bilder && projekt.bilder.length ? projekt.bilder : [proj
     <!-- Sand-Kopfband mit Titel, Kunde und Leistungen -->
     <section class="seitenkopf projekt-kopf">
       <a class="projekt-zurueck mono" href="/projekte" data-de="← zurück zu den Projekten" data-en="← back to projects">← zurück zu den Projekten</a>
-      <p class="mono kopfband-label" data-de={`${nr} · ${projekt.meta.de}`} data-en={`${nr} · ${projekt.meta.en}`}>{nr} · {projekt.meta.de}</p>
       <h1 class="seitentitel" data-de={projekt.titel.de} data-en={projekt.titel.en}>{projekt.titel.de}</h1>
-      <p class="seitenkopf-unter"><span class="kursiv" data-de={projekt.kunde.de} data-en={projekt.kunde.en}>{projekt.kunde.de}</span></p>
+      <p class="seitenkopf-unter projekt-kopf-unter">
+        <span class="kursiv" data-de={projekt.kunde.de} data-en={projekt.kunde.en}>{projekt.kunde.de}</span>
+        {jahrDe && <span class="projekt-jahr mono" data-de={jahrDe} data-en={jahrEn}>{jahrDe}</span>}
+      </p>
       {projekt.leistungen && (
         <ul class="pill-liste projekt-leistungen">
           {projekt.leistungen.map((l) => <li class="pill">{l}</li>)}
