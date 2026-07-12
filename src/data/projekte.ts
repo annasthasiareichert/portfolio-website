@@ -15,6 +15,7 @@
 //   { art: "paar",    … }  zwei Bilder nebeneinander auf einer Bühne (z. B. Mobile + Icon)
 //   { art: "text",    … }  Textabschnitt mit Label; `lead:true` = große Serifen-Kursiv-Aussage
 //   { art: "prozess", … }  nummerierte Schritte (Titel + Text)
+//   { art: "liste",   … }  unnummerierte Aufzählung (Label + Punkte) – z. B. Leistungen/Umfang
 // Bilder liegen in /public/projekte/<slug>/… — die Originale werden unter media/projekte/<slug>/
 // archiviert (nicht ausgeliefert). Ist `fall` leer/weggelassen, greift die einfache Galerie.
 
@@ -33,7 +34,8 @@ export type FallBlock =
   | { art: "bild"; label?: Zwei; bild: string; alt: Zwei; buehne?: Buehne; max?: string; unterschrift?: Zwei }
   | { art: "paar"; label?: Zwei; buehne?: Buehne; bilder: FallBild[] }
   | { art: "text"; label?: Zwei; lead?: boolean; absaetze: Zwei[] }
-  | { art: "prozess"; label?: Zwei; schritte: { titel: Zwei; text: Zwei }[] };
+  | { art: "prozess"; label?: Zwei; schritte: { titel: Zwei; text: Zwei }[] }
+  | { art: "liste"; label?: Zwei; punkte: Zwei[] };
 
 export type Projekt = {
   /* URL der Detailseite: /projekte/<slug> */
@@ -68,6 +70,29 @@ export const projekte: Projekt[] = [
       en: "Brand assets for ecostag / stagedates – consistent building blocks for the brand world.",
     },
     leistungen: ["Branding", "Brand Assets"],
+    fall: [
+      {
+        art: "text",
+        label: { de: "Rolle", en: "Role" },
+        lead: true,
+        absaetze: [
+          {
+            de: "Grafik- & UI-Designerin bei ecostag für die Marke stagedates – eigenverantwortliche Umsetzung sämtlicher benötigter grafischer Assets.",
+            en: "Graphic & UI designer at ecostag for the stagedates brand – independently producing all required graphic assets.",
+          },
+        ],
+      },
+      {
+        art: "liste",
+        label: { de: "Schwerpunkte", en: "Focus" },
+        punkte: [
+          { de: "Verantwortung für die Bildsprache auf Social-Media-Plattformen wie LinkedIn und Instagram", en: "Ownership of the visual language across social platforms such as LinkedIn and Instagram" },
+          { de: "Grafische Arbeiten zur Unterstützung des Social-Media-Teams", en: "Graphic work supporting the social media team" },
+          { de: "Digitale Banner für Newsletter-Kampagnen", en: "Digital banners for newsletter campaigns" },
+          { de: "Digitale und Print-Grafiken, u. a. für interne Mitarbeiterevents", en: "Digital and print graphics, e.g. for internal employee events" },
+        ],
+      },
+    ],
   },
   {
     slug: "eisbaeren-berlin-logo",
@@ -81,6 +106,41 @@ export const projekte: Projekt[] = [
       en: "Logo redesign in a sports context for Eisbären Berlin.",
     },
     leistungen: ["Sport-Branding", "Logo-Design"],
+    fall: [
+      {
+        art: "text",
+        label: { de: "Kontext", en: "Context" },
+        lead: true,
+        absaetze: [
+          {
+            de: "Prüfungsleistung im Modul „Visuelle Kommunikation“ meines Bachelorstudiums Design- und Projektmanagement.",
+            en: "Coursework for the module “Visual Communication” in my Design & Project Management bachelor’s degree.",
+          },
+        ],
+      },
+      {
+        art: "text",
+        label: { de: "Ziel", en: "Objective" },
+        absaetze: [
+          {
+            de: "Neugestaltung eines bereits vorhandenen Sportvereins-Logos – die Kombination aus Tiermotiv und Schrift.",
+            en: "Redesigning an existing sports club logo – the combination of an animal motif and lettering.",
+          },
+        ],
+      },
+      {
+        art: "liste",
+        label: { de: "Vorgehen", en: "Approach" },
+        punkte: [
+          { de: "Skizzieren der Ideen", en: "Sketching the ideas" },
+          { de: "Recherche zur aktuellen und vorherigen Logogestaltung", en: "Researching the current and previous logo designs" },
+          { de: "Kombination neuer Ideen mit bewährten Elementen aus der Logo-Historie", en: "Combining new ideas with proven elements from the logo’s history" },
+          { de: "Grafische Ausarbeitung der Bildmarke", en: "Crafting the graphic mark" },
+          { de: "Auswahl und Platzierung passender typografischer Elemente", en: "Selecting and placing suitable typographic elements" },
+          { de: "Farbwahl: bewusste Abstufungen der drei Grundfarben – im Anwendungskontext mit sehr deutlichem Farbkontrast", en: "Colour choice: deliberate variations of the three base colours – with strong contrast in application" },
+        ],
+      },
+    ],
   },
   {
     slug: "echory-logo-redesign",
@@ -94,6 +154,27 @@ export const projekte: Projekt[] = [
       en: "Logo redesign for echory – a clean, modern brand mark.",
     },
     leistungen: ["Logo-Design"],
+    fall: [
+      {
+        art: "text",
+        label: { de: "Ziel", en: "Objective" },
+        lead: true,
+        absaetze: [
+          {
+            de: "Logo-Redesign für die Marke echoryflow – eine klare, moderne Bildmarke.",
+            en: "Logo redesign for the echoryflow brand – a clear, modern brand mark.",
+          },
+        ],
+      },
+      {
+        art: "liste",
+        label: { de: "Vorgehen", en: "Approach" },
+        punkte: [
+          { de: "Definition einer konsistenten visuellen Sprache auf Grundlage eines vorab erarbeiteten Markenkerns", en: "Defining a consistent visual language based on a previously developed brand core" },
+          { de: "Erarbeitung eines individuellen Logos auf Basis der Kernelemente der Markenidentität: Present. Confident. Precise.", en: "Developing a bespoke logo from the core elements of the brand identity: Present. Confident. Precise." },
+        ],
+      },
+    ],
   },
   {
     slug: "content-creation",
@@ -107,6 +188,40 @@ export const projekte: Projekt[] = [
       en: "Content creation for various brands – social media design across multiple formats.",
     },
     leistungen: ["Social Media", "Content Creation"],
+    fall: [
+      {
+        art: "text",
+        label: { de: "Rolle", en: "Role" },
+        lead: true,
+        absaetze: [
+          {
+            de: "Bachelorandin bei LIEBERMANN communications – Betreuung der Instagram-Auftritte verschiedener Kunden aus der Beauty-, Fitness- und Lifestyle-Branche.",
+            en: "Bachelor’s intern at LIEBERMANN communications – managing the Instagram presences of various clients from the beauty, fitness and lifestyle sectors.",
+          },
+        ],
+      },
+      {
+        art: "liste",
+        label: { de: "Aufgaben", en: "Responsibilities" },
+        punkte: [
+          { de: "Ideengenerierung", en: "Idea generation" },
+          { de: "Recherche zu inhaltlichen Schwerpunktthemen", en: "Research into key content topics" },
+          { de: "Beobachtung von Trends", en: "Trend monitoring" },
+          { de: "Volle Verantwortung für Redaktionspläne", en: "Full responsibility for editorial planning" },
+          { de: "Fotografie und Bildnachbearbeitung", en: "Photography and image retouching" },
+          { de: "Erstellung visueller Inhalte unter Berücksichtigung des Corporate Designs", en: "Creating visual content in line with the corporate design" },
+        ],
+      },
+      {
+        art: "liste",
+        label: { de: "Betreute Accounts", en: "Managed accounts" },
+        punkte: [
+          { de: "@alphabiol_beauty", en: "@alphabiol_beauty" },
+          { de: "@justfit_fitnessclubs", en: "@justfit_fitnessclubs" },
+          { de: "@liebermann_communications", en: "@liebermann_communications" },
+        ],
+      },
+    ],
   },
   {
     slug: "ticket-ag-rebranding",
@@ -202,6 +317,29 @@ export const projekte: Projekt[] = [
       en: "A selection of personal illustration projects – ongoing.",
     },
     leistungen: ["Illustration"],
+    fall: [
+      {
+        art: "text",
+        label: { de: "Über", en: "About" },
+        lead: true,
+        absaetze: [
+          {
+            de: "Freizeit-Projekte für Freunde und Verwandte – zu verschiedenen Anlässen und mit unterschiedlichen ästhetischen Ansprüchen.",
+            en: "Personal projects for friends and family – for a range of occasions and aesthetic briefs.",
+          },
+        ],
+      },
+      {
+        art: "liste",
+        label: { de: "Formate", en: "Formats" },
+        punkte: [
+          { de: "Save-the-Date-Karten", en: "Save-the-date cards" },
+          { de: "Einladungen", en: "Invitations" },
+          { de: "Gutscheine", en: "Vouchers" },
+          { de: "u. v. m.", en: "and much more" },
+        ],
+      },
+    ],
   },
   {
     slug: "merchandise-stagedates",
@@ -215,6 +353,30 @@ export const projekte: Projekt[] = [
       en: "Merchandise and print design for stagedates.",
     },
     leistungen: ["Merchandise", "Print"],
+    fall: [
+      {
+        art: "text",
+        label: { de: "Rolle", en: "Role" },
+        lead: true,
+        absaetze: [
+          {
+            de: "Grafik- & UI-Designerin bei ecostag für die Marke stagedates – selbstständige Planung und Umsetzung eines Merchandise-Konzepts zur Repräsentation des Unternehmens auf dem Reeperbahn-Festival 2024.",
+            en: "Graphic & UI designer at ecostag for the stagedates brand – independently planning and delivering a merchandise concept to represent the company at Reeperbahn Festival 2024.",
+          },
+        ],
+      },
+      {
+        art: "liste",
+        label: { de: "Umfang", en: "Scope" },
+        punkte: [
+          { de: "Inhaltliche und grafische Umsetzung eines informativen Flyers", en: "Content and design of an informative flyer" },
+          { de: "Betreuung einer OOH-Beamerkampagne", en: "Overseeing an out-of-home projection campaign" },
+          { de: "Mitarbeiter-Shirts für einen einheitlichen Auftritt beim Juicy Beats Festival", en: "Staff shirts for a unified appearance at Juicy Beats Festival" },
+          { de: "Inhaltliche und grafische Umsetzung verschiedener Sticker", en: "Content and design of various stickers" },
+          { de: "Recherche, Umsetzung und Druckvorbereitung gebrandeter Werbeartikel (Stifte, Blöcke, Feuerzeuge, Luftballons u. a.)", en: "Research, production and print preparation of branded merchandise (pens, notepads, lighters, balloons and more)" },
+        ],
+      },
+    ],
   },
   {
     slug: "3d-rendering-schuh",
@@ -228,6 +390,40 @@ export const projekte: Projekt[] = [
       en: "Photorealistic 3D rendering of a shoe model for product visualisation.",
     },
     leistungen: ["3D-Rendering", "Produktvisualisierung"],
+    fall: [
+      {
+        art: "text",
+        label: { de: "Kontext", en: "Context" },
+        lead: true,
+        absaetze: [
+          {
+            de: "Prüfungsleistung im Modul „Digitale Illustration“ meines Bachelorstudiums Design- und Projektmanagement.",
+            en: "Coursework for the module “Digital Illustration” in my Design & Project Management bachelor’s degree.",
+          },
+        ],
+      },
+      {
+        art: "text",
+        label: { de: "Ziel", en: "Objective" },
+        absaetze: [
+          {
+            de: "Grafische Ausarbeitung eines existierenden Schuh-Modells.",
+            en: "A graphic rendering of an existing shoe model.",
+          },
+        ],
+      },
+      {
+        art: "liste",
+        label: { de: "Vorgehen", en: "Approach" },
+        punkte: [
+          { de: "Iterative Erarbeitung der Renderings von der Skizze bis zum finalen Entwurf", en: "Iterative development of the renderings from sketch to final design" },
+          { de: "Individuelle farbliche Gestaltung", en: "Bespoke colour design" },
+          { de: "Aufwertung der Komposition mittels Komplementärkontrast (Blau/Orange)", en: "Elevating the composition with complementary contrast (blue/orange)" },
+          { de: "Entwicklung eines passenden Claims: „Never Take Them Off“ – passend zur Kooperation mit der Marke Off-White", en: "Developing a fitting claim: “Never Take Them Off” – in keeping with the collaboration with Off-White" },
+          { de: "Gestaltung eines Posters", en: "Designing a poster" },
+        ],
+      },
+    ],
   },
   {
     slug: "lampenwelt-banner",
@@ -241,5 +437,30 @@ export const projekte: Projekt[] = [
       en: "Banner design for Lampenwelt (preview 2026).",
     },
     leistungen: ["Banner", "Display"],
+    fall: [
+      {
+        art: "text",
+        label: { de: "Ausblick", en: "Preview" },
+        lead: true,
+        absaetze: [
+          {
+            de: "Ausblick auf meine Arbeit als Art Director bei lampenwelt.de: eigeninitiative Gestaltung einer Grafik zur Bewerbung einer potenziellen Herbst-Rabattaktion – für Newsletter und Online-Shop.",
+            en: "A preview of my work as art director at lampenwelt.de: a self-initiated graphic promoting a potential autumn discount campaign – for the newsletter and online shop.",
+          },
+        ],
+      },
+      {
+        art: "liste",
+        label: { de: "Vorgehen", en: "Approach" },
+        punkte: [
+          { de: "Einbindung und Kombination zweier Produkte in eine Bildkomposition", en: "Integrating and combining two products into one image composition" },
+          { de: "Farbliche Gestaltung und bewusste Produktauswahl passend zum Herbst-Thema", en: "Colour design and deliberate product selection to suit the autumn theme" },
+          { de: "Berücksichtigung und Adaption der bisherigen Gestaltungsgrundlagen", en: "Respecting and adapting the existing design foundations" },
+          { de: "Einhaltung des Corporate Designs", en: "Adhering to the corporate design" },
+          { de: "Aufgreifen der Produktfarben in den Design-Elementen zur Abrundung des Gesamtbildes", en: "Echoing the product colours in the design elements to round off the overall look" },
+          { de: "Adaption der Gestaltung auf zwei verschiedene Formatgrößen", en: "Adapting the design to two different format sizes" },
+        ],
+      },
+    ],
   },
 ];

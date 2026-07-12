@@ -4,6 +4,7 @@
 //  · "paar"    – zwei Bilder nebeneinander auf einer Bühne (z. B. Mobile + App-Icon)
 //  · "text"    – Textabschnitt; erste Zeile als große Serifen-Kursiv-Aussage, wenn `lead`
 //  · "prozess" – nummerierte Schritte (Titel + Text)
+//  · "liste"   – unnummerierte Aufzählung (Label + Punkte)
 // Alle sichtbaren Texte tragen data-de/data-en für die Sprachumschaltung (interaktionen.js).
 import type { FallBlock } from "../data/projekte";
 // `eager` = erstes Bild der Seite sofort laden (Hero), damit beim ersten Blick sichtbar.
@@ -82,5 +83,18 @@ const ladeArt = eager ? "eager" : "lazy";
         </li>
       ))}
     </ol>
+  </section>
+)}
+
+{block.art === "liste" && (
+  <section class="fall-abschnitt fall-text auftritt">
+    {block.label && (
+      <p class="fall-label" data-de={block.label.de} data-en={block.label.en}>{block.label.de}</p>
+    )}
+    <ul class="fall-liste">
+      {block.punkte.map((p) => (
+        <li class="fall-liste-punkt" data-de={p.de} data-en={p.en}>{p.de}</li>
+      ))}
+    </ul>
   </section>
 )}

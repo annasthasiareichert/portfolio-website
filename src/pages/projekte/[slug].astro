@@ -20,12 +20,18 @@ export function getStaticPaths() {
   }));
 }
 
-const { projekt, naechstes } = Astro.props;
+const { projekt, index, naechstes } = Astro.props;
 // Jahr aus dem meta-Feld ("Kategorie · Jahr") — je Sprache getrennt, da z. B.
 // "laufend" / "ongoing" abweichen. Wird neben dem Unternehmensnamen gezeigt.
 const jahrDe = projekt.meta.de.split("·").pop()?.trim() ?? "";
 const jahrEn = projekt.meta.en.split("·").pop()?.trim() ?? "";
 const hatFall = !!(projekt.fall && projekt.fall.length);
+// Bringt die Fallstudie schon eigene Bilder mit? Wenn nicht (rein textliche Aufbereitung),
+// zeigen wir das Karten-Vorschaubild klein und randbündig als Platzhalter.
+const fallHatBild = !!projekt.fall?.some((b) => b.art === "bild" || b.art === "paar");
+const zeigeVorschau = hatFall && !fallHatBild;
+// Randseite je Projekt abwechselnd (rechts/links) für etwas Rhythmus.
+const vorschauSeite = index % 2 === 0 ? "rechts" : "links";
 // Galerie (einfache Variante): zusätzliche Bilder, sonst nur das Vorschaubild
 const galerie = projekt.bilder && projekt.bilder.length ? projekt.bilder : [projekt.bild];
 ---
@@ -82,6 +88,12 @@ const galerie = projekt.bilder && projekt.bilder.length ? projekt.bilder : [proj
 
     {hatFall ? (
       <div class="fall-inhalt">
+        {zeigeVorschau && (
+          <figure class={`projekt-vorschau projekt-vorschau-${vorschauSeite} auftritt`}>
+            <img src={projekt.bild} alt={`${projekt.titel.de} – ${projekt.kunde.de}`} loading="eager" decoding="async" />
+            <figcaption class="mono" data-de="Platzhalter – finale Bilder folgen." data-en="Placeholder – final visuals coming soon.">Platzhalter – finale Bilder folgen.</figcaption>
+          </figure>
+        )}
         {projekt.fall!.map((block, i) => <Fallblock block={block} eager={i === 0} />)}
 
         <!-- Weiter blättern -->

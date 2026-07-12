@@ -22,7 +22,7 @@ function aufraeumen() {
 }
 
 if (karte) {
-  const ziel = document.querySelector(".fall-buehne img, .projekt-figur img");
+  const ziel = document.querySelector(".fall-buehne img, .projekt-figur img, .projekt-vorschau img");
 
   const flieg = async () => {
     // Ziel-Bild fertig laden lassen: ohne Maße im Markup hätte ein ungeladenes
