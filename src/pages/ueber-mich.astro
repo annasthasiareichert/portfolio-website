@@ -15,16 +15,74 @@ import Fuss from "../components/Fuss.astro";
   <main class="unterseite">
     <section class="seitenkopf">
       <h1 class="seitentitel">Über mich</h1>
+      <p
+        class="seitenkopf-unter"
+        data-de='Ein kleiner Steckbrief — <span class="vn">annasthasia</span>, für Freunde Stacy.'
+        data-en='A little profile — <span class="vn">annasthasia</span>, Stacy to my friends.'
+        set:html='Ein kleiner Steckbrief — <span class="vn">annasthasia</span>, für Freunde Stacy.'
+      ></p>
     </section>
 
-    <div class="coming-soon">
-      <p
-        class="coming-soon-text kursiv"
-        data-de="Diese Seite entsteht gerade — bald mehr über mich, meinen Werdegang und was mich antreibt."
-        data-en="This page is being built right now — more about me, my journey and what drives me, coming soon."
-        >Diese Seite entsteht gerade — bald mehr über mich, meinen Werdegang und was mich antreibt.</p>
-      <span class="pill" data-de="Coming soon" data-en="Coming soon">Coming soon</span>
-    </div>
+    <section class="steckbrief auftritt">
+      <ul class="sb-spalte sb-links">
+        <li class="sb-item">
+          <span class="sb-kicker" data-de="Spitzname" data-en="Nickname">Spitzname</span>
+          <p class="sb-text"
+            data-de='Meine Freunde nennen mich <em>Stacy</em>.'
+            data-en='My friends call me <em>Stacy</em>.'
+            set:html='Meine Freunde nennen mich <em>Stacy</em>.'></p>
+        </li>
+        <li class="sb-item">
+          <span class="sb-kicker" data-de="Herkunft" data-en="Roots">Herkunft</span>
+          <p class="sb-text"
+            data-de='Aufgewachsen in <em>Dortmund</em>.'
+            data-en='Grew up in <em>Dortmund</em>.'
+            set:html='Aufgewachsen in <em>Dortmund</em>.'></p>
+        </li>
+        <li class="sb-item">
+          <span class="sb-kicker" data-de="Zuhause" data-en="Home">Zuhause</span>
+          <p class="sb-text"
+            data-de='Seit <em>6&nbsp;Jahren</em> in <em>Köln</em> zuhause.'
+            data-en='Home in <em>Cologne</em> for <em>6&nbsp;years</em>.'
+            set:html='Seit <em>6&nbsp;Jahren</em> in <em>Köln</em> zuhause.'></p>
+        </li>
+      </ul>
+
+      <div class="sb-figur">
+        <img
+          class="sb-bild"
+          src="/cartoon.png"
+          width="1214"
+          height="880"
+          alt="Annasthasia als Cartoon-Figur"
+          decoding="async"
+        />
+      </div>
+
+      <ul class="sb-spalte sb-rechts">
+        <li class="sb-item">
+          <span class="sb-kicker" data-de="Kreativ" data-en="Creative">Kreativ</span>
+          <p class="sb-text"
+            data-de='Für nahezu <em>jedes kreative Hobby</em> zu begeistern.'
+            data-en='Up for <em>almost any creative hobby</em>.'
+            set:html='Für nahezu <em>jedes kreative Hobby</em> zu begeistern.'></p>
+        </li>
+        <li class="sb-item">
+          <span class="sb-kicker" data-de="Leidenschaft" data-en="Passion">Leidenschaft</span>
+          <p class="sb-text"
+            data-de='<em>Interior Design</em> ist eine meiner großen Leidenschaften.'
+            data-en='<em>Interior design</em> is one of my great passions.'
+            set:html='<em>Interior Design</em> ist eine meiner großen Leidenschaften.'></p>
+        </li>
+        <li class="sb-item">
+          <span class="sb-kicker" data-de="Seit jeher" data-en="Always">Seit jeher</span>
+          <p class="sb-text"
+            data-de='Ich <em>male und bastle</em>, seit ich denken kann.'
+            data-en="I've <em>painted and crafted</em> for as long as I can remember."
+            set:html='Ich <em>male und bastle</em>, seit ich denken kann.'></p>
+        </li>
+      </ul>
+    </section>
   </main>
 
   <Fuss />
