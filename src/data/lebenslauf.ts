@@ -110,12 +110,12 @@ export const faehigkeiten = {
   professionell: [
     "UI Design (Mobile & Web)", "UX Design", "Corporate Design", "Content Management",
     "Online Marketing", "Social Media", "Grafikdesign", "Visual Identity",
-    "Email-Marketing", "Projektmanagement",
+    "Email-Marketing", "Projektmanagement", "Branding", "Brand Management",
+    "Art Direction", "Claude Code", "ChatGPT", "Gemini/Nano Banana",
   ],
   technisch: [
     "Adobe Creative Cloud (Illustrator, InDesign, Photoshop)", "Figma", "Framer", "Canva",
     "Hubspot", "Jira", "Wordpress", "Webflow", "Microsoft 365", "Brevo",
-    "KI-Tools (u. a. ChatGPT, Gemini, Claude)",
   ],
   sprachen: [
     "Deutsch (Muttersprache)", "Englisch (B2)", "Italienisch (Grundkenntnisse)",
