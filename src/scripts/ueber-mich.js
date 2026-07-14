@@ -31,20 +31,16 @@ export function starteUeberMich() {
   if (!szene) return;
 
   const reduziert = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const mqMobil = window.matchMedia("(max-width: 820px)");
+  let mobil = mqMobil.matches; // Mobil: Karten überlappen die Figur → gleitendes Fenster
+  mqMobil.addEventListener("change", (e) => { mobil = e.matches; });
 
   const figurWrap = szene.querySelector(".figur-wrap");
   const canvas = szene.querySelector(".figur-canvas");
   const scrollHinweis = szene.querySelector(".scroll-hinweis");
   const hinweise = Array.from(szene.querySelectorAll(".hinweis"));
+  const ats = hinweise.map((h) => parseFloat(h.dataset.at || "0"));
   const ctx = canvas.getContext("2d");
-
-  // Jeden Fakt ober- oder unterhalb der Figur einplanen — immer auf der freien
-  // Seite: Steht die Figur beim Aufpoppen oben (Drift negativ), kommt der Fakt
-  // nach UNTEN, sonst nach OBEN. So überdeckt kein Fakt die Figur.
-  for (const h of hinweise) {
-    const at = parseFloat(h.dataset.at || "0");
-    h.classList.add(driftBei(at) < 0 ? "hinweis-unten" : "hinweis-oben");
-  }
 
   // Papierton der Seite — damit das Weiß der JPGs randlos verschmilzt.
   const PAPIER =
@@ -149,13 +145,16 @@ export function starteUeberMich() {
     // 3) Scroll-Aufforderung nur ganz am Anfang zeigen
     if (scrollHinweis) scrollHinweis.classList.toggle("weg", p > 0.03);
 
-    // 4) Fakten als gleitendes Fenster: immer nur der aktuelle Fakt ober- bzw.
-    //    unterhalb der Figur, danach blendet er wieder aus (reversibel beim
-    //    Hochscrollen). So bleibt die Figur jederzeit frei sichtbar.
-    for (const h of hinweise) {
-      const at = parseFloat(h.dataset.at || "0");
-      const an = p >= at && p < at + 0.18;
-      h.classList.toggle("sichtbar", an);
+    // 4) Fakten im Wechsel links/rechts auf-/zuklappen (reversibel beim
+    //    Hochscrollen). Desktop: neben der Figur ist Platz → einmal aufgeploppt,
+    //    bleiben sie. Mobil: Karten überlappen den Rumpf → immer nur die
+    //    aktuelle Karte (bis zum nächsten Fakt), danach blendet sie aus. Das
+    //    Fenster ergibt sich aus dem Abstand zum nächsten Fakt → passt sich
+    //    automatisch an, wenn Fakten dazukommen.
+    for (let i = 0; i < hinweise.length; i++) {
+      const bis = i + 1 < ats.length ? ats[i + 1] : 1.01;
+      const an = mobil ? (p >= ats[i] && p < bis) : p >= ats[i];
+      hinweise[i].classList.toggle("sichtbar", an);
     }
   }
 

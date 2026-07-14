@@ -8,10 +8,10 @@ import Grundgeruest from "../layouts/Grundgeruest.astro";
 import Kopf from "../components/Kopf.astro";
 import Fuss from "../components/Fuss.astro";
 
-// Reihenfolge der Hinweise, so wie die Figur nach unten wandert. `at` =
-// Scroll-Fortschritt (0–1), bei dem der Hinweis aufpoppt. Ober-/unterhalb der
-// Figur platziert ueber-mich.js automatisch (immer die freie Seite), damit die
-// Fakten die Cartoon-Figur nie überdecken. Ohne Kicker-Überschrift — schlanker.
+// Reihenfolge der Hinweise, so wie die Figur nach unten wandert. Pro Eintrag nur
+// `at` (Scroll-Fortschritt 0–1, bei dem der Hinweis aufpoppt) + Text — Seite und
+// Höhe rechnet die Seite unten automatisch aus. So ordnen sich neue Fakten von
+// selbst ein (einfach hier eintragen). Ohne Kicker-Überschrift — schlanker.
 const hinweise = [
   { at: 0.06,
     de: 'Meine Freunde nennen mich <em>Stacy</em>.',
@@ -32,6 +32,18 @@ const hinweise = [
     de: 'Ich <em>male und bastle</em>, seit ich denken kann.',
     en: "I've <em>painted and crafted</em> for as long as I can remember." },
 ];
+
+// Automatische Platzierung je Fakt (unabhängig von der Anzahl):
+//  - seite: im Wechsel links/rechts (nach Reihenfolge).
+//  - --top-d (Desktop): kaskadiert neben der Figur mit dem Scroll-Fortschritt.
+//  - --top-m (Mobil):  Rumpfhöhe unter dem Kopf — folgt der absinkenden Figur,
+//                       überlappt so nur den Körper, nie das Gesicht.
+const platziert = hinweise.map((h, i) => ({
+  ...h,
+  seite: i % 2 === 0 ? "links" : "rechts",
+  topD: Math.round(11 + h.at * 90),
+  topM: Math.round(44 + h.at * 26),
+}));
 ---
 
 <Grundgeruest
@@ -62,8 +74,13 @@ const hinweise = [
           </div>
 
           <ul class="hinweise">
-            {hinweise.map((h) => (
-              <li class="hinweis" data-at={h.at}>
+            {platziert.map((h) => (
+              <li
+                class={`hinweis hinweis-${h.seite}`}
+                data-at={h.at}
+                style={`--top-d:${h.topD}%; --top-m:${h.topM}%`}
+              >
+                <span class="sb-funke" aria-hidden="true">✨</span>
                 <p class="sb-text" data-de={h.de} data-en={h.en} set:html={h.de}></p>
               </li>
             ))}
