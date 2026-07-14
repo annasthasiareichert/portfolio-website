@@ -10,8 +10,8 @@
 //  - Gezeichnet wird auf ein <canvas> — das ist flimmerfrei, weil wir nicht
 //    ständig die Bildquelle austauschen.
 
-const BASIS = "/about me/about-me-animation/v7M1HnXXg8ntOJn2eoAB/";
-const ANZAHL = 97; // frame_0001.jpg … frame_0097.jpg
+const BASIS = "/about me/about-me-new-animation/";
+const ANZAHL = 121; // frame_0001.jpg … frame_0121.jpg
 
 const klemm = (v, min, max) => Math.min(Math.max(v, min), max);
 const misch = (a, b, t) => a + (b - a) * t;
