@@ -16,6 +16,11 @@ const ANZAHL = 121; // frame_0001.jpg … frame_0121.jpg
 const klemm = (v, min, max) => Math.min(Math.max(v, min), max);
 const misch = (a, b, t) => a + (b - a) * t;
 
+// Vertikale „Schraube" der Figur (in vh): startet oben, sinkt nach unten.
+const DRIFT_OBEN = -14;
+const DRIFT_UNTEN = 12;
+const driftBei = (p) => misch(DRIFT_OBEN, DRIFT_UNTEN, p);
+
 function bildpfad(nr) {
   const name = "frame_" + String(nr).padStart(4, "0") + ".jpg";
   return encodeURI(BASIS + name); // Leerzeichen im Ordnernamen kodieren
@@ -26,15 +31,20 @@ export function starteUeberMich() {
   if (!szene) return;
 
   const reduziert = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const mqMobil = window.matchMedia("(max-width: 820px)");
-  let mobil = mqMobil.matches; // Karten überlagern die Figur → gleitendes Fenster
-  mqMobil.addEventListener("change", (e) => { mobil = e.matches; });
 
   const figurWrap = szene.querySelector(".figur-wrap");
   const canvas = szene.querySelector(".figur-canvas");
   const scrollHinweis = szene.querySelector(".scroll-hinweis");
   const hinweise = Array.from(szene.querySelectorAll(".hinweis"));
   const ctx = canvas.getContext("2d");
+
+  // Jeden Fakt ober- oder unterhalb der Figur einplanen — immer auf der freien
+  // Seite: Steht die Figur beim Aufpoppen oben (Drift negativ), kommt der Fakt
+  // nach UNTEN, sonst nach OBEN. So überdeckt kein Fakt die Figur.
+  for (const h of hinweise) {
+    const at = parseFloat(h.dataset.at || "0");
+    h.classList.add(driftBei(at) < 0 ? "hinweis-unten" : "hinweis-oben");
+  }
 
   // Papierton der Seite — damit das Weiß der JPGs randlos verschmilzt.
   const PAPIER =
@@ -109,11 +119,16 @@ export function starteUeberMich() {
   }
 
   // --- Fortschritt berechnen & alles darstellen ----------------------------
+  // Der Fortschritt zählt schon ab dem Seitenanfang (nicht erst, wenn die Szene
+  // oben „andockt"). Der Vorlauf ist die Strecke bis zum Andocken — dadurch
+  // dreht sich die Figur bereits, während man von ganz oben hereinscrollt, und
+  // man sieht am Anfang nicht lange das statische Standbild.
   function fortschritt() {
     const gesamt = szene.offsetHeight - window.innerHeight;
     if (gesamt <= 0) return 0;
-    const oben = szene.getBoundingClientRect().top;
-    return klemm(-oben / gesamt, 0, 1);
+    const rect = szene.getBoundingClientRect();
+    const vorlauf = rect.top + window.scrollY; // Abstand Szene-Oberkante ↔ Seitenanfang
+    return klemm(window.scrollY / (gesamt + vorlauf), 0, 1);
   }
 
   function stelleDar() {
@@ -124,8 +139,9 @@ export function starteUeberMich() {
     if (frame !== letzterFrame) zeichne(frame);
 
     // 2) Schraube: Figur wandert langsam nach unten (+ minimales Ein-/Ausatmen).
-    // Startet knapp über der Mitte und sinkt deutlich ab — Kopf/Füße bleiben frei.
-    const drift = misch(-2, 16, p);           // vh, oben → unten
+    // Startet deutlich über der Mitte (füllt den Raum, wo früher die Achslinie war)
+    // und schraubt sich klar nach unten — Kopf/Füße bleiben frei.
+    const drift = driftBei(p);                // vh, oben → unten
     const skala = 1 - Math.sin(p * Math.PI) * 0.03;
     figurWrap.style.transform =
       `translate(-50%, calc(-50% + ${drift}vh)) scale(${skala})`;
@@ -133,13 +149,12 @@ export function starteUeberMich() {
     // 3) Scroll-Aufforderung nur ganz am Anfang zeigen
     if (scrollHinweis) scrollHinweis.classList.toggle("weg", p > 0.03);
 
-    // 4) Hinweise im Wechsel auf-/zuklappen (reversibel beim Hochscrollen).
-    //    Desktop: neben der Figur ist Platz → einmal aufgeploppt, bleiben sie.
-    //    Mobil: Karten überlagern die Figur → gleitendes Fenster, immer nur die
-    //    aktuelle Karte, danach blendet sie wieder aus (Figur bleibt sichtbar).
+    // 4) Fakten als gleitendes Fenster: immer nur der aktuelle Fakt ober- bzw.
+    //    unterhalb der Figur, danach blendet er wieder aus (reversibel beim
+    //    Hochscrollen). So bleibt die Figur jederzeit frei sichtbar.
     for (const h of hinweise) {
       const at = parseFloat(h.dataset.at || "0");
-      const an = mobil ? (p >= at && p < at + 0.18) : p >= at;
+      const an = p >= at && p < at + 0.18;
       h.classList.toggle("sichtbar", an);
     }
   }
@@ -163,7 +178,7 @@ export function starteUeberMich() {
     szene.classList.add("statisch");
     if (scrollHinweis) scrollHinweis.classList.add("weg");
     for (const h of hinweise) h.classList.add("sichtbar");
-    figurWrap.style.transform = "translate(-50%, -50%)";
+    figurWrap.style.transform = ""; // statisches Layout übernimmt (siehe global.css)
     zeichne(0);
     window.addEventListener("resize", () => {
       messeCanvas();

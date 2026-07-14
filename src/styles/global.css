@@ -1434,11 +1434,6 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
 /* ============================================================
    ÜBER MICH — Typo der Hinweis-Bausteine (in der Scroll-Szene verwendet)
    ============================================================ */
-.sb-kicker {
-  display: block; margin-bottom: 0.45rem;
-  font-family: var(--grotesk); font-weight: 800;
-  font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ton);
-}
 .sb-text { font-size: clamp(1.05rem, 1.6vw, 1.4rem); line-height: 1.3; color: var(--tinte); }
 .sb-text em {
   font-family: var(--lockup); font-style: italic; font-weight: 400;
@@ -1463,18 +1458,6 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
   margin: 0 auto; padding: 0 var(--rand);
 }
 
-/* Zarte senkrechte „Gewinde“-Achse, an der die Figur herunterläuft */
-.schraube-achse {
-  position: absolute; left: 50%; top: 8%; bottom: 8%;
-  width: 1px; transform: translateX(-50%);
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    color-mix(in srgb, var(--sand) 80%, transparent) 12%,
-    color-mix(in srgb, var(--sand) 80%, transparent) 88%,
-    transparent);
-}
-
 /* Figur: exakt mittig, per JS vertikal verschoben (translateY = Schraube).
    Höhenbasiert (max. 60vh) → Kopf/Füße bleiben frei, viel Whitespace ringsum. */
 .figur-wrap {
@@ -1485,37 +1468,29 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
 }
 .figur-canvas {
   display: block; width: auto;
-  height: clamp(300px, 60vh, 540px);
+  height: clamp(300px, 52vh, 480px);
   aspect-ratio: 1080 / 1920;
   /* Papierfüllung + Multiply passieren auf dem Canvas selbst (ueber-mich.js),
      damit das Weiß der JPGs randlos mit dem Papierton verschmilzt. */
 }
 
-/* Hinweise, die im Wechsel links/rechts aufpoppen. Position relativ zur Mitte
-   mit festem Sicherheitsabstand → überschneiden die Figur zu keinem Zeitpunkt
-   (die Figur ist maximal ~304px breit, also ±152px um die Mitte). */
+/* Fakten poppen ober- oder unterhalb der Figur auf (nie daneben, nie darüber):
+   horizontal mittig, per JS der freien Seite zugewiesen (.hinweis-oben /
+   .hinweis-unten). Immer nur einer sichtbar → überdeckt die Figur nie. */
 .hinweise { list-style: none; margin: 0; padding: 0; }
 .hinweis {
-  position: absolute; z-index: 2;
-  max-width: min(24ch, 24vw);
+  position: absolute; left: 50%; z-index: 2;
+  width: max-content; max-width: min(42ch, 82vw);
+  text-align: center;
   opacity: 0; filter: blur(7px);
+  transform: translate(-50%, 12px);
   transition: opacity 0.6s ease,
               transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
               filter 0.6s ease;
 }
-.hinweis-links  { right: calc(50% + 190px); text-align: right; transform: translateX(-38px) translateY(8px); }
-.hinweis-rechts { left:  calc(50% + 190px); text-align: left;  transform: translateX(38px)  translateY(8px); }
-.hinweis.sichtbar { opacity: 1; filter: none; transform: none; }
-
-/* Strich, der von jedem Hinweis zur Figur „zeigt“ */
-.hinweis .sb-kicker { display: block; margin-bottom: 0.4rem; }
-.hinweis-links  .sb-kicker::after,
-.hinweis-rechts .sb-kicker::before {
-  content: ""; display: inline-block; vertical-align: middle;
-  width: clamp(1rem, 3vw, 2.4rem); height: 1px; background: var(--tinte);
-}
-.hinweis-links  .sb-kicker::after  { margin-left: 0.6rem; }
-.hinweis-rechts .sb-kicker::before { margin-right: 0.6rem; }
+.hinweis-oben  { top: 7%; }
+.hinweis-unten { bottom: 7%; }
+.hinweis.sichtbar { opacity: 1; filter: none; transform: translate(-50%, 0); }
 
 /* Scroll-Aufforderung, blendet nach dem ersten Stück aus */
 .scroll-hinweis {
@@ -1537,27 +1512,22 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
   50%      { transform: scaleY(1);   transform-origin: top; opacity: 1; }
 }
 
-/* Mobil: „nebeneinander“ ist zu eng — Hinweise werden randbündige, im Wechsel
-   ein-/ausfahrende Karten, die die Figur an den Seiten leicht überlappen. */
+/* Mobil: kompaktere Figur + Karten ober-/unterhalb, mittig, im Wechsel ein- und
+   ausfahrend. Nie neben oder über der Figur → sie bleibt jederzeit frei. */
 @media (max-width: 820px) {
   .szene { height: 380vh; }
-  .figur-canvas { height: clamp(320px, 54vh, 470px); }
+  .figur-canvas { height: clamp(280px, 46vh, 400px); }
   .hinweis {
-    max-width: none; width: min(64vw, 300px);
-    padding: 0.75rem 0.95rem; border-radius: 0.8rem;
+    width: min(84vw, 340px); max-width: none;
+    padding: 0.8rem 1rem; border-radius: 0.9rem;
     background: color-mix(in srgb, var(--papier) 88%, transparent);
     box-shadow: 0 14px 34px -20px color-mix(in srgb, var(--tinte) 70%, transparent);
   }
   /* Backdrop-Blur erst beim Sichtbarwerden — sonst „Geister“ bei opacity:0 */
   .hinweis.sichtbar { backdrop-filter: blur(7px); }
-  .hinweis-links  { left: 4vw;  right: auto; text-align: left;
-    transform: translateX(-30px) translateY(8px); }
-  .hinweis-rechts { right: 4vw; left: auto;  text-align: right;
-    transform: translateX(30px) translateY(8px); }
-  .hinweis.sichtbar { transform: none; }
-  .hinweis .sb-text { font-size: 0.95rem; }
-  .hinweis-links  .sb-kicker::after,
-  .hinweis-rechts .sb-kicker::before { display: none; }
+  .hinweis-oben  { top: 5%; }
+  .hinweis-unten { bottom: 5%; }
+  .hinweis .sb-text { font-size: 0.98rem; }
 }
 
 /* Reduzierte Bewegung: Szene wird zu einem ruhigen Standbild (kein Sticky,
@@ -1568,13 +1538,16 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
   padding-block: clamp(2rem, 6vw, 4rem);
 }
 .szene.statisch .scroll-hinweis { display: none; }
-@media (max-width: 820px) {
-  .szene.statisch .hinweis {
-    position: static; width: auto; max-width: 34ch; margin: 0 auto 1.4rem;
-    opacity: 1; filter: none; transform: none;
-  }
-  .szene.statisch .szene-buehne { display: flex; flex-direction: column; }
-  .szene.statisch .figur-wrap { position: static; transform: none; margin: 0 auto; }
+/* Ohne Scroll keine Ober-/Unten-Choreografie: Figur oben, Fakten als ruhige,
+   mittige Spalte darunter (für jede Breite gleich). */
+.szene.statisch .szene-buehne {
+  display: flex; flex-direction: column; align-items: center; gap: 1.3rem;
+}
+.szene.statisch .figur-wrap { position: static; transform: none; margin: 0 auto; }
+.szene.statisch .hinweis {
+  position: static; inset: auto; width: auto; max-width: 40ch;
+  margin: 0 auto; text-align: center;
+  opacity: 1; filter: none; transform: none;
 }
 
 /* ============================================================

@@ -8,25 +8,27 @@ import Grundgeruest from "../layouts/Grundgeruest.astro";
 import Kopf from "../components/Kopf.astro";
 import Fuss from "../components/Fuss.astro";
 
-// Reihenfolge der Hinweise: im Wechsel links/rechts, so wie die Figur nach unten
-// wandert. `at` = Scroll-Fortschritt (0–1), bei dem der Hinweis aufpoppt.
+// Reihenfolge der Hinweise, so wie die Figur nach unten wandert. `at` =
+// Scroll-Fortschritt (0–1), bei dem der Hinweis aufpoppt. Ober-/unterhalb der
+// Figur platziert ueber-mich.js automatisch (immer die freie Seite), damit die
+// Fakten die Cartoon-Figur nie überdecken. Ohne Kicker-Überschrift — schlanker.
 const hinweise = [
-  { seite: "links",  at: 0.06, top: 15, kicker: ["Spitzname", "Nickname"],
+  { at: 0.06,
     de: 'Meine Freunde nennen mich <em>Stacy</em>.',
     en: 'My friends call me <em>Stacy</em>.' },
-  { seite: "rechts", at: 0.20, top: 29, kicker: ["Kreativ", "Creative"],
+  { at: 0.20,
     de: 'Für nahezu <em>jedes kreative Hobby</em> zu begeistern.',
     en: 'Up for <em>almost any creative hobby</em>.' },
-  { seite: "links",  at: 0.35, top: 43, kicker: ["Herkunft", "Roots"],
+  { at: 0.35,
     de: 'Aufgewachsen in <em>Dortmund</em>.',
     en: 'Grew up in <em>Dortmund</em>.' },
-  { seite: "rechts", at: 0.50, top: 57, kicker: ["Leidenschaft", "Passion"],
+  { at: 0.50,
     de: '<em>Interior Design</em> ist eine meiner großen Leidenschaften.',
     en: '<em>Interior design</em> is one of my great passions.' },
-  { seite: "links",  at: 0.65, top: 71, kicker: ["Zuhause", "Home"],
+  { at: 0.65,
     de: 'Seit <em>6&nbsp;Jahren</em> in <em>Köln</em> zuhause.',
     en: 'Home in <em>Cologne</em> for <em>6&nbsp;years</em>.' },
-  { seite: "rechts", at: 0.80, top: 83, kicker: ["Seit jeher", "Always"],
+  { at: 0.80,
     de: 'Ich <em>male und bastle</em>, seit ich denken kann.',
     en: "I've <em>painted and crafted</em> for as long as I can remember." },
 ];
@@ -55,20 +57,13 @@ const hinweise = [
         <p class="scroll-hinweis" data-de="Scrollen" data-en="Scroll">Scrollen</p>
 
         <div class="szene-buehne">
-          <span class="schraube-achse" aria-hidden="true"></span>
-
           <div class="figur-wrap">
             <canvas class="figur-canvas" aria-label="Annasthasia als animierte 3D-Cartoon-Figur"></canvas>
           </div>
 
           <ul class="hinweise">
             {hinweise.map((h) => (
-              <li
-                class={`hinweis hinweis-${h.seite}`}
-                data-at={h.at}
-                style={`top:${h.top}%`}
-              >
-                <span class="sb-kicker" data-de={h.kicker[0]} data-en={h.kicker[1]}>{h.kicker[0]}</span>
+              <li class="hinweis" data-at={h.at}>
                 <p class="sb-text" data-de={h.de} data-en={h.en} set:html={h.de}></p>
               </li>
             ))}

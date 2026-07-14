@@ -3,7 +3,13 @@
 // Auf dem Handy klappt alles hinter einem Hamburger-Menü oben rechts zusammen.
 // data-ghost = fette Breitenreserve (siehe global.css), aria-current markiert
 // den aktuellen Menüpunkt (wird dann fett dargestellt).
-const pfad = Astro.url.pathname;
+// Trailing-Slash abschneiden: Der Hoster (Cloudflare) liefert Unterseiten unter
+// „/ueber-mich/" aus — ohne Normalisierung würde der exakte Vergleich scheitern
+// und der aktive Punkt bliebe unauffällig. `istAktiv` deckt auch Unterseiten ab
+// (z. B. /projekte/ticket-ag → Menüpunkt „Projekte" bleibt aktiv).
+const pfad = Astro.url.pathname.replace(/\/+$/, "") || "/";
+const istAktiv = (ziel) =>
+  ziel === "/" ? pfad === "/" : pfad === ziel || pfad.startsWith(ziel + "/");
 ---
 
 <header>
@@ -28,11 +34,11 @@ const pfad = Astro.url.pathname;
 
   <nav id="hauptmenue">
     <div class="nav-links">
-      <a href="/" data-de="Home" data-en="Home" data-ghost="Home" aria-current={pfad === "/" ? "page" : undefined}>Home</a>
-      <a href="/projekte" class="nav-arbeiten" data-de="Projekte" data-en="Projects" data-ghost="Projekte" aria-current={pfad.startsWith("/projekte") ? "page" : undefined}>Projekte</a>
-      <a href="/ueber-mich" data-de="Über mich" data-en="About" data-ghost="Über mich" aria-current={pfad === "/ueber-mich" ? "page" : undefined}>Über mich</a>
-      <a href="/lebenslauf" data-de="Lebenslauf" data-en="Resume" data-ghost="Lebenslauf" aria-current={pfad === "/lebenslauf" ? "page" : undefined}>Lebenslauf</a>
-      <a href="/kontakt" data-de="Kontakt" data-en="Contact" data-ghost="Kontakt" aria-current={pfad === "/kontakt" ? "page" : undefined}>Kontakt</a>
+      <a href="/" data-de="Home" data-en="Home" data-ghost="Home" aria-current={istAktiv("/") ? "page" : undefined}>Home</a>
+      <a href="/projekte" class="nav-arbeiten" data-de="Projekte" data-en="Projects" data-ghost="Projekte" aria-current={istAktiv("/projekte") ? "page" : undefined}>Projekte</a>
+      <a href="/ueber-mich" data-de="Über mich" data-en="About" data-ghost="Über mich" aria-current={istAktiv("/ueber-mich") ? "page" : undefined}>Über mich</a>
+      <a href="/lebenslauf" data-de="Lebenslauf" data-en="Resume" data-ghost="Lebenslauf" aria-current={istAktiv("/lebenslauf") ? "page" : undefined}>Lebenslauf</a>
+      <a href="/kontakt" data-de="Kontakt" data-en="Contact" data-ghost="Kontakt" aria-current={istAktiv("/kontakt") ? "page" : undefined}>Kontakt</a>
     </div>
     <a
       class="kopf-linkedin"
