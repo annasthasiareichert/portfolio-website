@@ -86,6 +86,11 @@ import {
                 <p class="bildung-abschluss">{a.abschluss}</p>
                 <p class="bildung-fach">{a.fach}</p>
                 <p class="bildung-ort mono">{a.ort}</p>
+                {a.beschreibung && (
+                  <p class="bildung-text" data-de={a.beschreibung.de} data-en={a.beschreibung.en}>
+                    {a.beschreibung.de}
+                  </p>
+                )}
               </li>
             ))}
           </ul>

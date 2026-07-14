@@ -16,6 +16,7 @@ export type Bildungsweg = {
   abschluss: string;
   fach: string;
   ort: string;
+  beschreibung?: { de: string; en: string };
 };
 
 /* Kurzprofil (Über-mich-Text aus dem CV) */
@@ -97,11 +98,43 @@ export const ausbildung: Bildungsweg[] = [
     abschluss: "Master of Engineering",
     fach: "Digitale Technologien",
     ort: "Fachhochschule Südwestfalen, Soest",
+    beschreibung: {
+      de:
+        "Das Studium verknüpft fachspezifische Anwendungen mit Kompetenzen für die " +
+        "digitale Arbeitswelt und IT-Wissen. Absolvent*innen werden aber nicht zu " +
+        "IT-Spezialist*innen ausgebildet, sie sind aufgrund ihres technischen " +
+        "Hintergrunds vielmehr in der Lage, Digitalisierungstechnologien adäquat " +
+        "einzusetzen sowie dessen Möglichkeiten und Grenzen zu verstehen.",
+      en:
+        "The programme combines subject-specific applications with skills for the " +
+        "digital working world and IT knowledge. Graduates are not trained to become " +
+        "IT specialists, however; thanks to their technical background they are instead " +
+        "able to deploy digitalisation technologies appropriately and to understand " +
+        "their possibilities and limitations.",
+    },
   },
   {
     abschluss: "Bachelor of Arts",
     fach: "Design- & Projektmanagement",
     ort: "Fachhochschule Südwestfalen, Soest",
+    beschreibung: {
+      de:
+        "Der Studiengang Designmanagement und Projektmanagement setzt sich aus den " +
+        "Hauptkompetenzfeldern Design, Technik und Wirtschaft zusammen und bildet die " +
+        "Grundlage für erfolgreiches Management. Die Schwerpunkte Designmanagement, " +
+        "Technikmanagement und Produktentwicklung ergeben sich aus den Schnittmengen der " +
+        "Hauptkompetenzfelder. Ergänzt werden diese Inhalte durch die Vermittlung der " +
+        "Projektmanagement-Methoden und diverser Querschnittskompetenzen (wie z.B. " +
+        "Medienkompetenz, Führungskompetenz, Innovationskompetenz).",
+      en:
+        "The Design Management and Project Management programme is composed of the core " +
+        "competence fields of design, technology and business, forming the foundation for " +
+        "successful management. Its focus areas — design management, technology management " +
+        "and product development — emerge from the intersections of these core fields. These " +
+        "contents are complemented by teaching project management methods and various " +
+        "cross-cutting competencies (such as media literacy, leadership skills and " +
+        "innovation skills).",
+    },
   },
 ];
 
