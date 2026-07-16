@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" role="img" aria-label="Platzhalter: Flyer">
+  <rect x="40" y="40" width="560" height="560" rx="28" fill="#FCFBF9" stroke="#1A1712" stroke-opacity="0.16"/>
+  <g fill="none" stroke="#1A1712" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M232 176 h176 l40 40 v208 h-216 z"/>
+    <path d="M408 176 v40 h40"/>
+    <path d="M268 256 h120"/>
+    <path d="M268 296 h120"/>
+    <path d="M268 336 h120"/>
+    <path d="M268 376 h72"/>
+  </g>
+  <text x="320" y="486" text-anchor="middle" font-family="Archivo, Arial, sans-serif" font-weight="900" font-size="66" letter-spacing="-1" fill="#1A1712">FLYER</text>
+  <text x="320" y="534" text-anchor="middle" font-family="Archivo, Arial, sans-serif" font-weight="700" font-size="20" letter-spacing="6" fill="#8A857B">PLATZHALTER</text>
+</svg>

@@ -1110,19 +1110,20 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
   max-width: 1160px; margin-inline: auto;
   padding: clamp(1.75rem, 3.5vw, 2.5rem) var(--rand) var(--takt);
 }
-.fall-abschnitt { margin-top: clamp(3.5rem, 9vw, 7rem); }
+.fall-abschnitt { margin-top: clamp(2rem, 4.5vw, 3.4rem); }
 .fall-abschnitt:first-child { margin-top: 0; }
 
-/* Abschnitts-Label mit vorangestellter Haarlinie (editorial) */
+/* Abschnitts-Überschrift — im selben Stil wie die Lebenslauf-Überschriften
+   (.ls-h2, z. B. „Berufserfahrung"): Archivo 800, enger Schnitt, gemischte
+   Schreibung, mit feiner Grundlinie darunter. */
 .fall-label {
-  display: flex; align-items: center; gap: 0.9rem;
-  font-family: var(--grotesk); font-weight: 600; font-size: 0.72rem;
-  letter-spacing: 0.16em; text-transform: uppercase; color: var(--ton);
-  margin-bottom: clamp(1.1rem, 2.6vw, 1.9rem);
-}
-.fall-label::before {
-  content: ""; flex: 0 0 auto; width: clamp(1.4rem, 4vw, 2.6rem); height: 1px;
-  background: var(--tinte); opacity: 0.55;
+  font-family: var(--grotesk); font-weight: 800;
+  font-size: clamp(1.05rem, 1.7vw, 1.3rem); letter-spacing: -0.02em;
+  color: var(--tinte);
+  margin-bottom: 1.2rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--haar);
+  /* Eigener Block-Formatierungskontext: neben einem umflossenen Vorschaubild
+     endet die Grundlinie an der Bildkante statt darunter durchzulaufen. */
+  display: flow-root;
 }
 
 /* Textabschnitt — erste Zeile als große Serifen-Kursiv-Aussage (lead) */
@@ -1135,15 +1136,18 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
 .fall-lead + .fall-absatz { margin-top: 1.4rem; }
 
 /* Aufzählung (unnummeriert) — Leistungen/Umfang eines Projekts */
-.fall-liste { list-style: none; max-width: 62ch; }
+/* display:flow-root = eigener Block-Formatierungskontext: neben einem umflossenen
+   Vorschaubild rückt die ganze Liste sauber neben das Bild, statt darunter zu laufen —
+   so sitzen die Punkte am Textrand und nicht halb im Bild. */
+.fall-liste { list-style: none; max-width: 62ch; display: flow-root; }
 .fall-liste-punkt {
   position: relative; padding-left: 1.6rem; margin-top: 0.85rem;
   color: var(--tinte); line-height: 1.5;
 }
 .fall-liste-punkt:first-child { margin-top: 0; }
 .fall-liste-punkt::before {
-  content: ""; position: absolute; left: 0; top: 0.62em;
-  width: 0.5rem; height: 1px; background: var(--tinte); opacity: 0.6;
+  content: ""; position: absolute; left: 0; top: 0.55em;
+  width: 0.42rem; height: 0.42rem; background: var(--tinte); border-radius: 50%;
 }
 
 /* Kleines Vorschaubild (Platzhalter, bis finale Bilder vorliegen) — der Fließtext läuft
@@ -1243,6 +1247,75 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
   .fall-buehne { padding: clamp(1.1rem, 5vw, 2rem); border-radius: 10px; }
   .fall-buehne[data-buehne="dunkel"] { padding: clamp(0.7rem, 3vw, 1.2rem); }
   .fall-schritt { grid-template-columns: 2.6rem 1fr; gap: 0.9rem; }
+}
+
+/* ============================================================
+   AUSLAGE — Wortliste + Bildwechsel (Menü-Prinzip)
+   Links ein fester Bildplatz, rechts die Asset-Wörter. Hover/Tippen auf ein Wort
+   tauscht das Bild an gleicher Stelle (siehe scripts/auslage.js).
+   ============================================================ */
+.auslage-einleitung {
+  font-family: var(--serif); font-style: italic; color: var(--ton);
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  margin: -0.4rem 0 clamp(1.5rem, 3.5vw, 2.4rem); max-width: 54ch;
+}
+.auslage-raster {
+  display: grid; grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem); align-items: center;
+}
+
+/* Fester Bildplatz — alle Bilder liegen gestapelt, nur das aktive ist sichtbar */
+.auslage-figur { margin: 0; }
+.auslage-buehne {
+  --pad: clamp(1rem, 4vw, 2.4rem);
+  position: relative; display: block; aspect-ratio: 1 / 1; padding: 0;
+}
+/* Kein Anheben der Bühne beim Hover — das Bild soll ruhig an seiner Stelle bleiben */
+@media (hover: hover) and (min-width: 761px) {
+  .auslage-buehne:hover { transform: none; box-shadow: none; }
+  .auslage-buehne:hover img { transform: none; }
+}
+.auslage-buehne .auslage-bild {
+  position: absolute; inset: var(--pad);
+  width: calc(100% - 2 * var(--pad)); height: calc(100% - 2 * var(--pad));
+  max-width: none; object-fit: contain;
+  border-radius: 6px; opacity: 0; transform: scale(0.985);
+  transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.auslage-bild.aktiv { opacity: 1; transform: none; }
+.auslage-cap { min-height: 1.2em; }
+
+/* Wortliste (Menü) */
+.auslage-worte { list-style: none; }
+.auslage-wort {
+  display: flex; align-items: baseline; gap: clamp(0.8rem, 2vw, 1.4rem);
+  width: 100%; text-align: left; background: none; border: 0;
+  border-top: 1px solid var(--haar); cursor: pointer;
+  padding: clamp(0.55rem, 1.6vw, 0.95rem) 0; color: var(--ton);
+  transition: color 0.35s ease;
+}
+.auslage-worte li:last-child .auslage-wort { border-bottom: 1px solid var(--haar); }
+.auslage-wort-nr {
+  flex: 0 0 auto; font-family: var(--grotesk); font-weight: 700;
+  font-size: 0.72rem; letter-spacing: 0.1em; color: var(--haar);
+  transition: color 0.35s ease;
+}
+.auslage-wort-text {
+  font-family: var(--grotesk); font-weight: 800; letter-spacing: -0.015em;
+  line-height: 1.04; font-size: clamp(1.5rem, 4.4vw, 2.6rem);
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.35s ease;
+}
+.auslage-wort.aktiv { color: var(--tinte); }
+.auslage-wort.aktiv .auslage-wort-nr { color: var(--tinte); }
+.auslage-wort.aktiv .auslage-wort-text { transform: translateX(0.45rem); }
+.auslage-wort:focus-visible {
+  outline: 2px solid var(--tinte); outline-offset: 3px; border-radius: 3px;
+}
+
+@media (max-width: 760px) {
+  .auslage-raster { grid-template-columns: 1fr; gap: clamp(1.2rem, 4vw, 1.8rem); }
+  .auslage-buehne { max-width: 340px; margin-inline: auto; width: 100%; }
+  .auslage-wort-text { font-size: clamp(1.4rem, 8.5vw, 2.1rem); }
 }
 
 /* ============================================================

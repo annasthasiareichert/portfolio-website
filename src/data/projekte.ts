@@ -16,6 +16,9 @@
 //   { art: "text",    … }  Textabschnitt mit Label; `lead:true` = große Serifen-Kursiv-Aussage
 //   { art: "prozess", … }  nummerierte Schritte (Titel + Text)
 //   { art: "liste",   … }  unnummerierte Aufzählung (Label + Punkte) – z. B. Leistungen/Umfang
+//   { art: "auslage", … }  Wortliste + Bildwechsel: rechts die Asset-Wörter, links ein fester
+//                          Bildplatz. Hover/Tippen auf ein Wort tauscht das Bild an gleicher Stelle
+//                          (Ruhezustand: dezente Auto-Schleife, stoppt beim ersten Hover).
 // Bilder liegen in /public/projekte/<slug>/… — die Originale werden unter media/projekte/<slug>/
 // archiviert (nicht ausgeliefert). Ist `fall` leer/weggelassen, greift die einfache Galerie.
 
@@ -30,12 +33,22 @@ export type FallBild = {
   unterschrift?: Zwei;
 };
 
+/* Ein „Stück" der Auslage: ein Wort in der Liste + das Bild, das beim Hover erscheint. */
+export type AuslageStueck = {
+  wort: Zwei;
+  bild: string;
+  alt: Zwei;
+  /* Kleine Bildunterschrift unter dem gewechselten Bild (optional). */
+  unterschrift?: Zwei;
+};
+
 export type FallBlock =
   | { art: "bild"; label?: Zwei; bild: string; alt: Zwei; buehne?: Buehne; max?: string; unterschrift?: Zwei }
   | { art: "paar"; label?: Zwei; buehne?: Buehne; bilder: FallBild[] }
   | { art: "text"; label?: Zwei; lead?: boolean; absaetze: Zwei[] }
   | { art: "prozess"; label?: Zwei; schritte: { titel: Zwei; text: Zwei }[] }
-  | { art: "liste"; label?: Zwei; punkte: Zwei[] };
+  | { art: "liste"; label?: Zwei; punkte: Zwei[] }
+  | { art: "auslage"; label?: Zwei; einleitung?: Zwei; buehne?: Buehne; stuecke: AuslageStueck[] };
 
 export type Projekt = {
   /* URL der Detailseite: /projekte/<slug> */
@@ -374,6 +387,53 @@ export const projekte: Projekt[] = [
           { de: "Mitarbeiter-Shirts für einen einheitlichen Auftritt beim Juicy Beats Festival", en: "Staff shirts for a unified appearance at Juicy Beats Festival" },
           { de: "Inhaltliche und grafische Umsetzung verschiedener Sticker", en: "Content and design of various stickers" },
           { de: "Recherche, Umsetzung und Druckvorbereitung gebrandeter Werbeartikel (Stifte, Blöcke, Feuerzeuge, Luftballons u. a.)", en: "Research, production and print preparation of branded merchandise (pens, notepads, lighters, balloons and more)" },
+        ],
+      },
+      {
+        art: "auslage",
+        label: { de: "Die Werbeartikel", en: "The merch" },
+        einleitung: {
+          de: "Fahr über ein Wort – der passende Artikel erscheint daneben.",
+          en: "Hover over a word – the matching item appears beside it.",
+        },
+        buehne: "sand",
+        stuecke: [
+          {
+            wort: { de: "Kugelschreiber", en: "Pens" },
+            bild: "/projekte/merchandise-stagedates/kugelschreiber.svg",
+            alt: { de: "Gebrandeter Kugelschreiber für stagedates", en: "Branded stagedates pen" },
+            unterschrift: { de: "Gebrandeter Kugelschreiber", en: "Branded pen" },
+          },
+          {
+            wort: { de: "Flyer", en: "Flyer" },
+            bild: "/projekte/merchandise-stagedates/flyer.svg",
+            alt: { de: "Informativer Flyer für stagedates", en: "Informative stagedates flyer" },
+            unterschrift: { de: "Informativer Flyer", en: "Informative flyer" },
+          },
+          {
+            wort: { de: "Liegestühle", en: "Deck chairs" },
+            bild: "/projekte/merchandise-stagedates/liegestuehle.svg",
+            alt: { de: "Gebrandete Liegestühle für stagedates", en: "Branded stagedates deck chairs" },
+            unterschrift: { de: "Gebrandete Liegestühle", en: "Branded deck chairs" },
+          },
+          {
+            wort: { de: "T-Shirt", en: "T-shirt" },
+            bild: "/projekte/merchandise-stagedates/t-shirt.svg",
+            alt: { de: "Mitarbeiter-Shirt für einen einheitlichen Auftritt", en: "Staff shirt for a unified appearance" },
+            unterschrift: { de: "Mitarbeiter-Shirt", en: "Staff shirt" },
+          },
+          {
+            wort: { de: "Sticker", en: "Stickers" },
+            bild: "/projekte/merchandise-stagedates/sticker.svg",
+            alt: { de: "Verschiedene gebrandete Sticker", en: "Various branded stickers" },
+            unterschrift: { de: "Gebrandete Sticker", en: "Branded stickers" },
+          },
+          {
+            wort: { de: "Blöcke", en: "Notepads" },
+            bild: "/projekte/merchandise-stagedates/bloecke.svg",
+            alt: { de: "Gebrandete Notizblöcke für stagedates", en: "Branded stagedates notepads" },
+            unterschrift: { de: "Notizblöcke", en: "Notepads" },
+          },
         ],
       },
     ],

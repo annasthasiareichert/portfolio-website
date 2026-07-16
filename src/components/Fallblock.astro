@@ -98,3 +98,56 @@ const ladeArt = eager ? "eager" : "lazy";
     </ul>
   </section>
 )}
+
+{block.art === "auslage" && (
+  <section class="fall-abschnitt auslage auftritt" data-auslage>
+    {block.label && (
+      <p class="fall-label" data-de={block.label.de} data-en={block.label.en}>{block.label.de}</p>
+    )}
+    {block.einleitung && (
+      <p class="auslage-einleitung kursiv" data-de={block.einleitung.de} data-en={block.einleitung.en}>{block.einleitung.de}</p>
+    )}
+    <div class="auslage-raster">
+      {/* Fester Bildplatz: alle Bilder liegen gestapelt, nur das aktive ist sichtbar */}
+      <figure class="auslage-figur">
+        <div class="fall-buehne auslage-buehne" data-buehne={block.buehne ?? "sand"}>
+          {block.stuecke.map((s, i) => (
+            <img
+              class={`auslage-bild${i === 0 ? " aktiv" : ""}`}
+              data-bild={i}
+              src={s.bild}
+              alt={s.alt.de}
+              data-alt-de={s.alt.de}
+              data-alt-en={s.alt.en}
+              loading={ladeArt}
+              decoding="async"
+            />
+          ))}
+        </div>
+        <figcaption
+          class="fall-unterschrift auslage-cap"
+          data-de={block.stuecke[0].unterschrift?.de ?? block.stuecke[0].wort.de}
+          data-en={block.stuecke[0].unterschrift?.en ?? block.stuecke[0].wort.en}
+        >{block.stuecke[0].unterschrift?.de ?? block.stuecke[0].wort.de}</figcaption>
+      </figure>
+
+      {/* Wortliste (Menü): Hover/Tippen wechselt Bild + Unterschrift */}
+      <ul class="auslage-worte" role="list">
+        {block.stuecke.map((s, i) => (
+          <li>
+            <button
+              type="button"
+              class={`auslage-wort${i === 0 ? " aktiv" : ""}`}
+              data-ziel={i}
+              data-cap-de={s.unterschrift?.de ?? s.wort.de}
+              data-cap-en={s.unterschrift?.en ?? s.wort.en}
+            >
+              <span class="auslage-wort-nr" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+              <span class="auslage-wort-text" data-de={s.wort.de} data-en={s.wort.en}>{s.wort.de}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}

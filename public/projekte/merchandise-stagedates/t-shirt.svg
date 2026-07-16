@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" role="img" aria-label="Platzhalter: T-Shirt">
+  <rect x="40" y="40" width="560" height="560" rx="28" fill="#FCFBF9" stroke="#1A1712" stroke-opacity="0.16"/>
+  <g fill="none" stroke="#1A1712" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M264 168 L200 208 L168 272 L216 312 L248 280 V440 H392 V280 L424 312 L472 272 L440 208 L376 168 Z"/>
+    <path d="M264 168 C280 216 360 216 376 168"/>
+  </g>
+  <text x="320" y="500" text-anchor="middle" font-family="Archivo, Arial, sans-serif" font-weight="900" font-size="64" letter-spacing="-1" fill="#1A1712">T-SHIRT</text>
+  <text x="320" y="548" text-anchor="middle" font-family="Archivo, Arial, sans-serif" font-weight="700" font-size="20" letter-spacing="6" fill="#8A857B">PLATZHALTER</text>
+</svg>

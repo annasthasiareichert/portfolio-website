@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" role="img" aria-label="Platzhalter: Notizblöcke">
+  <rect x="40" y="40" width="560" height="560" rx="28" fill="#FCFBF9" stroke="#1A1712" stroke-opacity="0.16"/>
+  <g fill="none" stroke="#1A1712" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="224" y="184" width="192" height="240" rx="10"/>
+    <path d="M224 232 H416"/>
+    <path d="M256 168 V216 M296 168 V216 M336 168 V216 M376 168 V216"/>
+    <path d="M264 288 H376 M264 328 H376 M264 368 H328"/>
+  </g>
+  <text x="320" y="486" text-anchor="middle" font-family="Archivo, Arial, sans-serif" font-weight="900" font-size="52" letter-spacing="-1" fill="#1A1712">BLÖCKE</text>
+  <text x="320" y="534" text-anchor="middle" font-family="Archivo, Arial, sans-serif" font-weight="700" font-size="20" letter-spacing="6" fill="#8A857B">PLATZHALTER</text>
+</svg>

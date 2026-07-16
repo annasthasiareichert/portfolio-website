@@ -28,7 +28,7 @@ const jahrEn = projekt.meta.en.split("·").pop()?.trim() ?? "";
 const hatFall = !!(projekt.fall && projekt.fall.length);
 // Bringt die Fallstudie schon eigene Bilder mit? Wenn nicht (rein textliche Aufbereitung),
 // zeigen wir das Karten-Vorschaubild klein und randbündig als Platzhalter.
-const fallHatBild = !!projekt.fall?.some((b) => b.art === "bild" || b.art === "paar");
+const fallHatBild = !!projekt.fall?.some((b) => b.art === "bild" || b.art === "paar" || b.art === "auslage");
 const zeigeVorschau = hatFall && !fallHatBild;
 // Randseite je Projekt abwechselnd (rechts/links) für etwas Rhythmus.
 const vorschauSeite = index % 2 === 0 ? "rechts" : "links";
@@ -136,5 +136,6 @@ const galerie = projekt.bilder && projekt.bilder.length ? projekt.bilder : [proj
   <script>
     import "../../scripts/interaktionen.js";
     import "../../scripts/ankunft.js";
+    import "../../scripts/auslage.js";
   </script>
 </Grundgeruest>
