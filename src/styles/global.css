@@ -1043,12 +1043,58 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
    PROJEKT-DETAILSEITEN — /projekte/<slug>
    ============================================================ */
 .projekt-kopf { position: relative; }
-.projekt-zurueck {
-  display: inline-block; margin-bottom: clamp(1rem, 2.5vw, 1.6rem);
-  color: var(--ton); font-size: 0.72rem; letter-spacing: 0.06em;
-  transition: color 0.3s;
+
+/* Kopf-Navigationsleiste: prominenter Zurück-Button links, Blätter-Pfeile rechts.
+   Sitzt ganz oben im Sand-Band, damit sie sofort sichtbar ist – kein Scrollen nötig. */
+.projekt-topnav {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 0.8rem 1.4rem;
+  margin-bottom: clamp(1.2rem, 3vw, 1.9rem);
 }
-.projekt-zurueck:hover { color: var(--tinte); }
+
+/* Deutlich sichtbarer Zurück-Button: gefüllte Tinten-Pille statt zarter Textlink. */
+.projekt-zurueck-btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: var(--tinte); color: var(--papier);
+  font-family: var(--grotesk); font-weight: 700;
+  font-size: clamp(0.82rem, 1.5vw, 0.95rem); letter-spacing: -0.01em;
+  padding: 0.62rem 1.15rem; border-radius: 999px;
+  transition: background 0.25s, transform 0.25s;
+}
+.projekt-zurueck-btn:hover { background: var(--ton); transform: translateX(-3px); }
+
+/* Blätter-Pfeile (voriges / nächstes Projekt) */
+.projekt-blaettern { display: flex; align-items: stretch; gap: 0.6rem; }
+.blaetter-pfeil {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  max-width: 15rem;
+  padding: 0.5rem 0.9rem; border-radius: 999px;
+  border: 1.5px solid var(--tinte); color: var(--tinte);
+  background: transparent;
+  transition: background 0.25s, color 0.25s, transform 0.25s;
+}
+.blaetter-pfeil-next { text-align: right; }
+.blaetter-pfeil:hover { background: var(--tinte); color: var(--papier); }
+.blaetter-pfeil:not(.blaetter-pfeil-next):hover { transform: translateX(-3px); }
+.blaetter-pfeil-next:hover { transform: translateX(3px); }
+.blaetter-glyph { font-size: 1.2rem; line-height: 1; flex-shrink: 0; }
+.blaetter-text { display: flex; flex-direction: column; min-width: 0; line-height: 1.1; }
+.blaetter-pfeil-next .blaetter-text { align-items: flex-end; }
+.blaetter-kicker { font-size: 0.6rem; letter-spacing: 0.08em; opacity: 0.7; }
+.blaetter-titel {
+  font-family: var(--grotesk); font-weight: 700; font-size: 0.9rem; letter-spacing: -0.01em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+}
+
+/* Handy: Zurück-Button volle Zeile, darunter die beiden Pfeile nebeneinander.
+   Projekt-Titel in den Pfeilen ausblenden – nur Glyph + Kicker, spart Platz. */
+@media (max-width: 640px) {
+  .projekt-topnav { gap: 0.7rem; }
+  .projekt-zurueck-btn { width: 100%; justify-content: center; }
+  .projekt-blaettern { width: 100%; }
+  .blaetter-pfeil { flex: 1; justify-content: center; max-width: none; }
+  .blaetter-titel { display: none; }
+}
 
 /* Kompakter Projekt-Kopf (Maßstab wie Impressum/Rechtsseiten): der Kopf soll niedrig sein,
    damit direkt beim ersten Blick Projektinhalt sichtbar wird – kein Scrollen nötig. */
@@ -1059,7 +1105,7 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
 .projektseite .seitentitel {
   font-size: clamp(1.9rem, 5vw, 3rem); line-height: 0.95; letter-spacing: -0.02em;
 }
-.projektseite .projekt-zurueck { margin-bottom: clamp(0.7rem, 1.8vw, 1rem); }
+.projektseite .projekt-topnav { margin-bottom: clamp(0.9rem, 2.2vw, 1.4rem); }
 .projektseite .seitenkopf-unter { margin-top: 0.7rem; font-size: clamp(0.95rem, 1.7vw, 1.15rem); }
 /* Unternehmen (Serifen-Kursiv) und Jahr (Mono) auf einer Zeile, durch „·" getrennt */
 .projekt-kopf-unter { display: flex; align-items: baseline; flex-wrap: wrap; }
@@ -1085,21 +1131,10 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
   font-size: 0.72rem; letter-spacing: 0.06em;
 }
 .projekt-nav {
-  display: flex; justify-content: space-between; align-items: baseline;
-  flex-wrap: wrap; gap: 1rem 2rem;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem 1.4rem;
   margin-top: clamp(3rem, 7vw, 5rem); padding-top: 1.6rem;
   border-top: 1px solid var(--haar);
-}
-.projekt-nav .pfeil-link { margin-top: 0; }
-.naechstes-projekt {
-  margin-left: auto; text-align: right;
-  font-family: var(--grotesk); font-weight: 800; font-size: clamp(1rem, 2.2vw, 1.3rem);
-  letter-spacing: -0.01em; transition: opacity 0.3s;
-}
-.naechstes-projekt:hover { opacity: 0.6; }
-@media (max-width: 640px) {
-  .projekt-nav { flex-direction: column; align-items: flex-start; }
-  .naechstes-projekt { margin-left: 0; text-align: left; }
 }
 
 /* ============================================================

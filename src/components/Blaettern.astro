@@ -1,0 +1,24 @@
+---
+// Vor-/Zurück-Blättern zwischen Projekten (voriges · nächstes).
+// Sitzt am Fuß der Fallstudie und ersetzt die frühere schlichte Weiter-Navigation.
+// Sprach-Attribute liegen bewusst nur auf den inneren Text-Spans, nicht auf dem
+// Anker — der DE/EN-Umschalter setzt innerHTML und würde sonst die Struktur zerstören.
+interface Slugbar {
+  slug: string;
+  titel: { de: string; en: string };
+}
+const { voriges, naechstes } = Astro.props as { voriges: Slugbar; naechstes: Slugbar };
+---
+
+<nav class="projekt-nav projekt-blaettern" aria-label="Durch die Projekte blättern">
+  <a class="blaetter-pfeil" href={`/projekte/${voriges.slug}`}
+     aria-label={`voriges Projekt: ${voriges.titel.de}`}>
+    <span class="blaetter-glyph" aria-hidden="true">←</span>
+    <span class="blaetter-text"><span class="blaetter-kicker mono" data-de="voriges Projekt" data-en="previous project">voriges Projekt</span><span class="blaetter-titel" data-de={voriges.titel.de} data-en={voriges.titel.en}>{voriges.titel.de}</span></span>
+  </a>
+  <a class="blaetter-pfeil blaetter-pfeil-next" href={`/projekte/${naechstes.slug}`}
+     aria-label={`nächstes Projekt: ${naechstes.titel.de}`}>
+    <span class="blaetter-text"><span class="blaetter-kicker mono" data-de="nächstes Projekt" data-en="next project">nächstes Projekt</span><span class="blaetter-titel" data-de={naechstes.titel.de} data-en={naechstes.titel.en}>{naechstes.titel.de}</span></span>
+    <span class="blaetter-glyph" aria-hidden="true">→</span>
+  </a>
+</nav>
