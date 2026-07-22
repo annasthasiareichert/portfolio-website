@@ -25,7 +25,11 @@
 // archiviert (nicht ausgeliefert). Ist `fall` leer/weggelassen, greift die einfache Galerie.
 
 export type Zwei = { de: string; en: string };
-export type Buehne = "papier" | "sand" | "dunkel";
+/* Präsentation eines Bildes:
+   papier/sand/dunkel — Bühne mit Hintergrundfläche (für Bilder, die Kontrast brauchen)
+   frei  — Freisteller ohne Container: Bild (mit Transparenz) steht direkt auf dem Seitenhintergrund
+   druck — wie ein gedrucktes Stück: ohne Container, nur feine Kontur + weicher Schatten */
+export type Buehne = "papier" | "sand" | "dunkel" | "frei" | "druck";
 
 export type FallBild = {
   bild: string;
@@ -101,11 +105,11 @@ export const projekte: Projekt[] = [
       {
         art: "paar",
         label: { de: "Social · Instagram", en: "Social · Instagram" },
-        buehne: "dunkel",
+        buehne: "sand",
         bilder: [
-          { bild: "/projekte/brand-assets-ecostag/ig-work.png", alt: { de: "Instagram-Post „wanna work with us?“ für stagedates", en: "Instagram post “wanna work with us?” for stagedates" }, max: "300px", unterschrift: { de: "Recruiting", en: "Recruiting" } },
-          { bild: "/projekte/brand-assets-ecostag/ig-comingsoon.png", alt: { de: "Instagram-Post „coming soon“ für stagedates", en: "Instagram post “coming soon” for stagedates" }, max: "300px", unterschrift: { de: "Teaser", en: "Teaser" } },
-          { bild: "/projekte/brand-assets-ecostag/ig-feature.png", alt: { de: "Instagram-Post „new feature“ mit App-Screenshot für stagedates", en: "Instagram post “new feature” with app screenshot for stagedates" }, max: "300px", unterschrift: { de: "Feature", en: "Feature" } },
+          { bild: "/projekte/brand-assets-ecostag/ig-work.webp", alt: { de: "Instagram-Post „wanna work with us?“ für stagedates", en: "Instagram post “wanna work with us?” for stagedates" }, max: "270px", unterschrift: { de: "Recruiting", en: "Recruiting" } },
+          { bild: "/projekte/brand-assets-ecostag/ig-comingsoon.webp", alt: { de: "Instagram-Post „coming soon“ für stagedates", en: "Instagram post “coming soon” for stagedates" }, max: "270px", unterschrift: { de: "Teaser", en: "Teaser" } },
+          { bild: "/projekte/brand-assets-ecostag/ig-feature.webp", alt: { de: "Instagram-Post „new feature“ mit App-Screenshot für stagedates", en: "Instagram post “new feature” with app screenshot for stagedates" }, max: "270px", unterschrift: { de: "Feature", en: "Feature" } },
         ],
       },
       {
@@ -121,19 +125,19 @@ export const projekte: Projekt[] = [
       {
         art: "bild",
         label: { de: "Mitarbeiterevent — Summer Stage", en: "Employee event — Summer Stage" },
-        bild: "/projekte/brand-assets-ecostag/sommerfest.png",
+        bild: "/projekte/brand-assets-ecostag/sommerfest.webp",
         alt: { de: "Save-the-Date „Summer Stage“ für das ecostag-Sommerfest", en: "“Summer Stage” save-the-date for the ecostag summer party" },
-        buehne: "sand",
-        max: "460px",
+        buehne: "druck",
+        max: "440px",
         unterschrift: { de: "Save-the-Date für das ecostag-Sommerfest.", en: "Save-the-date for the ecostag summer party." },
       },
       {
         art: "bild",
         label: { de: "Die Einladung", en: "The invitation" },
-        bild: "/projekte/brand-assets-ecostag/sommerfest-einladung.png",
+        bild: "/projekte/brand-assets-ecostag/sommerfest-einladung.webp",
         alt: { de: "Einladung „Summer Stage — a night in all white“ mit Ablauf und Dresscode", en: "“Summer Stage — a night in all white” invitation with schedule and dress code" },
-        buehne: "sand",
-        max: "720px",
+        buehne: "druck",
+        max: "760px",
         unterschrift: { de: "Die Einladung mit Ablauf, Dresscode „All White“ und Programm.", en: "The invitation with schedule, “all white” dress code and programme." },
       },
     ],
@@ -213,9 +217,10 @@ export const projekte: Projekt[] = [
       {
         art: "bild",
         label: { de: "Die Marke im Einsatz", en: "The brand in use" },
-        bild: "/projekte/echory-logo-redesign/mockup.png",
+        bild: "/projekte/echory-logo-redesign/mockup.webp",
         alt: { de: "Website echoryflow.com mit dem neuen echory-Logo auf einem Laptop", en: "echoryflow.com website with the new echory logo on a laptop" },
-        buehne: "sand",
+        buehne: "frei",
+        max: "780px",
         unterschrift: { de: "Die neue Bildmarke auf echoryflow.com.", en: "The new brand mark on echoryflow.com." },
       },
       {
@@ -229,19 +234,19 @@ export const projekte: Projekt[] = [
       {
         art: "bild",
         label: { de: "Logo — vorher / nachher", en: "Logo — before / after" },
-        bild: "/projekte/echory-logo-redesign/logo-evolution.png",
+        bild: "/projekte/echory-logo-redesign/logo-evolution.webp",
         alt: { de: "Logo-Evolution: vom alten orangefarbenen E-Symbol zur neuen echo-Bildmarke", en: "Logo evolution: from the old orange E symbol to the new echo brand mark" },
-        buehne: "papier",
-        max: "760px",
+        buehne: "frei",
+        max: "700px",
         unterschrift: { de: "Vom alten Symbol zur klaren, selbstbewussten Bildmarke.", en: "From the old symbol to a clear, confident brand mark." },
       },
       {
         art: "bild",
         label: { de: "Bildmarke", en: "Brand mark" },
-        bild: "/projekte/echory-logo-redesign/logo-vertical.png",
+        bild: "/projekte/echory-logo-redesign/logo-vertical.webp",
         alt: { de: "Vertikale Variante des neuen echory-Logos", en: "Vertical version of the new echory logo" },
-        buehne: "dunkel",
-        max: "420px",
+        buehne: "frei",
+        max: "320px",
       },
     ],
   },
@@ -272,9 +277,10 @@ export const projekte: Projekt[] = [
       {
         art: "bild",
         label: { de: "@alphabiol_beauty", en: "@alphabiol_beauty" },
-        bild: "/projekte/content-creation/alphabiol-mockup.png",
+        bild: "/projekte/content-creation/alphabiol-mockup.webp",
         alt: { de: "Instagram-Feed von @alphabiol_elixier auf einem Smartphone, flankiert von Produktfotos", en: "Instagram feed of @alphabiol_elixier on a smartphone, flanked by product photos" },
-        buehne: "sand",
+        buehne: "frei",
+        max: "760px",
         unterschrift: { de: "Kuratiertes Feed-Design & Produktinszenierung für Alphabiol.", en: "Curated feed design & product staging for Alphabiol." },
       },
       {
@@ -292,10 +298,10 @@ export const projekte: Projekt[] = [
       {
         art: "paar",
         label: { de: "Weitere Accounts", en: "More accounts" },
-        buehne: "papier",
+        buehne: "frei",
         bilder: [
-          { bild: "/projekte/content-creation/justfit.png", alt: { de: "Instagram-Feed von @justfit_fitnessclubs auf einem Smartphone in der Hand", en: "Instagram feed of @justfit_fitnessclubs on a smartphone held in hand" }, max: "300px", unterschrift: { de: "@justfit_fitnessclubs", en: "@justfit_fitnessclubs" } },
-          { bild: "/projekte/content-creation/liebermann.png", alt: { de: "Instagram-Feed von @liebermann_communications auf einem Smartphone in der Hand", en: "Instagram feed of @liebermann_communications on a smartphone held in hand" }, max: "300px", unterschrift: { de: "@liebermann_communications", en: "@liebermann_communications" } },
+          { bild: "/projekte/content-creation/justfit.webp", alt: { de: "Instagram-Feed von @justfit_fitnessclubs auf einem Smartphone in der Hand", en: "Instagram feed of @justfit_fitnessclubs on a smartphone held in hand" }, max: "340px", unterschrift: { de: "@justfit_fitnessclubs", en: "@justfit_fitnessclubs" } },
+          { bild: "/projekte/content-creation/liebermann.webp", alt: { de: "Instagram-Feed von @liebermann_communications auf einem Smartphone in der Hand", en: "Instagram feed of @liebermann_communications on a smartphone held in hand" }, max: "340px", unterschrift: { de: "@liebermann_communications", en: "@liebermann_communications" } },
         ],
       },
       {
@@ -310,10 +316,10 @@ export const projekte: Projekt[] = [
       {
         art: "bild",
         label: { de: "Produktfotografie", en: "Product photography" },
-        bild: "/projekte/content-creation/alphabiol-produkte.png",
+        bild: "/projekte/content-creation/alphabiol-produkte.webp",
         alt: { de: "Produktfotografie-Collage der Alphabiol-Ampullen auf dunklem Samt", en: "Product photography collage of the Alphabiol ampoules on dark velvet" },
-        buehne: "sand",
-        max: "460px",
+        buehne: "frei",
+        max: "480px",
         unterschrift: { de: "Fotografie & Bildbearbeitung für den Feed.", en: "Photography & retouching for the feed." },
       },
     ],
@@ -428,11 +434,11 @@ export const projekte: Projekt[] = [
         art: "galerie",
         label: { de: "Auswahl", en: "Selection" },
         bilder: [
-          { bild: "/projekte/private-projekte/sour-and-sound.png", alt: { de: "Event-Plakat „Sour & Sound“ – Aperol, Limoncello & Summer Grooves", en: "“Sour & Sound” event poster – Aperol, Limoncello & summer grooves" }, unterschrift: { de: "„Sour & Sound“ · Event-Plakat", en: "“Sour & Sound” · event poster" } },
-          { bild: "/projekte/private-projekte/harry-potter.png", alt: { de: "Einladung „The Music of Harry Potter – Live in Concert“", en: "“The Music of Harry Potter – Live in Concert” invitation" }, unterschrift: { de: "Harry Potter in Concert · Einladung", en: "Harry Potter in Concert · invitation" } },
-          { bild: "/projekte/private-projekte/barista-break.png", alt: { de: "Illustriertes „Short Barista Break“-Schild mit Cartoon-Kaffeebecher", en: "Illustrated “Short Barista Break” sign with a cartoon coffee cup" }, unterschrift: { de: "„Barista Break“ · Illustration", en: "“Barista Break” · illustration" } },
-          { bild: "/projekte/private-projekte/geraldine-mermaid.png", alt: { de: "Meerjungfrau-Einladung zu Geraldines 30. Geburtstag", en: "Mermaid invitation for Geraldine’s 30th birthday" }, unterschrift: { de: "Geburtstag · Meerjungfrau-Einladung", en: "Birthday · mermaid invitation" } },
-          { bild: "/projekte/private-projekte/save-the-date.png", alt: { de: "Typografisches Save-the-Date zu einem 30. Geburtstag", en: "Typographic save-the-date for a 30th birthday" }, unterschrift: { de: "30. Geburtstag · Save-the-Date", en: "30th birthday · save-the-date" } },
+          { bild: "/projekte/private-projekte/sour-and-sound.webp", alt: { de: "Event-Plakat „Sour & Sound“ – Aperol, Limoncello & Summer Grooves", en: "“Sour & Sound” event poster – Aperol, Limoncello & summer grooves" }, unterschrift: { de: "„Sour & Sound“ · Event-Plakat", en: "“Sour & Sound” · event poster" } },
+          { bild: "/projekte/private-projekte/harry-potter.webp", alt: { de: "Einladung „The Music of Harry Potter – Live in Concert“", en: "“The Music of Harry Potter – Live in Concert” invitation" }, unterschrift: { de: "Harry Potter in Concert · Einladung", en: "Harry Potter in Concert · invitation" } },
+          { bild: "/projekte/private-projekte/barista-break.webp", alt: { de: "Illustriertes „Short Barista Break“-Schild mit Cartoon-Kaffeebecher", en: "Illustrated “Short Barista Break” sign with a cartoon coffee cup" }, unterschrift: { de: "„Barista Break“ · Illustration", en: "“Barista Break” · illustration" } },
+          { bild: "/projekte/private-projekte/geraldine-mermaid.webp", alt: { de: "Meerjungfrau-Einladung zu Geraldines 30. Geburtstag", en: "Mermaid invitation for Geraldine’s 30th birthday" }, unterschrift: { de: "Geburtstag · Meerjungfrau-Einladung", en: "Birthday · mermaid invitation" } },
+          { bild: "/projekte/private-projekte/save-the-date.webp", alt: { de: "Typografisches Save-the-Date zu einem 30. Geburtstag", en: "Typographic save-the-date for a 30th birthday" }, unterschrift: { de: "30. Geburtstag · Save-the-Date", en: "30th birthday · save-the-date" } },
         ],
       },
       {
@@ -552,10 +558,10 @@ export const projekte: Projekt[] = [
       {
         art: "bild",
         label: { de: "Das Rendering", en: "The rendering" },
-        bild: "/projekte/3d-rendering-schuh/render.png",
+        bild: "/projekte/3d-rendering-schuh/render.webp",
         alt: { de: "Digitale Illustration eines weißen High-Top-Sneakers im Off-White-Stil", en: "Digital illustration of a white high-top sneaker in Off-White style" },
-        buehne: "dunkel",
-        max: "720px",
+        buehne: "frei",
+        max: "620px",
         unterschrift: { de: "Die fertige Illustration des Schuh-Modells.", en: "The finished illustration of the shoe model." },
       },
       {
@@ -582,10 +588,10 @@ export const projekte: Projekt[] = [
       {
         art: "bild",
         label: { de: "Das Poster", en: "The poster" },
-        bild: "/projekte/3d-rendering-schuh/poster.png",
+        bild: "/projekte/3d-rendering-schuh/poster.webp",
         alt: { de: "Poster „Never Take Them Off“ mit dem Sneaker im Blau/Orange-Komplementärkontrast", en: "“Never Take Them Off” poster with the sneaker in blue/orange complementary contrast" },
-        buehne: "sand",
-        max: "560px",
+        buehne: "druck",
+        max: "480px",
         unterschrift: { de: "„Never Take Them Off“ — Poster im Blau/Orange-Komplementärkontrast.", en: "“Never Take Them Off” — poster in blue/orange complementary contrast." },
       },
     ],
@@ -617,10 +623,10 @@ export const projekte: Projekt[] = [
       {
         art: "bild",
         label: { de: "Newsletter- & Social-Format", en: "Newsletter & social format" },
-        bild: "/projekte/lampenwelt-banner/banner-square.png",
+        bild: "/projekte/lampenwelt-banner/banner-square.webp",
         alt: { de: "Herbst-Sale-Banner „Let’s get cozy“ im quadratischen Format mit Wandleuchte und Pendelleuchte", en: "Autumn sale banner “Let’s get cozy” in square format with a wall light and pendant lamp" },
-        buehne: "sand",
-        max: "560px",
+        buehne: "druck",
+        max: "520px",
         unterschrift: { de: "„Let’s get cozy“ — die Herbst-Rabattaktion, Code HERBST.", en: "“Let’s get cozy” — the autumn discount campaign, code HERBST." },
       },
       {
@@ -638,9 +644,10 @@ export const projekte: Projekt[] = [
       {
         art: "bild",
         label: { de: "Web-Banner (Shop)", en: "Web banner (shop)" },
-        bild: "/projekte/lampenwelt-banner/banner-wide.png",
+        bild: "/projekte/lampenwelt-banner/banner-wide.webp",
         alt: { de: "Herbst-Sale-Banner „Let’s get cozy“ im breiten Web-Format für den Online-Shop", en: "Autumn sale banner “Let’s get cozy” in wide web format for the online shop" },
-        buehne: "papier",
+        buehne: "druck",
+        max: "1000px",
         unterschrift: { de: "Dieselbe Gestaltung, adaptiert auf das breite Shop-Format.", en: "The same design, adapted to the wide shop format." },
       },
     ],

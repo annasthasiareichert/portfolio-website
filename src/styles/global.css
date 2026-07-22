@@ -1247,10 +1247,33 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
 .fall-buehne[data-buehne="papier"] { background: var(--papier); border: 1px solid var(--haar); }
 .fall-buehne[data-buehne="sand"]   { background: var(--sand); }
 .fall-buehne[data-buehne="dunkel"] { background: var(--tinte); padding: clamp(0.9rem, 2.5vw, 1.8rem); }
+
+/* Freisteller — kein Container: das transparente Bild steht direkt auf dem Seitenhintergrund */
+.fall-buehne[data-buehne="frei"] {
+  background: none; border: none; padding: 0;
+  border-radius: 0; overflow: visible;
+}
+
+/* Druckstück — ohne Container-Fläche: das Bild selbst trägt feine Kontur + weichen Schatten,
+   wie ein aufgelegtes Printprodukt */
+.fall-buehne[data-buehne="druck"] {
+  background: none; border: none; padding: 0;
+  border-radius: 0; overflow: visible;
+}
+.fall-buehne[data-buehne="druck"] img {
+  border-radius: 10px; border: 1px solid var(--haar);
+  box-shadow: 0 26px 52px -30px rgba(26,23,18,0.4);
+}
+
 .fall-buehne img {
-  display: block; width: 100%; height: auto; max-width: var(--bild-max, 100%);
+  display: block; width: auto; height: auto;
+  max-width: min(var(--bild-max, 100%), 100%);
+  /* Nie höher als der Bildschirm: Hochformate bleiben beim Scrollen komplett erfassbar.
+     Beide max-Grenzen zusammen skalieren das Bild formatgetreu (kein Verzerren). */
+  max-height: min(76vh, 700px);
   border-radius: 6px;
 }
+.fall-buehne[data-buehne="frei"] img { border-radius: 0; }
 
 .fall-unterschrift {
   margin-top: 0.95rem;
@@ -1263,6 +1286,16 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
   .fall-buehne img { transition: transform 0.6s cubic-bezier(0.2,0.8,0.2,1); }
   .fall-buehne:hover { transform: translateY(-6px); box-shadow: 0 42px 72px -34px rgba(26,23,18,0.5); }
   .fall-buehne:hover img { transform: scale(1.025); }
+  /* Freisteller bleiben ruhig liegen (kein Container, der sich heben könnte) */
+  .fall-buehne[data-buehne="frei"]:hover,
+  .fall-buehne[data-buehne="druck"]:hover { transform: none; box-shadow: none; }
+  .fall-buehne[data-buehne="frei"]:hover img { transform: none; }
+  /* Beim Druckstück hebt sich das Bild selbst */
+  .fall-buehne[data-buehne="druck"] img { transition: transform 0.6s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.6s ease; }
+  .fall-buehne[data-buehne="druck"]:hover img {
+    transform: translateY(-6px);
+    box-shadow: 0 40px 68px -32px rgba(26,23,18,0.5);
+  }
 }
 
 /* Bilderpaar (z. B. Mobile + App-Icon) auf einer Bühne */
@@ -1290,6 +1323,8 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
    CSS-Columns halten das Hochkant-/Querformat-Mischmasch ruhig, ohne Bilder zu beschneiden. */
 .fall-galerie {
   column-count: 3; column-gap: clamp(0.9rem, 2vw, 1.4rem);
+  /* Volle Breite unterhalb eines umflossenen Vorschaubilds — die Arbeiten brauchen Raum */
+  clear: both;
 }
 .galerie-figur {
   margin: 0 0 clamp(0.9rem, 2vw, 1.4rem);
@@ -1345,7 +1380,7 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
 .auslage-buehne .auslage-bild {
   position: absolute; inset: var(--pad);
   width: calc(100% - 2 * var(--pad)); height: calc(100% - 2 * var(--pad));
-  max-width: none; object-fit: contain;
+  max-width: none; max-height: none; object-fit: contain;
   border-radius: 6px; opacity: 0; transform: scale(0.985);
   transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
