@@ -1117,7 +1117,7 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
 .projekt-intro {
   font-family: var(--serif); font-style: italic;
   font-size: clamp(1.15rem, 2.4vw, 1.6rem); line-height: 1.5;
-  max-width: 62ch; color: var(--tinte);
+  max-width: none; color: var(--tinte);
   margin-bottom: clamp(2rem, 5vw, 3.2rem);
 }
 .projekt-galerie { display: grid; gap: clamp(1rem, 2.5vw, 1.8rem); }
@@ -1161,13 +1161,15 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
   display: flow-root;
 }
 
-/* Textabschnitt — erste Zeile als große Serifen-Kursiv-Aussage (lead) */
+/* Textabschnitt — erster Absatz (lead) in derselben Grundschrift wie die übrigen
+   Abschnitte (Archivo/Grotesk, kein Serifen-Kursiv), damit der erste Abschnitt
+   typografisch zum Rest der Fallstudie passt. */
 .fall-lead {
-  font-family: var(--serif); font-style: italic; font-weight: 400;
-  font-size: clamp(1.05rem, 1.7vw, 1.35rem); line-height: 1.5; letter-spacing: -0.005em;
+  font-family: var(--grotesk); font-style: normal; font-weight: 400;
+  line-height: 1.55; letter-spacing: normal;
   color: var(--tinte); max-width: none;
 }
-.fall-absatz { max-width: 62ch; margin-top: 1rem; color: var(--tinte); }
+.fall-absatz { margin-top: 1rem; color: var(--tinte); }
 .fall-lead + .fall-absatz { margin-top: 1.4rem; }
 
 /* Aufzählung (unnummeriert) — Leistungen/Umfang eines Projekts */
@@ -1228,7 +1230,7 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
   letter-spacing: -0.01em; line-height: 1.18;
   transition: transform 0.45s cubic-bezier(0.2,0.8,0.2,1);
 }
-.fall-schritt-text { margin-top: 0.5rem; max-width: 56ch; color: var(--ton); }
+.fall-schritt-text { margin-top: 0.5rem; max-width: none; color: var(--ton); }
 @media (hover: hover) and (min-width: 761px) {
   .fall-schritt:hover .fall-schritt-nr { color: var(--tinte); }
   .fall-schritt:hover .fall-schritt-titel { transform: translateX(0.5rem); }
@@ -1283,6 +1285,36 @@ footer.fuss-schlicht .zeile { margin-top: 0; padding-top: 0; border-top: none; }
   .fall-buehne[data-buehne="dunkel"] { padding: clamp(0.7rem, 3vw, 1.2rem); }
   .fall-schritt { grid-template-columns: 2.6rem 1fr; gap: 0.9rem; }
 }
+
+/* Bilderraster (Galerie) — mehrere unterschiedlich große Arbeiten als Masonry-Spalten.
+   CSS-Columns halten das Hochkant-/Querformat-Mischmasch ruhig, ohne Bilder zu beschneiden. */
+.fall-galerie {
+  column-count: 3; column-gap: clamp(0.9rem, 2vw, 1.4rem);
+}
+.galerie-figur {
+  margin: 0 0 clamp(0.9rem, 2vw, 1.4rem);
+  break-inside: avoid; -webkit-column-break-inside: avoid;
+  display: flex; flex-direction: column; gap: 0.7rem;
+  max-width: var(--bild-max, none);
+}
+.galerie-figur img {
+  display: block; width: 100%; height: auto; border-radius: 10px;
+  border: 1px solid var(--haar);
+  box-shadow: 0 20px 44px -30px rgba(26,23,18,0.42);
+  transition: transform 0.5s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.5s ease;
+}
+.galerie-cap {
+  font-family: var(--grotesk); font-weight: 600; font-size: 0.66rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--ton);
+}
+@media (hover: hover) and (min-width: 761px) {
+  .galerie-figur img:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 34px 60px -30px rgba(26,23,18,0.5);
+  }
+}
+@media (max-width: 900px) { .fall-galerie { column-count: 2; } }
+@media (max-width: 520px) { .fall-galerie { column-count: 1; } }
 
 /* ============================================================
    AUSLAGE — Wortliste + Bildwechsel (Menü-Prinzip)

@@ -99,6 +99,24 @@ const ladeArt = eager ? "eager" : "lazy";
   </section>
 )}
 
+{block.art === "galerie" && (
+  <section class="fall-abschnitt auftritt">
+    {block.label && (
+      <p class="fall-label" data-de={block.label.de} data-en={block.label.en}>{block.label.de}</p>
+    )}
+    <div class="fall-galerie" data-buehne={block.buehne ?? "papier"}>
+      {block.bilder.map((b) => (
+        <figure class="galerie-figur" style={b.max ? `--bild-max:${b.max}` : undefined}>
+          <img src={b.bild} alt={b.alt.de} loading={ladeArt} decoding="async" />
+          {b.unterschrift && (
+            <figcaption class="galerie-cap" data-de={b.unterschrift.de} data-en={b.unterschrift.en}>{b.unterschrift.de}</figcaption>
+          )}
+        </figure>
+      ))}
+    </div>
+  </section>
+)}
+
 {block.art === "auslage" && (
   <section class="fall-abschnitt auslage auftritt" data-auslage>
     {block.label && (
